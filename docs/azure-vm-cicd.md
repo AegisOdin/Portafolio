@@ -76,7 +76,7 @@ Create:
 
 ## 5. Deploy
 
-Push to `main`, or run the workflow manually from `Actions` -> `CI/CD Azure VM`.
+Push to `master`, or run the workflow manually from `Actions` -> `Deploy to Azure VM`.
 
 The workflow:
 
