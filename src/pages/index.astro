@@ -5,6 +5,7 @@ import CommandBar from "../components/CommandBar.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import CrtModel from "../components/CrtModel.astro";
 import MatrixScene from "../components/MatrixScene.astro";
+import AccessModal from "../components/AccessModal.astro";
 import { i18n, type Lang } from "../i18n";
 
 const lang: Lang = "es";
@@ -70,6 +71,7 @@ const experience = [
     id: "tekniu",
     date: "[2026-03]",
     host: "tekniu.mx",
+    url: "https://wiki.tekniu.org/login?from=%2F",
     role: "BECARIO_DEV",
     state: "HIRED",
     mode: "Híbrido · Jornada parcial",
@@ -97,6 +99,7 @@ const experience = [
     id: "itm",
     date: "[2026-01]",
     host: "itm.edu.mx",
+    url: "https://sim-cle.morelia.tecnm.mx/login",
     role: "FULLSTACK",
     state: "ACTIVE",
     mode: "Remoto · Temporal",
@@ -121,6 +124,7 @@ const experience = [
     id: "flama",
     date: "[2025-11]",
     host: "flama.agency",
+    url: "https://appbeperfect.com",
     role: "FULLSTACK",
     state: "ACTIVE",
     mode: "Remoto · Autónomo",
@@ -194,6 +198,7 @@ const skills: { key: string; items: string[] }[] = [
   <BootSequence />
   <CommandBar />
   <MatrixScene />
+  <AccessModal />
 
   <!-- Top status bar -->
   <header
@@ -487,6 +492,8 @@ const skills: { key: string; items: string[] }[] = [
                   href={p.prod}
                   target="_blank"
                   rel="noopener"
+                  data-access-link
+                  data-access-host={p.prod.replace(/^https?:\/\//, "").replace(/\/.*$/, "")}
                   class="inline-flex items-center gap-2 text-sm"
                 >
                   <span class="sigil">↗</span> {p.prod.replace("https://", "")}
@@ -560,6 +567,18 @@ const skills: { key: string; items: string[] }[] = [
                       <span class="pill !text-[10px]">{t}</span>
                     ))}
                   </div>
+                  {e.url && (
+                    <a
+                      href={e.url}
+                      target="_blank"
+                      rel="noopener"
+                      data-access-link
+                      data-access-host={e.host}
+                      class="inline-flex items-center gap-2 text-[13px] pt-1"
+                    >
+                      <span class="sigil">↗</span> {e.host}
+                    </a>
+                  )}
                 </div>
               </details>
             ))

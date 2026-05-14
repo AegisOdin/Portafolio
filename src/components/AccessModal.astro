@@ -1,0 +1,501 @@
+---
+// AccessModal — terminal-style access intercept for external experience links.
+// Triggered by any anchor with [data-access-link]. Exposes window.__access.open(url, host?).
+---
+<div
+  id="access-modal"
+  class="fixed inset-0 z-[120] hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Terminal de acceso"
+>
+  <div class="absolute inset-0 access-backdrop"></div>
+
+  <div class="relative h-full w-full flex items-center justify-center px-4 py-8 overflow-y-auto">
+    <div class="w-full max-w-2xl font-mono text-[13px] md:text-[14px]">
+      <div class="access-card frame p-6 md:p-8 relative" data-label="secure_handshake.tty">
+        <span class="access-corner top-left">┌</span>
+        <span class="access-corner top-right">┐</span>
+        <span class="access-corner bottom-left">└</span>
+        <span class="access-corner bottom-right">┘</span>
+
+        <div class="text-[10px] md:text-xs tracking-[0.3em] uppercase mb-4 flex items-center gap-3">
+          <span
+            id="access-stage-dot"
+            class="inline-block w-2 h-2 bg-[var(--color-amber)] glow rounded-full"
+          ></span>
+          <span
+            id="access-stage-label"
+            class="text-[var(--color-amber)] glow-soft"
+            >ESTABLECIENDO ENLACE</span
+          >
+          <span class="ml-auto text-[var(--color-muted)]" id="access-time"
+            >00:00:00</span
+          >
+        </div>
+
+        <div
+          class="mb-5 border-l-2 border-[color-mix(in_srgb,var(--color-phosphor)_45%,transparent)] pl-4"
+        >
+          <div
+            class="text-[var(--color-muted)] text-[10px] uppercase tracking-widest"
+          >
+            target_host
+          </div>
+          <div
+            id="access-host"
+            class="text-[var(--color-phosphor)] glow-soft text-lg md:text-xl truncate"
+          >
+            --
+          </div>
+        </div>
+
+        <div
+          id="access-log"
+          class="text-[var(--color-ink)]/85 space-y-1 min-h-[180px] md:min-h-[200px] max-h-[40vh] overflow-hidden text-[12px] md:text-[13px] leading-[1.55]"
+        ></div>
+
+        <div class="mt-5">
+          <div
+            class="flex justify-between text-[10px] uppercase tracking-widest text-[var(--color-muted)] mb-1.5"
+          >
+            <span id="access-progress-label">handshake</span>
+            <span id="access-progress-pct">0%</span>
+          </div>
+          <div
+            class="h-2 border border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] relative overflow-hidden bg-[color-mix(in_srgb,var(--color-phosphor)_5%,transparent)]"
+          >
+            <div
+              id="access-progress-fill"
+              class="absolute inset-y-0 left-0 w-0 bg-[var(--color-phosphor)]"
+              style="box-shadow: 0 0 12px var(--color-phosphor);"
+            ></div>
+            <div
+              class="absolute inset-0 access-progress-scan pointer-events-none"
+            ></div>
+          </div>
+        </div>
+
+        <div id="access-granted" class="hidden mt-5">
+          <pre
+            class="text-[var(--color-phosphor)] glow-soft text-[7px] md:text-[10px] leading-[1.05] text-center whitespace-pre access-banner-anim m-0 overflow-x-auto">
+ █████╗  ██████╗ ██████╗███████╗███████╗ ██████╗
+██╔══██╗██╔════╝██╔════╝██╔════╝██╔════╝██╔═══██╗
+███████║██║     ██║     █████╗  ███████╗██║   ██║
+██╔══██║██║     ██║     ██╔══╝  ╚════██║██║   ██║
+██║  ██║╚██████╗╚██████╗███████╗███████║╚██████╔╝
+╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝╚══════╝ ╚═════╝
+        P E R M I T I D O
+</pre>
+          <div
+            class="mt-4 flex items-center justify-between text-xs uppercase tracking-widest"
+          >
+            <span class="text-[var(--color-muted)]"
+              >redirigiendo en <span id="access-redirect-host" class="text-[var(--color-phosphor)] normal-case tracking-normal"></span></span
+            >
+            <span id="access-countdown" class="text-[var(--color-amber)] glow text-base"
+              >3</span
+            >
+          </div>
+        </div>
+
+        <div
+          class="mt-5 pt-4 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] flex justify-between items-center text-[10px] uppercase tracking-widest text-[var(--color-muted)]"
+        >
+          <span>signal: aes-256 · tls 1.3</span>
+          <button
+            id="access-cancel"
+            type="button"
+            class="hover:text-[var(--color-magenta)] cursor-pointer transition-colors"
+            >[esc] abortar</button
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #access-modal[data-open="true"] {
+    display: block;
+  }
+  #access-modal[data-open="true"] .access-backdrop {
+    animation: access-fade 0.35s ease both;
+  }
+  #access-modal[data-open="true"] .access-card {
+    animation: access-in 0.45s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  }
+
+  .access-backdrop {
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+  }
+
+  @keyframes access-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes access-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.985); filter: blur(4px); }
+    to   { opacity: 1; transform: translateY(0) scale(1); filter: none; }
+  }
+
+  .access-corner {
+    position: absolute;
+    font-family: var(--font-mono);
+    color: var(--color-amber);
+    font-size: 14px;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: 0 0 4px color-mix(in srgb, var(--color-amber) 50%, transparent);
+  }
+  .access-corner.top-left { top: 6px; left: 8px; }
+  .access-corner.top-right { top: 6px; right: 8px; }
+  .access-corner.bottom-left { bottom: 6px; left: 8px; }
+  .access-corner.bottom-right { bottom: 6px; right: 8px; }
+
+  .access-progress-scan {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-phosphor) 55%, transparent),
+      transparent
+    );
+    animation: access-scan 1.6s linear infinite;
+    width: 30%;
+  }
+  @keyframes access-scan {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(360%); }
+  }
+
+  .access-banner-anim {
+    animation: access-banner-flicker 0.7s steps(8) 1;
+  }
+  @keyframes access-banner-flicker {
+    0%   { opacity: 0; filter: blur(6px); transform: translateY(-4px); }
+    20%  { opacity: 0.8; filter: blur(2px); }
+    40%  { opacity: 0.3; }
+    60%  { opacity: 0.95; }
+    100% { opacity: 1; filter: none; transform: none; }
+  }
+
+  .access-log-line {
+    animation: access-line-in 0.2s ease-out both;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  @keyframes access-line-in {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  #access-modal[data-stage="granted"] .access-card {
+    border-color: var(--color-phosphor);
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.4),
+      0 0 0 1px var(--color-phosphor),
+      0 0 60px -8px color-mix(in srgb, var(--color-phosphor) 90%, transparent);
+    animation: access-granted-pulse 0.55s ease-out 1;
+  }
+  @keyframes access-granted-pulse {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.012); }
+    100% { transform: scale(1); }
+  }
+
+  #access-modal[data-stage="aborted"] .access-card {
+    border-color: var(--color-magenta);
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.4),
+      0 0 0 1px var(--color-magenta),
+      0 0 60px -8px color-mix(in srgb, var(--color-magenta) 80%, transparent);
+  }
+  #access-modal[data-stage="aborted"] #access-stage-dot,
+  #access-modal[data-stage="aborted"] #access-progress-fill {
+    background: var(--color-magenta) !important;
+    box-shadow: 0 0 12px var(--color-magenta) !important;
+  }
+  #access-modal[data-stage="aborted"] #access-stage-label {
+    color: var(--color-magenta) !important;
+  }
+
+  /* Realworld theme: strip CRT glow */
+  :root[data-theme="realworld"] #access-modal .access-corner,
+  :root[data-theme="realworld"] #access-modal #access-stage-label,
+  :root[data-theme="realworld"] #access-modal #access-host,
+  :root[data-theme="realworld"] #access-modal pre {
+    text-shadow: none !important;
+  }
+  :root[data-theme="realworld"] #access-modal .access-progress-scan { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #access-modal .access-progress-scan,
+    #access-modal .access-banner-anim,
+    #access-modal .access-log-line,
+    #access-modal .access-card,
+    #access-modal .access-backdrop {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const modal = document.getElementById("access-modal");
+    if (!modal) return;
+    const log = document.getElementById("access-log")!;
+    const hostEl = document.getElementById("access-host")!;
+    const stageDot = document.getElementById("access-stage-dot")!;
+    const stageLabel = document.getElementById("access-stage-label")!;
+    const timeEl = document.getElementById("access-time")!;
+    const progFill = document.getElementById(
+      "access-progress-fill",
+    ) as HTMLElement;
+    const progPct = document.getElementById("access-progress-pct")!;
+    const progLabel = document.getElementById("access-progress-label")!;
+    const granted = document.getElementById("access-granted")!;
+    const countdownEl = document.getElementById("access-countdown")!;
+    const redirectHost = document.getElementById("access-redirect-host")!;
+    const cancelBtn = document.getElementById("access-cancel")!;
+
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let timers: number[] = [];
+    let clockId: number | null = null;
+    let targetUrl = "";
+    let aborted = false;
+    let lastFocus: HTMLElement | null = null;
+
+    const clearTimers = () => {
+      timers.forEach((t) => clearTimeout(t));
+      timers = [];
+      if (clockId !== null) {
+        clearTimeout(clockId);
+        clockId = null;
+      }
+    };
+    const after = (ms: number, fn: () => void) => {
+      const id = window.setTimeout(fn, ms);
+      timers.push(id);
+      return id;
+    };
+
+    function addLine(text: string, color?: string) {
+      const div = document.createElement("div");
+      div.className = "access-log-line";
+      div.textContent = text;
+      if (color) div.style.color = color;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function setProgress(pct: number) {
+      progFill.style.transition = reduced ? "none" : "width 0.35s ease";
+      progFill.style.width = pct + "%";
+      progPct.textContent = Math.round(pct) + "%";
+    }
+
+    function nowStamp() {
+      const d = new Date();
+      return [d.getHours(), d.getMinutes(), d.getSeconds()]
+        .map((n) => String(n).padStart(2, "0"))
+        .join(":");
+    }
+
+    function startClock() {
+      const tick = () => {
+        timeEl.textContent = nowStamp();
+        clockId = window.setTimeout(tick, 1000);
+      };
+      tick();
+    }
+
+    function reset() {
+      clearTimers();
+      log.innerHTML = "";
+      granted.classList.add("hidden");
+      progFill.style.transition = "none";
+      progFill.style.width = "0%";
+      progPct.textContent = "0%";
+      progLabel.textContent = "handshake";
+      stageLabel.textContent = "ESTABLECIENDO ENLACE";
+      stageLabel.style.color = "";
+      stageDot.style.background = "";
+      countdownEl.textContent = "3";
+      redirectHost.textContent = "";
+      modal.removeAttribute("data-stage");
+      aborted = false;
+    }
+
+    function close(immediate = false) {
+      clearTimers();
+      const finish = () => {
+        modal.removeAttribute("data-open");
+        modal.removeAttribute("style");
+        reset();
+        lastFocus?.focus?.();
+        lastFocus = null;
+      };
+      if (immediate || reduced) {
+        finish();
+        return;
+      }
+      modal.style.transition = "opacity .3s ease, filter .3s ease";
+      modal.style.opacity = "0";
+      modal.style.filter = "blur(6px)";
+      after(320, finish);
+    }
+
+    function abort() {
+      if (aborted || modal.getAttribute("data-open") !== "true") return;
+      aborted = true;
+      clearTimers();
+      modal.setAttribute("data-stage", "aborted");
+      stageLabel.textContent = "CONEXIÓN ABORTADA";
+      progLabel.textContent = "denied";
+      addLine("✗ user_abort signal received", "var(--color-magenta)");
+      addLine("conexión terminada por el cliente", "var(--color-magenta)");
+      after(1100, () => close());
+    }
+
+    function open(url: string, hostHint: string) {
+      lastFocus = document.activeElement as HTMLElement | null;
+      reset();
+      targetUrl = url;
+      hostEl.textContent = hostHint;
+      redirectHost.textContent = hostHint;
+      modal.setAttribute("data-open", "true");
+      startClock();
+      cancelBtn.focus();
+      runSequence(hostHint);
+    }
+
+    function runSequence(host: string) {
+      if (reduced) {
+        addLine("[OK] handshake completo", "var(--color-phosphor)");
+        addLine("[OK] acceso permitido", "var(--color-phosphor)");
+        setProgress(100);
+        granted.classList.remove("hidden");
+        stageLabel.textContent = "ACCESO PERMITIDO";
+        stageLabel.style.color = "var(--color-phosphor)";
+        stageDot.style.background = "var(--color-phosphor)";
+        modal.setAttribute("data-stage", "granted");
+        after(700, () => doRedirect());
+        return;
+      }
+
+      const phases: Array<[string, string | undefined, number]> = [
+        [`$ ssh -i ~/.keys/portfolio.pem visitor@${host}`, "var(--color-muted)", 80],
+        ["resolviendo dns... ok", undefined, 280],
+        ["negociando tls 1.3... ok", undefined, 240],
+        ["[..] verificando huella digital", "var(--color-amber)", 340],
+        ["[OK] huella verificada · sha256:a7f3c12b...", "var(--color-phosphor)", 220],
+        ["[..] solicitando autorización", "var(--color-amber)", 340],
+        ["[OK] credenciales aceptadas", "var(--color-phosphor)", 220],
+        ["[..] estableciendo túnel seguro", "var(--color-amber)", 300],
+      ];
+
+      let elapsed = 100;
+      let pct = 8;
+      setProgress(pct);
+      phases.forEach(([text, color, delay]) => {
+        elapsed += delay;
+        after(elapsed, () => {
+          if (aborted) return;
+          addLine(text, color);
+          pct = Math.min(85, pct + 11);
+          setProgress(pct);
+        });
+      });
+
+      const grantedAt = elapsed + 380;
+      after(grantedAt, () => {
+        if (aborted) return;
+        setProgress(100);
+        progLabel.textContent = "granted";
+        stageLabel.textContent = "ACCESO PERMITIDO";
+        stageLabel.style.color = "var(--color-phosphor)";
+        stageDot.style.background = "var(--color-phosphor)";
+        stageDot.style.boxShadow = "0 0 12px var(--color-phosphor)";
+        modal.setAttribute("data-stage", "granted");
+        addLine(
+          `[OK] enlace establecido · sesión #${Math.floor(Math.random() * 9000 + 1000)}`,
+          "var(--color-phosphor)",
+        );
+        granted.classList.remove("hidden");
+      });
+
+      const cdStart = grantedAt + 350;
+      [3, 2, 1].forEach((n, i) => {
+        after(cdStart + i * 700, () => {
+          if (aborted) return;
+          countdownEl.textContent = String(n);
+          countdownEl.animate(
+            [
+              { transform: "scale(1.4)", opacity: 0.4 },
+              { transform: "scale(1)", opacity: 1 },
+            ],
+            { duration: 280, easing: "cubic-bezier(.2,.7,.1,1)" },
+          );
+        });
+      });
+
+      after(cdStart + 3 * 700, () => {
+        if (aborted) return;
+        doRedirect();
+      });
+    }
+
+    function doRedirect() {
+      if (!targetUrl) return;
+      const opened = window.open(targetUrl, "_blank", "noopener,noreferrer");
+      if (!opened) {
+        window.location.href = targetUrl;
+        return;
+      }
+      after(400, () => close());
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (modal.getAttribute("data-open") !== "true") return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        abort();
+      }
+    });
+    cancelBtn.addEventListener("click", abort);
+
+    (window as any).__access = {
+      open(url: string, host?: string) {
+        let h = host;
+        if (!h) {
+          try {
+            h = new URL(url).host;
+          } catch {
+            h = url;
+          }
+        }
+        open(url, h || "unknown");
+      },
+    };
+
+    document.addEventListener("click", (e) => {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      const a = t.closest<HTMLAnchorElement>("a[data-access-link]");
+      if (!a) return;
+      const href = a.getAttribute("href");
+      if (!href) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const host =
+        a.getAttribute("data-access-host") || a.textContent?.trim() || "";
+      (window as any).__access.open(href, host);
+    });
+  })();
+</script>
