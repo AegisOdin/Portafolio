@@ -407,6 +407,45 @@ a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent);
 /* Prompt sigil */
 .sigil { color: var(--color-amber); }
 
+/* ============================================================
+   ISOTYPE — claw mark, brand sigil. Subtle phosphor halo so it
+   reads as part of the CRT glow column, not a foreign image.
+   ============================================================ */
+.isotype {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  object-fit: cover;
+  background: var(--color-bg);
+  filter:
+    drop-shadow(0 0 4px color-mix(in srgb, var(--accent) 55%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 22%, transparent));
+  transition: filter 240ms ease, transform 240ms ease;
+  image-rendering: -webkit-optimize-contrast;
+}
+.isotype-link { display: inline-flex; align-items: center; }
+.isotype-link:hover .isotype,
+.isotype-link:focus-visible .isotype {
+  filter:
+    drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 80%, transparent))
+    drop-shadow(0 0 16px color-mix(in srgb, var(--accent) 35%, transparent));
+  transform: rotate(-6deg) scale(1.06);
+}
+.isotype--dim {
+  width: 22px;
+  height: 22px;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+:root[data-theme="realworld"] .isotype { filter: grayscale(1) brightness(0.7); }
+:root[data-theme="realworld"] .isotype-link:hover .isotype { transform: none; filter: grayscale(1) brightness(0.85); }
+@media (prefers-reduced-motion: reduce) {
+  .isotype { transition: none; }
+  .isotype-link:hover .isotype,
+  .isotype-link:focus-visible .isotype { transform: none; }
+}
+
 /* Grid bg */
 .grid-bg {
   background-image:
