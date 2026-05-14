@@ -3,11 +3,71 @@ import "../styles/globals.css";
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
+const SITE_URL = "https://neftali-odin.dev";
 const {
-  title = "Neftali Odín — Full Stack Engineer",
-  description = "Portfolio of Neftali Odín García Ramírez — Full Stack engineer based in Morelia, MX.",
+  title = "Neftali Odín García Ramírez — Full Stack Engineer · Morelia, MX",
+  description = "Full Stack engineer based in Morelia, México. Building production web apps with TypeScript, Vue/Nuxt, Laravel, Node.js, Strapi, AWS and Docker. Available for hire.",
+  image = "/og.png",
 } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE_URL).toString();
+const ogImage = new URL(image, SITE_URL).toString();
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Neftali Odín García Ramírez",
+  alternateName: ["Neftali Odin", "Odin Garcia"],
+  url: SITE_URL,
+  image: ogImage,
+  jobTitle: "Full Stack Engineer",
+  description,
+  email: "mailto:odingarra@gmail.com",
+  telephone: "+52-1-443-214-3605",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Morelia",
+    addressRegion: "Michoacán",
+    addressCountry: "MX",
+  },
+  sameAs: [
+    "https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/",
+  ],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Instituto Tecnológico de Morelia",
+    sameAs: "https://www.morelia.tecnm.mx/",
+  },
+  knowsLanguage: ["Spanish", "English"],
+  knowsAbout: [
+    "JavaScript", "TypeScript", "Vue.js", "Nuxt.js", "React.js", "Astro",
+    "Node.js", "Laravel", "PHP", "Python", "Java", "Strapi", "REST API",
+    "Socket.io", "Livewire", "MySQL", "PostgreSQL",
+    "Docker", "AWS", "AWS S3", "Linux", "SSH", "Git",
+    "Odoo ERP", "Full Stack Web Development",
+  ],
+  hasOccupation: {
+    "@type": "Occupation",
+    name: "Full Stack Web Developer",
+    occupationLocation: {
+      "@type": "City",
+      name: "Morelia, Michoacán, Mexico",
+    },
+    skills: "JavaScript, TypeScript, Vue.js, Nuxt.js, Laravel, Node.js, Docker, AWS, PostgreSQL, MySQL",
+  },
+};
+
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  url: SITE_URL,
+  name: "Neftali Odín — Portfolio",
+  description,
+  author: { "@type": "Person", name: "Neftali Odín García Ramírez" },
+  inLanguage: ["es-MX", "en-US"],
+};
 ---
 <!doctype html>
 <html lang="es">
@@ -15,21 +75,60 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Neftali Odín García Ramírez" />
+    <meta name="keywords" content="Neftali Odín, Neftali Odin Garcia, Odin Garcia Ramirez, full stack developer Morelia, desarrollador full stack México, TypeScript developer, Vue developer, Nuxt developer, Laravel developer, Node.js engineer, Strapi developer, Odoo developer, Morelia Michoacán developer, hire full stack developer, portfolio Neftali Odin" />
     <meta name="theme-color" content="#0a0e0a" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+
+    <!-- AI / LLM crawler hints -->
+    <meta name="ai-content" content="portfolio, professional profile, full stack engineer" />
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM-friendly summary" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Neftali Odín — Portfolio" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content="Neftali Odín — Full Stack Engineer" />
+    <meta property="profile:first_name" content="Neftali Odín" />
+    <meta property="profile:last_name" content="García Ramírez" />
+    <meta property="profile:username" content="neftali-odin" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&family=VT323&display=swap"
     />
-    <title>{title}</title>
 
-    <!-- OG -->
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <!-- Sitemap hint -->
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
+    <script type="application/ld+json" set:html={JSON.stringify(website)} />
   </head>
   <body class="scanlines crt">
     <slot />

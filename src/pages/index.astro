@@ -4,6 +4,10 @@ import BootSequence from "../components/BootSequence.astro";
 import CommandBar from "../components/CommandBar.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import CrtModel from "../components/CrtModel.astro";
+import { i18n, type Lang } from "../i18n";
+
+const lang: Lang = "es";
+const t = i18n[lang];
 
 const projects = [
   {
@@ -14,7 +18,15 @@ const projects = [
     period: "nov 2025 — actualidad",
     summary:
       "App de gestión operativa para clínica de medicina estética. Frontend Nuxt/Vue, backend Strapi v5/TS, tiempo real con Socket.io, almacenamiento en AWS S3 y MySQL gestionado.",
-    stack: ["Nuxt", "Vue", "TypeScript", "Strapi v5", "Socket.io", "AWS S3", "MySQL"],
+    stack: [
+      "Nuxt",
+      "Vue",
+      "TypeScript",
+      "Strapi v5",
+      "Socket.io",
+      "AWS S3",
+      "MySQL",
+    ],
     prod: "https://appbeperfect.com",
     status: "PROD",
   },
@@ -27,6 +39,7 @@ const projects = [
     summary:
       "Sistema institucional para centralizar inscripciones, gestión de grupos y seguimiento de alumnos del Centro de Lenguas. Frontend reactivo con Livewire y API REST en Laravel.",
     stack: ["Laravel", "Livewire", "PHP", "REST API", "Java", "GitLab"],
+    prod: "https://sim-cle.morelia.tecnm.mx/login",
     status: "ACTIVE",
   },
   {
@@ -37,7 +50,16 @@ const projects = [
     period: "mar 2026 — actualidad",
     summary:
       "Desarrollo e implementación de módulos Odoo para PyMEs locales e internacionales. Integraciones con servicios externos, mantenimiento de servidores Linux y dockerización de entornos cliente.",
-    stack: ["Odoo", "JavaScript", "Docker", "Linux", "PostgreSQL", "React", "XML"],
+    stack: [
+      "Odoo",
+      "JavaScript",
+      "Docker",
+      "Linux",
+      "PostgreSQL",
+      "React",
+      "XML",
+    ],
+    prod: "https://wiki.tekniu.org/login?from=%2F",
     status: "ACTIVE",
   },
 ];
@@ -57,7 +79,18 @@ const experience = [
       "Implementación y personalización de módulos ERP, integración con servicios externos.",
       "Mantenimiento de infraestructura Linux, despliegues con Docker.",
     ],
-    tech: ["JavaScript", "Odoo", "Docker", "Linux", "PostgreSQL", "React.js", "SSH", "XML", "HTML", "CSS"],
+    tech: [
+      "JavaScript",
+      "Odoo",
+      "Docker",
+      "Linux",
+      "PostgreSQL",
+      "React.js",
+      "SSH",
+      "XML",
+      "HTML",
+      "CSS",
+    ],
   },
   {
     id: "itm",
@@ -72,7 +105,16 @@ const experience = [
       "Desarrollo del sistema SIM-CLE para el Depto. de Idiomas, frontend y backend.",
       "Centralización del control de inscripciones, grupos y seguimiento de alumnos.",
     ],
-    tech: ["Laravel", "Livewire", "PHP", "Java", "REST API", "GitLab", "GitHub", "Git"],
+    tech: [
+      "Laravel",
+      "Livewire",
+      "PHP",
+      "Java",
+      "REST API",
+      "GitLab",
+      "GitHub",
+      "Git",
+    ],
   },
   {
     id: "flama",
@@ -88,18 +130,63 @@ const experience = [
       "Frontend Nuxt/Vue, backend Strapi v5/TS, integración AWS S3, tiempo real con Socket.io.",
       "Proyecto en producción: appbeperfect.com",
     ],
-    tech: ["Nuxt.js", "Vue.js", "TypeScript", "Strapi", "REST API", "MySQL", "AWS S3", "Socket.io"],
+    tech: [
+      "Nuxt.js",
+      "Vue.js",
+      "TypeScript",
+      "Strapi",
+      "REST API",
+      "MySQL",
+      "AWS S3",
+      "Socket.io",
+    ],
   },
 ];
 
-const skills = {
-  Frontend: ["JavaScript", "TypeScript", "Vue.js", "Nuxt.js", "React.js", "HTML", "CSS", "Livewire"],
-  Backend: ["Node.js", "PHP", "Laravel", "Python", "Java", "Strapi", "REST API", "Socket.io"],
-  "Bases de datos": ["MySQL", "PostgreSQL"],
-  "DevOps / Cloud": ["Docker", "AWS", "AWS S3", "Linux", "SSH"],
-  "Control de versiones": ["Git", "GitHub", "GitLab"],
-  Otros: ["Odoo ERP", "XML", "Microsoft Excel"],
-};
+const skills: { key: string; items: string[] }[] = [
+  {
+    key: "Frontend",
+    items: [
+      "JavaScript",
+      "TypeScript",
+      "Vue.js",
+      "Nuxt.js",
+      "React.js",
+      "Astro",
+      "HTML",
+      "CSS",
+      "Livewire",
+    ],
+  },
+  {
+    key: "Backend",
+    items: [
+      "Node.js",
+      "PHP",
+      "Laravel",
+      "Python",
+      "Java",
+      "Strapi",
+      "REST API",
+      "Socket.io",
+    ],
+  },
+  { key: "Databases", items: ["MySQL", "PostgreSQL"] },
+  {
+    key: "DevOps",
+    items: [
+      "Docker",
+      "AWS",
+      "AWS S3",
+      "Microsoft Azure",
+      "CI/CD",
+      "Linux",
+      "SSH",
+    ],
+  },
+  { key: "Vcs", items: ["Git", "GitHub", "GitLab"] },
+  { key: "Other", items: ["Odoo ERP", "XML", "Microsoft Excel"] },
+];
 ---
 
 <BaseLayout>
@@ -107,65 +194,116 @@ const skills = {
   <CommandBar />
 
   <!-- Top status bar -->
-  <header class="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_srgb,var(--color-bg)_85%,transparent)] border-b border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)]">
-    <div class="max-w-6xl mx-auto px-5 md:px-8 py-2.5 flex items-center justify-between text-[11px] md:text-xs tracking-widest uppercase">
+  <header
+    class="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_srgb,var(--color-bg)_85%,transparent)] border-b border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)]"
+  >
+    <div
+      class="max-w-6xl mx-auto px-5 md:px-8 py-2.5 flex items-center justify-between text-[11px] md:text-xs tracking-widest uppercase"
+    >
       <div class="flex items-center gap-3 md:gap-5">
         <span class="text-[var(--color-amber)] glow-soft">●</span>
         <span class="text-[var(--color-muted)]">neftali@portfolio:~$</span>
-        <span class="hidden md:inline text-[var(--color-ink)]/70">build · 26.05.14</span>
+        <span class="hidden md:inline text-[var(--color-ink)]/70"
+          >build · 26.05.14</span
+        >
       </div>
       <nav class="hidden md:flex items-center gap-5 text-[var(--color-muted)]">
-        <a href="#about" class="no-underline hover:text-[var(--color-phosphor)]">whoami</a>
-        <a href="#projects" class="no-underline hover:text-[var(--color-phosphor)]">projects</a>
-        <a href="#experience" class="no-underline hover:text-[var(--color-phosphor)]">exp.log</a>
-        <a href="#skills" class="no-underline hover:text-[var(--color-phosphor)]">skills</a>
-        <a href="#contact" class="no-underline hover:text-[var(--color-phosphor)]">mail</a>
+        <a href="#about" class="no-underline hover:text-[var(--color-phosphor)]"
+          >whoami</a
+        >
+        <a
+          href="#projects"
+          class="no-underline hover:text-[var(--color-phosphor)]">projects</a
+        >
+        <a
+          href="#experience"
+          class="no-underline hover:text-[var(--color-phosphor)]">exp.log</a
+        >
+        <a
+          href="#skills"
+          class="no-underline hover:text-[var(--color-phosphor)]">skills</a
+        >
+        <a
+          href="#contact"
+          class="no-underline hover:text-[var(--color-phosphor)]">mail</a
+        >
       </nav>
-      <button onclick="(window).__cmd?.open()" class="text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">/ cmd</button>
+      <div class="flex items-center gap-2">
+        <button
+          id="lang-toggle"
+          aria-label="Toggle language"
+          class="text-[var(--color-amber)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-amber)_15%,transparent)]"
+          data-i18n="lang.toggle">{t["lang.toggle"]}</button
+        >
+        <button
+          onclick="(window).__cmd?.open()"
+          class="text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+          >/ cmd</button
+        >
+      </div>
     </div>
   </header>
 
   <main class="relative">
     <!-- ============ HERO ============ -->
-    <section id="hero" class="relative min-h-[92vh] grid-bg overflow-hidden">
+    <section
+      id="hero"
+      class="relative min-h-[min(92vh,900px)] lg:min-h-[92vh] grid-bg overflow-hidden"
+    >
       <div class="absolute inset-0 pointer-events-none">
         <!-- decorative ASCII corners -->
-        <pre class="absolute top-6 left-5 text-[10px] text-[color-mix(in_srgb,var(--color-phosphor)_45%,transparent)] leading-[1.1]">┌───────────────┐
+        <pre
+          class="hidden sm:block absolute top-6 left-5 text-[10px] text-[color-mix(in_srgb,var(--color-phosphor)_45%,transparent)] leading-[1.1]">┌───────────────┐
 │ session #0001 │
 │ tty: pts/0    │
 │ uptime: 0d 0h │
 └───────────────┘</pre>
-        <pre class="hidden md:block absolute top-6 right-5 text-[10px] text-[color-mix(in_srgb,var(--color-amber)_55%,transparent)] leading-[1.1] text-right">┌──────────────┐
+        <pre
+          class="hidden md:block absolute top-6 right-5 text-[10px] text-[color-mix(in_srgb,var(--color-amber)_55%,transparent)] leading-[1.1] text-right">┌──────────────┐
 │ loc: morelia │
 │ mx-mor · gmt-6│
 │ wx: 22°c ☀   │
 └──────────────┘</pre>
       </div>
 
-      <div class="max-w-6xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 relative">
+      <div
+        class="max-w-6xl mx-auto px-5 md:px-8 pt-20 sm:pt-24 md:pt-32 pb-24 sm:pb-20 relative"
+      >
         <!-- Floating 3D CRT model — top-right of hero on desktop -->
-        <div class="hidden lg:block absolute top-24 right-5 md:right-8 w-[340px] h-[340px] xl:w-[400px] xl:h-[400px] z-10 pointer-events-auto">
+        <div
+          class="hidden lg:block absolute top-24 right-5 md:right-8 w-[340px] h-[340px] xl:w-[400px] xl:h-[400px] z-10 pointer-events-auto"
+        >
           <CrtModel />
         </div>
 
-        <div class="text-[var(--color-amber)] glow-soft text-xs md:text-sm mb-4 tracking-widest">
-          ⟶ INIT_PROFILE · v2026
+        <div
+          class="relative z-1 text-[var(--color-amber)] glow-soft text-xs md:text-sm mb-4 tracking-widest"
+          data-i18n="hero.tag"
+        >
+          {t["hero.tag"]}
         </div>
 
-        <h1 class="display aberrate text-[clamp(3.4rem,12vw,10rem)] text-[var(--color-phosphor)] font-normal leading-[0.85]">
-          NEFTALI<br/>OD<span class="text-[var(--color-amber)]">Í</span>N.
+        <h1
+          class="relative z-1 display aberrate text-[clamp(2.8rem,11vw,10rem)] text-[var(--color-phosphor)] font-normal leading-[0.9] sm:leading-[0.85] wrap-break-word"
+        >
+          NEFTALI<br />OD<span class="text-[var(--color-amber)]">Í</span>N.
         </h1>
 
         <!-- Mobile/tablet: inline below pills -->
-        <div class="lg:hidden mt-10 w-full h-[280px] sm:h-[340px]">
+        <div
+          class="lg:hidden mt-12 mb-2 w-full h-[260px] sm:h-[340px] relative z-1"
+        >
           <CrtModel />
         </div>
 
-        <div class="mt-6 max-w-2xl text-base md:text-lg text-[var(--color-ink)]/90 leading-relaxed">
-          <p class="typewrite font-mono">
-            <span class="sigil">&gt;</span> Full Stack engineer. Morelia, MX. Status:
-            <span class="text-[var(--color-phosphor)] glow caret">AVAILABLE_</span>
-          </p>
+        <div
+          class="mt-8 max-w-2xl text-base md:text-lg text-[var(--color-ink)]/90 leading-relaxed relative z-1"
+        >
+          <p
+            class="typewrite font-mono"
+            data-i18n="hero.subtitle"
+            set:html={t["hero.subtitle"]}
+          />
         </div>
 
         <div class="mt-10 flex flex-wrap gap-3 text-xs md:text-sm">
@@ -179,46 +317,67 @@ const skills = {
 
         <div class="mt-12 flex flex-wrap items-center gap-4">
           <a href="#projects" class="no-underline">
-            <span class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-4 !py-2">▸ ls projects</span>
+            <span
+              class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-4 !py-2"
+              data-i18n="hero.btnProjects">{t["hero.btnProjects"]}</span
+            >
           </a>
           <a href="/CV_Neftali_Odin_Garcia.pdf" download class="no-underline">
-            <span class="pill !text-sm !px-4 !py-2">▼ download cv.pdf</span>
+            <span class="pill !text-sm !px-4 !py-2" data-i18n="hero.btnCv"
+              >{t["hero.btnCv"]}</span
+            >
           </a>
-          <button onclick="(window).__cmd?.hire()" class="no-underline cursor-pointer">
-            <span class="pill !text-[var(--color-amber)] !border-[var(--color-amber)] !text-sm !px-4 !py-2">$ sudo hire-me</span>
+          <button
+            onclick="(window).__cmd?.hire()"
+            class="no-underline cursor-pointer"
+          >
+            <span
+              class="pill !text-[var(--color-amber)] !border-[var(--color-amber)] !text-sm !px-4 !py-2"
+              data-i18n="hero.btnHire">{t["hero.btnHire"]}</span
+            >
           </button>
         </div>
 
-        <div class="absolute bottom-6 left-5 md:left-8 text-[var(--color-muted)] text-xs flex items-center gap-3">
-          <span class="inline-block w-2 h-2 rounded-full bg-[var(--color-phosphor)] glow"></span>
-          <span>scroll ↓ &nbsp;or press <kbd class="pill !py-[1px]">/</kbd></span>
+        <div
+          class="absolute bottom-6 left-5 md:left-8 text-[var(--color-muted)] text-xs flex items-center gap-3"
+        >
+          <span
+            class="inline-block w-2 h-2 rounded-full bg-[var(--color-phosphor)] glow"
+          ></span>
+          <span data-i18n="hero.scroll" set:html={t["hero.scroll"]} />
         </div>
       </div>
     </section>
 
     <!-- ============ ABOUT ============ -->
     <section id="about" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
-      <SectionHeader cmd="whoami" label="/etc/identity" />
+      <SectionHeader
+        cmd="whoami"
+        label={t["about.label"]}
+        labelKey="about.label"
+      />
 
       <div class="grid md:grid-cols-12 gap-8 md:gap-12">
-        <div class="md:col-span-7 text-[var(--color-ink)]/90 leading-relaxed text-sm md:text-base space-y-5">
-          <p>
-            Desarrollador <strong class="text-[var(--color-phosphor)] glow-soft">Full Stack</strong> con experiencia construyendo aplicaciones web de extremo a extremo — desde la interfaz hasta la infraestructura. Estudiante de <em>Ingeniería en Sistemas Computacionales</em> en el Instituto Tecnológico de Morelia (egreso 2026).
-          </p>
-          <p>
-            Bases sólidas en <span class="pill">JavaScript</span> <span class="pill">TypeScript</span>, ecosistemas <span class="pill">Vue · Nuxt</span> y <span class="pill">Laravel · Node</span>. Cómodo en entornos híbridos y remotos, trabajando con equipos distribuidos.
-          </p>
-          <p class="text-[var(--color-muted)] italic">
-            // tres roles activos en paralelo · una webapp en producción · una promesa: enviar código que funcione.
+        <div
+          class="md:col-span-7 text-[var(--color-ink)]/90 leading-relaxed text-sm md:text-base space-y-5"
+        >
+          <p data-i18n="about.p1" set:html={t["about.p1"]} />
+          <p data-i18n="about.p2" set:html={t["about.p2"]} />
+          <p class="text-[var(--color-muted)] italic" data-i18n="about.p3">
+            {t["about.p3"]}
           </p>
         </div>
 
         <aside class="md:col-span-5">
-          <div class="frame p-5 md:p-6 font-mono text-sm" data-label="stats.json">
+          <div
+            class="frame p-5 md:p-6 font-mono text-sm"
+            data-label="stats.json"
+          >
             <div class="space-y-2.5">
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">role</span>
-                <span class="text-[var(--color-phosphor)]">"fullstack_dev"</span>
+                <span class="text-[var(--color-phosphor)]">"fullstack_dev"</span
+                >
               </div>
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">loc</span>
@@ -230,7 +389,9 @@ const skills = {
               </div>
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">langs</span>
-                <span class="text-[var(--color-ink)]">["es-native", "en-B2+"]</span>
+                <span class="text-[var(--color-ink)]"
+                  >["es-native", "en-B2+"]</span
+                >
               </div>
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">active_roles</span>
@@ -251,100 +412,186 @@ const skills = {
     </section>
 
     <!-- ============ PROJECTS ============ -->
-    <section id="projects" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
-      <SectionHeader cmd="ls -la ./projects" label={`${projects.length} items`} />
+    <section
+      id="projects"
+      class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+    >
+      <SectionHeader
+        cmd="ls -la ./projects"
+        label={t["projects.label"]}
+        labelKey="projects.label"
+      />
 
       <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-        {projects.map((p, i) => (
-          <article
-            class={`frame glitch p-6 md:p-7 relative ${i === 0 ? "md:col-span-2" : ""}`}
-            data-label={`./${p.slug}.md`}
-          >
-            <div class="flex items-start justify-between gap-4 mb-3 flex-wrap">
-              <div>
-                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">{p.org}</div>
-                <h3 class={`display ${i === 0 ? "text-5xl md:text-7xl" : "text-4xl md:text-5xl"} text-[var(--color-phosphor)] glow-soft glitch-target mt-1`}>{p.name}</h3>
+        {
+          projects.map((p, i) => (
+            <article
+              class={`frame glitch p-6 md:p-7 relative ${i === 0 ? "md:col-span-2" : ""}`}
+              data-label={`./${p.slug}.md`}
+            >
+              <div class="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                <div>
+                  <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">
+                    {p.org}
+                  </div>
+                  <h3
+                    class={`display ${i === 0 ? "text-5xl md:text-7xl" : "text-4xl md:text-5xl"} text-[var(--color-phosphor)] glow-soft glitch-target mt-1`}
+                  >
+                    {p.name}
+                  </h3>
+                </div>
+                <span
+                  class={`pill ${p.status === "PROD" ? "!text-[var(--color-amber)] !border-[var(--color-amber)]" : ""}`}
+                >
+                  ● {p.status}
+                </span>
               </div>
-              <span class={`pill ${p.status === "PROD" ? "!text-[var(--color-amber)] !border-[var(--color-amber)]" : ""}`}>● {p.status}</span>
-            </div>
 
-            <div class="text-xs text-[var(--color-muted)] mb-4">
-              {p.role} · <span class="text-[var(--color-ink)]/70">{p.period}</span>
-            </div>
+              <div class="text-xs text-[var(--color-muted)] mb-4">
+                <span data-i18n={`proj-${i}-role`}>
+                  {t[`proj-${i}-role`] ?? p.role}
+                </span>{" "}
+                ·{" "}
+                <span
+                  class="text-[var(--color-ink)]/70"
+                  data-i18n={`proj-${i}-period`}
+                >
+                  {t[`proj-${i}-period`] ?? p.period}
+                </span>
+              </div>
 
-            <p class="text-sm md:text-[15px] text-[var(--color-ink)]/85 leading-relaxed mb-5">
-              {p.summary}
-            </p>
+              <p
+                class="text-sm md:text-[15px] text-[var(--color-ink)]/85 leading-relaxed mb-5"
+                data-i18n={`proj-${i}-summary`}
+              >
+                {t[`proj-${i}-summary`] ?? p.summary}
+              </p>
 
-            <div class="flex flex-wrap gap-1.5 mb-5">
-              {p.stack.map((s) => <span class="pill">{s}</span>)}
-            </div>
+              <div class="flex flex-wrap gap-1.5 mb-5">
+                {p.stack.map((s) => (
+                  <span class="pill">{s}</span>
+                ))}
+              </div>
 
-            {p.prod && (
-              <a href={p.prod} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm">
-                <span class="sigil">↗</span> {p.prod.replace("https://", "")}
-              </a>
-            )}
-          </article>
-        ))}
+              {p.prod && (
+                <a
+                  href={p.prod}
+                  target="_blank"
+                  rel="noopener"
+                  class="inline-flex items-center gap-2 text-sm"
+                >
+                  <span class="sigil">↗</span> {p.prod.replace("https://", "")}
+                </a>
+              )}
+            </article>
+          ))
+        }
       </div>
     </section>
 
     <!-- ============ EXPERIENCE ============ -->
-    <section id="experience" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
-      <SectionHeader cmd="cat experience.log" label="3 entries" />
+    <section
+      id="experience"
+      class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+    >
+      <SectionHeader
+        cmd="cat experience.log"
+        label={t["experience.label"]}
+        labelKey="experience.label"
+      />
 
       <div class="frame p-5 md:p-8 font-mono text-sm" data-label="tail -f">
         <div class="space-y-1.5">
-          {experience.map((e) => (
-            <details class="group border-b border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] last:border-b-0 py-2">
-              <summary class="cursor-pointer list-none flex flex-wrap items-center gap-x-4 gap-y-1 hover:bg-[color-mix(in_srgb,var(--color-phosphor)_5%,transparent)] -mx-2 px-2 py-1.5 rounded-sm">
-                <span class="text-[var(--color-muted)]">{e.date}</span>
-                <span class="text-[var(--color-phosphor)] w-40 truncate">{e.host}</span>
-                <span class="pill !text-[10px]">[{e.role}]</span>
-                <span class={`text-xs ${e.state === "HIRED" ? "text-[var(--color-amber)]" : "text-[var(--color-phosphor)]"}`}>{e.state}</span>
-                <span class="ml-auto text-[var(--color-muted)] text-xs group-open:rotate-90 transition-transform">▸</span>
-              </summary>
-              <div class="pl-2 md:pl-44 pt-3 pb-2 text-[var(--color-ink)]/90 space-y-2">
-                <div>
-                  <span class="text-[var(--color-amber)]">{e.title}</span>
-                  <span class="text-[var(--color-muted)]"> · {e.org} · {e.mode}</span>
+          {
+            experience.map((e) => (
+              <details class="group border-b border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] last:border-b-0 py-2">
+                <summary class="cursor-pointer list-none flex flex-wrap items-center gap-x-4 gap-y-1 hover:bg-[color-mix(in_srgb,var(--color-phosphor)_5%,transparent)] -mx-2 px-2 py-1.5 rounded-sm">
+                  <span class="text-[var(--color-muted)]">{e.date}</span>
+                  <span class="text-[var(--color-phosphor)] w-40 truncate">
+                    {e.host}
+                  </span>
+                  <span class="pill !text-[10px]">[{e.role}]</span>
+                  <span
+                    class={`text-xs ${e.state === "HIRED" ? "text-[var(--color-amber)]" : "text-[var(--color-phosphor)]"}`}
+                  >
+                    {e.state}
+                  </span>
+                  <span class="ml-auto text-[var(--color-muted)] text-xs group-open:rotate-90 transition-transform">
+                    ▸
+                  </span>
+                </summary>
+                <div class="pl-2 md:pl-44 pt-3 pb-2 text-[var(--color-ink)]/90 space-y-2">
+                  <div>
+                    <span
+                      class="text-[var(--color-amber)]"
+                      data-i18n={`exp-${e.id}-title`}
+                    >
+                      {t[`exp-${e.id}-title`] ?? e.title}
+                    </span>
+                    <span class="text-[var(--color-muted)]">
+                      {" "}
+                      · {e.org} ·{" "}
+                      <span data-i18n={`exp-${e.id}-mode`}>
+                        {t[`exp-${e.id}-mode`] ?? e.mode}
+                      </span>
+                    </span>
+                  </div>
+                  <ul class="list-none space-y-1">
+                    {e.bullets.map((b, bi) => (
+                      <li class="flex gap-2 text-[13px]">
+                        <span class="sigil shrink-0">—</span>
+                        <span data-i18n={`exp-${e.id}-b${bi}`}>
+                          {t[`exp-${e.id}-b${bi}`] ?? b}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div class="flex flex-wrap gap-1.5 pt-1">
+                    {e.tech.map((t) => (
+                      <span class="pill !text-[10px]">{t}</span>
+                    ))}
+                  </div>
                 </div>
-                <ul class="list-none space-y-1">
-                  {e.bullets.map((b) => (
-                    <li class="flex gap-2 text-[13px]">
-                      <span class="sigil shrink-0">—</span><span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div class="flex flex-wrap gap-1.5 pt-1">
-                  {e.tech.map((t) => <span class="pill !text-[10px]">{t}</span>)}
-                </div>
-              </div>
-            </details>
-          ))}
+              </details>
+            ))
+          }
         </div>
       </div>
     </section>
 
     <!-- ============ SKILLS ============ -->
-    <section id="skills" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
+    <section
+      id="skills"
+      class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+    >
       <SectionHeader cmd="cat skills.json | jq" label="object" />
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {Object.entries(skills).map(([cat, items]) => (
-          <div class="frame p-5" data-label={cat.toLowerCase().replace(/[^a-z]/g, "_")}>
-            <div class="text-[var(--color-amber)] text-xs uppercase tracking-widest mb-3">{cat}</div>
-            <div class="flex flex-wrap gap-1.5">
-              {items.map((s) => <span class="pill">{s}</span>)}
+        {
+          skills.map((cat) => (
+            <div class="frame p-5" data-label={cat.key.toLowerCase()}>
+              <div
+                class="text-[var(--color-amber)] text-xs uppercase tracking-widest mb-3"
+                data-i18n={`skills.${cat.key}`}
+              >
+                {t[`skills.${cat.key}`] ?? cat.key}
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                {cat.items.map((s) => (
+                  <span class="pill">{s}</span>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </section>
 
     <!-- ============ CONTACT ============ -->
-    <section id="contact" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
+    <section
+      id="contact"
+      class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+    >
       <SectionHeader cmd="mail compose" label="--new" />
 
       <div class="grid md:grid-cols-12 gap-8">
@@ -356,76 +603,292 @@ const skills = {
           data-label="/dev/stdin"
         >
           <input type="hidden" name="_subject" value="Portfolio inbound" />
-          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+          <input
+            type="text"
+            name="_honey"
+            style="display:none"
+            tabindex="-1"
+            autocomplete="off"
+          />
 
           <label class="block">
-            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">to:</span>
-            <div class="mt-1 text-[var(--color-phosphor)]">odingarra@gmail.com <span class="text-[var(--color-muted)]">// locked</span></div>
+            <span
+              class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+              >to:</span
+            >
+            <div class="mt-1 text-[var(--color-phosphor)]">
+              odingarra@gmail.com <span
+                class="text-[var(--color-muted)]"
+                data-i18n="contact.locked">{t["contact.locked"]}</span>
+            </div>
           </label>
 
           <label class="block">
-            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">from:</span>
-            <input type="email" name="email" required placeholder="you@domain.com"
-              class="mt-1 w-full bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]" />
+            <span
+              class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+              >from:</span
+            >
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="you@domain.com"
+              class="mt-1 w-full bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]"
+            />
           </label>
 
           <label class="block">
-            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">subject:</span>
-            <input type="text" name="subject" required placeholder="re: full-stack role"
-              class="mt-1 w-full bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]" />
+            <span
+              class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+              >subject:</span
+            >
+            <input
+              type="text"
+              name="subject"
+              required
+              placeholder={t["contact.subjectPlaceholder"]}
+              data-i18n-attr={`placeholder:contact.subjectPlaceholder`}
+              class="mt-1 w-full bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]"
+            />
           </label>
 
           <label class="block">
-            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">body:</span>
-            <textarea name="message" required rows="6" placeholder="// write your message — hit send"
-              class="mt-1 w-full bg-transparent border border-[color-mix(in_srgb,var(--color-phosphor)_25%,transparent)] outline-none p-3 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)] resize-none"></textarea>
+            <span
+              class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+              >body:</span
+            >
+            <textarea
+              name="message"
+              required
+              rows="6"
+              placeholder={t["contact.bodyPlaceholder"]}
+              data-i18n-attr={`placeholder:contact.bodyPlaceholder`}
+              class="mt-1 w-full bg-transparent border border-[color-mix(in_srgb,var(--color-phosphor)_25%,transparent)] outline-none p-3 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)] resize-none"
+            ></textarea>
           </label>
 
-          <button type="submit" class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-5 !py-2 cursor-pointer hover:!bg-[var(--color-amber)] hover:!border-[var(--color-amber)] transition-colors">
-            ▶ send · ENTER
+          <!-- Captcha: in-page math challenge + honeypot + min-time check -->
+          <div class="block">
+            <span
+              class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+              >captcha:</span
+            >
+            <div class="mt-1 flex items-center gap-3 flex-wrap">
+              <code
+                id="captcha-q"
+                class="text-[var(--color-phosphor)] glow-soft text-sm"
+                >$ echo $((? + ?))</code
+              >
+              <input
+                id="captcha-input"
+                name="captcha_answer"
+                type="text"
+                inputmode="numeric"
+                pattern="-?\\d+"
+                autocomplete="off"
+                required
+                placeholder="= ?"
+                class="bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 px-2 w-24 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]"
+              />
+              <button
+                type="button"
+                id="captcha-refresh"
+                aria-label="refresh captcha"
+                class="text-[var(--color-muted)] hover:text-[var(--color-phosphor)] cursor-pointer text-xs"
+                >↻ new</button
+              >
+              <span id="captcha-status" class="text-xs ml-auto"></span>
+            </div>
+            <input
+              type="hidden"
+              id="captcha-expected"
+              name="captcha_expected"
+              value=""
+            />
+            <input type="hidden" id="form-ts" name="form_ts" value="" />
+          </div>
+
+          <button
+            type="submit"
+            id="contact-submit"
+            class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-5 !py-2 cursor-pointer hover:!bg-[var(--color-amber)] hover:!border-[var(--color-amber)] transition-colors"
+            data-i18n="contact.send"
+          >
+            {t["contact.send"]}
           </button>
         </form>
+
+        <script>
+          (() => {
+            const form = document.getElementById(
+              "contact-form",
+            ) as HTMLFormElement | null;
+            if (!form) return;
+            const qEl = document.getElementById("captcha-q")!;
+            const expectedEl = document.getElementById(
+              "captcha-expected",
+            ) as HTMLInputElement;
+            const inputEl = document.getElementById(
+              "captcha-input",
+            ) as HTMLInputElement;
+            const statusEl = document.getElementById("captcha-status")!;
+            const tsEl = document.getElementById("form-ts") as HTMLInputElement;
+            const refresh = document.getElementById("captcha-refresh")!;
+
+            const rand = (min: number, max: number) =>
+              Math.floor(Math.random() * (max - min + 1)) + min;
+            const ops = ["+", "-", "×"] as const;
+            type Op = (typeof ops)[number];
+
+            function newChallenge() {
+              const a = rand(2, 12);
+              const b = rand(2, 12);
+              const op: Op = ops[rand(0, ops.length - 1)];
+              let answer = 0;
+              if (op === "+") answer = a + b;
+              else if (op === "-") answer = a - b;
+              else answer = a * b;
+              qEl.textContent = `$ echo $((${a} ${op === "×" ? "*" : op} ${b}))`;
+              expectedEl.value = String(answer);
+              inputEl.value = "";
+              statusEl.textContent = "";
+              statusEl.removeAttribute("style");
+            }
+
+            newChallenge();
+            tsEl.value = String(Date.now());
+            refresh.addEventListener("click", newChallenge);
+
+            inputEl.addEventListener("input", () => {
+              if (inputEl.value.trim() === expectedEl.value) {
+                statusEl.textContent = "✓ ok";
+                statusEl.style.color = "var(--color-phosphor)";
+              } else {
+                statusEl.textContent = "";
+              }
+            });
+
+            form.addEventListener("submit", (e) => {
+              // honeypot
+              const honey = form.querySelector<HTMLInputElement>(
+                'input[name="_honey"]',
+              );
+              if (honey && honey.value) {
+                e.preventDefault();
+                return;
+              }
+
+              // min-time: reject submissions under 3s (bot signal)
+              const elapsed = Date.now() - Number(tsEl.value || 0);
+              if (elapsed < 3000) {
+                e.preventDefault();
+                statusEl.textContent = "✗ too fast — try again";
+                statusEl.style.color = "var(--color-magenta)";
+                return;
+              }
+
+              // captcha
+              if (inputEl.value.trim() !== expectedEl.value) {
+                e.preventDefault();
+                statusEl.textContent = "✗ wrong — retry";
+                statusEl.style.color = "var(--color-magenta)";
+                inputEl.focus();
+                newChallenge();
+                return;
+              }
+            });
+          })();
+        </script>
 
         <aside class="md:col-span-5 space-y-4 text-sm">
           <div class="frame p-5" data-label="/etc/contacts">
             <div class="space-y-3">
               <div>
-                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">email</div>
+                <div
+                  class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+                >
+                  email
+                </div>
                 <a href="mailto:odingarra@gmail.com">odingarra@gmail.com</a>
               </div>
               <div>
-                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">tel</div>
+                <div
+                  class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+                >
+                  tel
+                </div>
                 <a href="tel:+5214432143605">+52 1 443 214 3605</a>
               </div>
               <div>
-                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">linkedin</div>
-                <a href="https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/" target="_blank" rel="noopener">in/neftali-odin-garcia-ramirez</a>
+                <div
+                  class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+                >
+                  linkedin
+                </div>
+                <a
+                  href="https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/"
+                  target="_blank"
+                  rel="noopener">in/neftali-odin-garcia-ramirez</a
+                >
               </div>
               <div>
-                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">loc</div>
-                <span class="text-[var(--color-ink)]">Morelia, Michoacán, MX · GMT-6</span>
+                <div
+                  class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
+                >
+                  loc
+                </div>
+                <span class="text-[var(--color-ink)]"
+                  >Morelia, Michoacán, MX · GMT-6</span
+                >
               </div>
             </div>
           </div>
 
           <div class="frame p-5" data-label="resume">
-            <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest mb-2">curriculum</div>
-            <a href="/CV_Neftali_Odin_Garcia.pdf" download class="inline-flex items-center gap-2">
+            <div
+              class="text-[var(--color-muted)] text-xs uppercase tracking-widest mb-2"
+              data-i18n="contact.cvLabel"
+            >
+              {t["contact.cvLabel"]}
+            </div>
+            <a
+              href="/CV_Neftali_Odin_Garcia.pdf"
+              download
+              class="inline-flex items-center gap-2"
+            >
               <span class="sigil">▼</span> CV_Neftali_Odin_Garcia.pdf
             </a>
-            <div class="text-[var(--color-muted)] text-[11px] mt-2">254 KB · ES · updated 2026-05</div>
+            <div
+              class="text-[var(--color-muted)] text-[11px] mt-2"
+              data-i18n="contact.cvMeta"
+            >
+              {t["contact.cvMeta"]}
+            </div>
           </div>
         </aside>
       </div>
     </section>
 
     <!-- ============ FOOTER ============ -->
-    <footer class="border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] mt-12">
-      <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 flex flex-wrap items-center justify-between gap-3 text-[11px] text-[var(--color-muted)] uppercase tracking-widest">
-        <div>© 2026 · neftali.odin · built with astro + tailwind</div>
+    <footer
+      class="border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] mt-12"
+    >
+      <div
+        class="max-w-6xl mx-auto px-5 md:px-8 py-8 flex flex-wrap items-center justify-between gap-3 text-[11px] text-[var(--color-muted)] uppercase tracking-widest"
+      >
+        <div>
+          © 2026 · neftali.odin · <span data-i18n="footer.built"
+            >{t["footer.built"]}</span>
+        </div>
         <div class="flex items-center gap-4">
-          <span>uptime: <span id="uptime" class="text-[var(--color-phosphor)]">--</span></span>
-          <span>hash: <span class="text-[var(--color-amber)]">a7f3c12</span></span>
+          <span
+            >uptime: <span id="uptime" class="text-[var(--color-phosphor)]"
+              >--</span
+            ></span
+          >
+          <span
+            >hash: <span class="text-[var(--color-amber)]">a7f3c12</span></span
+          >
           <span>EOF</span>
         </div>
       </div>
@@ -433,15 +896,54 @@ const skills = {
   </main>
 
   <script>
-    // Section wipe-in via IntersectionObserver
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          (e.target as HTMLElement).classList.add("in");
-          io.unobserve(e.target);
-        }
+    import { i18n, type Lang } from "../i18n";
+
+    const stored = localStorage.getItem("lang") as Lang | null;
+    let current: Lang = stored === "en" || stored === "es" ? stored : "es";
+
+    function apply(lang: Lang) {
+      const dict = i18n[lang];
+      document.documentElement.lang = lang;
+      document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (!key) return;
+        const val = dict[key];
+        if (val == null) return;
+        if (val.includes("<")) el.innerHTML = val;
+        else el.textContent = val;
       });
-    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+      document
+        .querySelectorAll<HTMLElement>("[data-i18n-attr]")
+        .forEach((el) => {
+          const spec = el.getAttribute("data-i18n-attr");
+          if (!spec) return;
+          const [attr, key] = spec.split(":");
+          const val = dict[key];
+          if (val != null) el.setAttribute(attr, val);
+        });
+      localStorage.setItem("lang", lang);
+      current = lang;
+    }
+
+    if (current !== "es") apply(current);
+
+    const toggle = document.getElementById("lang-toggle");
+    toggle?.addEventListener("click", () =>
+      apply(current === "es" ? "en" : "es"),
+    );
+
+    // Section wipe-in via IntersectionObserver
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.05 },
+    );
 
     const vh = window.innerHeight;
     document.querySelectorAll("section").forEach((s) => {
@@ -474,14 +976,33 @@ const skills = {
       const mins = Math.floor((ms % 3600000) / 60000);
       if (upt) upt.textContent = `${days}d ${hrs}h ${mins}m`;
     }
-    tick(); setInterval(tick, 60000);
+    tick();
+    setInterval(tick, 60000);
 
     // Konami → hire-me
-    const konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+    const konami = [
+      "ArrowUp",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowRight",
+      "b",
+      "a",
+    ];
     let ki = 0;
     window.addEventListener("keydown", (e) => {
-      if (e.key === konami[ki]) { ki++; if (ki === konami.length) { (window as any).__cmd?.hire(); ki = 0; } }
-      else { ki = 0; }
+      if (e.key === konami[ki]) {
+        ki++;
+        if (ki === konami.length) {
+          (window as any).__cmd?.hire();
+          ki = 0;
+        }
+      } else {
+        ki = 0;
+      }
     });
   </script>
 </BaseLayout>

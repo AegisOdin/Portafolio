@@ -31,13 +31,18 @@
   --color-ink: #ffd0f4;
 }
 
+html {
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
+}
+
 html, body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-mono);
   font-feature-settings: "calt", "ss01";
-  min-height: 100%;
-  overflow-x: hidden;
+  min-height: 100dvh;
 }
 
 body {
@@ -128,6 +133,17 @@ body {
 @keyframes tw {
   from { width: 0; }
   to   { width: 100%; }
+}
+
+/* On phones, nowrap clipping causes text to disappear behind layout.
+   Let it wrap and skip the width animation. */
+@media (max-width: 640px) {
+  .typewrite {
+    white-space: normal;
+    overflow: visible;
+    border-right: none;
+    animation: none;
+  }
 }
 
 /* Section wipe reveal */
@@ -245,6 +261,7 @@ a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent);
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .scanlines::before,
   .crt::after,
   .caret::after,
