@@ -1,0 +1,331 @@
+---
+// Command bar — press / to open
+---
+
+<div
+  id="cmdbar"
+  class="fixed inset-0 z-[90] hidden items-start justify-center bg-black/60 backdrop-blur-sm pt-[14vh] px-4"
+>
+  <div
+    class="frame w-full max-w-2xl p-0 bg-[var(--color-bg-elev)]"
+    data-label="cmd.exe"
+  >
+    <div
+      class="flex items-center gap-2 px-4 py-3 border-b border-[color-mix(in_srgb,var(--color-phosphor)_25%,transparent)]"
+    >
+      <span class="sigil">➜</span>
+      <span class="text-[var(--color-muted)]">~/portfolio</span>
+      <span class="sigil">$</span>
+      <input
+        id="cmd-input"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        class="flex-1 bg-transparent outline-none text-[var(--color-ink)] placeholder:text-[var(--color-muted)] caret-[var(--color-phosphor)]"
+        placeholder="type a command — try `help`"
+      />
+    </div>
+    <ul id="cmd-list" class="max-h-[50vh] overflow-y-auto py-2"></ul>
+    <div
+      class="px-4 py-2 border-t border-[color-mix(in_srgb,var(--color-phosphor)_25%,transparent)] text-[11px] text-[var(--color-muted)] flex justify-between"
+    >
+      <span
+        ><span class="sigil">↑↓</span> navigate · <span class="sigil">⏎</span> run
+        · <span class="sigil">esc</span> close</span
+      >
+      <span id="cmd-hint" class="hidden md:inline"
+        >tip: <span class="text-[var(--color-amber)]">sudo hire-me</span></span
+      >
+    </div>
+  </div>
+</div>
+
+<!-- Easter egg modal -->
+<div
+  id="hire-modal"
+  class="fixed inset-0 z-[95] hidden items-center justify-center bg-black/80 px-4"
+>
+  <div
+    class="frame max-w-lg w-full p-6 bg-[var(--color-bg-elev)]"
+    data-label="/dev/hire"
+  >
+    <div class="text-[var(--color-amber)] text-xs mb-3 glow-soft">
+      [ root@neftali ~ ]# sudo hire-me
+    </div>
+    <h3 class="display text-4xl text-[var(--color-phosphor)] aberrate mb-3">
+      PERMISSION_GRANTED
+    </h3>
+    <p class="text-[var(--color-ink)]/90 mb-4 text-sm">
+      Available for full-stack roles — hybrid (Morelia) or remote. Open to
+      internship-to-fulltime conversions.
+    </p>
+    <div class="flex flex-wrap gap-3 text-sm">
+      <a
+        href="/CV_Neftali_Odin_Garcia.pdf"
+        download
+        class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] no-underline"
+        >▼ download CV</a
+      >
+      <a href="mailto:odingarra@gmail.com" class="pill no-underline">✉ email</a>
+      <a
+        href="https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/"
+        target="_blank"
+        rel="noopener"
+        class="pill no-underline">⌗ linkedin</a
+      >
+    </div>
+    <button
+      id="hire-close"
+      class="absolute top-2 right-3 text-[var(--color-muted)] hover:text-[var(--color-phosphor)]"
+      aria-label="close">[ x ]</button
+    >
+  </div>
+</div>
+
+<!-- Toast -->
+<div
+  id="toast"
+  class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[120] hidden frame px-4 py-2 bg-[var(--color-bg-elev)] text-sm"
+  data-label="stdout"
+>
+</div>
+
+<!-- Floating hint -->
+<div
+  class="hidden md:flex fixed bottom-4 right-4 z-[50] items-center gap-2 text-[11px] text-[var(--color-muted)] pointer-events-none"
+>
+  press <kbd class="pill !py-[1px]">/</kbd> for cmd
+</div>
+
+<script>
+  type Cmd = { name: string; desc: string; run: () => void };
+
+  const $ = <T extends HTMLElement>(s: string) =>
+    document.querySelector(s) as T;
+  const bar = $("#cmdbar")!;
+  const input = $<HTMLInputElement>("#cmd-input")!;
+  const list = $("#cmd-list")!;
+  const hireModal = $("#hire-modal")!;
+  const toast = $("#toast")!;
+
+  function showToast(msg: string) {
+    toast.textContent = msg;
+    toast.classList.remove("hidden");
+    clearTimeout((showToast as any)._t);
+    (showToast as any)._t = setTimeout(
+      () => toast.classList.add("hidden"),
+      1800,
+    );
+  }
+
+  function scrollTo(id: string) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function setTheme(t: string) {
+    const valid = ["green", "amber", "magenta"];
+    if (!valid.includes(t)) {
+      showToast(`theme: unknown '${t}'`);
+      return;
+    }
+    if (t === "green") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", t);
+    localStorage.setItem("theme", t);
+    showToast(`theme → ${t}`);
+  }
+
+  function openHire() {
+    hireModal.classList.remove("hidden");
+    hireModal.classList.add("flex");
+  }
+  function closeHire() {
+    hireModal.classList.add("hidden");
+    hireModal.classList.remove("flex");
+  }
+  $("#hire-close")!.addEventListener("click", closeHire);
+  hireModal.addEventListener("click", (e) => {
+    if (e.target === hireModal) closeHire();
+  });
+
+  const commands: Cmd[] = [
+    { name: "whoami", desc: "→ about me", run: () => scrollTo("about") },
+    {
+      name: "ls projects",
+      desc: "→ list projects",
+      run: () => scrollTo("projects"),
+    },
+    {
+      name: "cat experience.log",
+      desc: "→ work history",
+      run: () => scrollTo("experience"),
+    },
+    {
+      name: "cat skills.json",
+      desc: "→ tech stack",
+      run: () => scrollTo("skills"),
+    },
+    { name: "mail", desc: "→ contact", run: () => scrollTo("contact") },
+    {
+      name: "open appbeperfect",
+      desc: "→ live demo · Spa Be Perfect",
+      run: () => window.open("https://appbeperfect.com", "_blank"),
+    },
+    {
+      name: "theme green",
+      desc: "→ phosphor green (default)",
+      run: () => setTheme("green"),
+    },
+    { name: "theme amber", desc: "→ amber CRT", run: () => setTheme("amber") },
+    {
+      name: "theme magenta",
+      desc: "→ vaporwave magenta",
+      run: () => setTheme("magenta"),
+    },
+    {
+      name: "download cv",
+      desc: "→ get pdf",
+      run: () => {
+        window.location.href = "/CV_Neftali_Odin_Garcia.pdf";
+      },
+    },
+    {
+      name: "github",
+      desc: "→ github.com/...",
+      run: () => window.open("https://github.com/", "_blank"),
+    },
+    {
+      name: "linkedin",
+      desc: "→ linkedin profile",
+      run: () =>
+        window.open(
+          "https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/",
+          "_blank",
+        ),
+    },
+    { name: "sudo hire-me", desc: "→ ★ unlock contact", run: openHire },
+    { name: "clear", desc: "→ close bar", run: closeBar },
+    { name: "help", desc: "→ show all commands", run: () => render(commands) },
+  ];
+
+  let sel = 0;
+  let current: Cmd[] = commands;
+
+  function render(items: Cmd[]) {
+    current = items;
+    sel = 0;
+    list.innerHTML = items
+      .map(
+        (c, i) => `
+      <li data-i="${i}" class="px-4 py-2 flex justify-between gap-4 cursor-pointer text-sm ${i === 0 ? "bg-[color-mix(in_srgb,var(--color-phosphor)_12%,transparent)] text-[var(--color-phosphor)]" : "text-[var(--color-ink)]/85 hover:bg-[color-mix(in_srgb,var(--color-phosphor)_6%,transparent)]"}">
+        <span><span class="sigil mr-2">▸</span>${c.name}</span>
+        <span class="text-[var(--color-muted)] text-[11px] hidden sm:inline">${c.desc}</span>
+      </li>
+    `,
+      )
+      .join("");
+    list.querySelectorAll("li").forEach((li) => {
+      li.addEventListener("click", () => {
+        const i = Number((li as HTMLElement).dataset.i);
+        execute(current[i]);
+      });
+    });
+  }
+
+  function filter(q: string) {
+    q = q.trim().toLowerCase();
+    if (!q) {
+      render(commands);
+      return;
+    }
+    const ranked = commands
+      .map((c) => ({ c, score: rank(c.name, q) + rank(c.desc, q) * 0.3 }))
+      .filter((x) => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((x) => x.c);
+    render(ranked.length ? ranked : commands);
+  }
+
+  function rank(text: string, q: string): number {
+    text = text.toLowerCase();
+    if (text === q) return 100;
+    if (text.startsWith(q)) return 50;
+    if (text.includes(q)) return 20;
+    let qi = 0;
+    for (const ch of text) {
+      if (ch === q[qi]) qi++;
+      if (qi === q.length) return 5;
+    }
+    return 0;
+  }
+
+  function highlight() {
+    list.querySelectorAll("li").forEach((li, i) => {
+      const active = i === sel;
+      li.className = `px-4 py-2 flex justify-between gap-4 cursor-pointer text-sm ${active ? "bg-[color-mix(in_srgb,var(--color-phosphor)_12%,transparent)] text-[var(--color-phosphor)]" : "text-[var(--color-ink)]/85 hover:bg-[color-mix(in_srgb,var(--color-phosphor)_6%,transparent)]"}`;
+    });
+  }
+
+  function execute(c?: Cmd) {
+    if (!c) return;
+    closeBar();
+    setTimeout(() => c.run(), 80);
+  }
+
+  function openBar() {
+    bar.classList.remove("hidden");
+    bar.classList.add("flex");
+    input.value = "";
+    render(commands);
+    setTimeout(() => input.focus(), 10);
+  }
+
+  function closeBar() {
+    bar.classList.add("hidden");
+    bar.classList.remove("flex");
+  }
+
+  input.addEventListener("input", () => filter(input.value));
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      sel = Math.min(sel + 1, current.length - 1);
+      highlight();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      sel = Math.max(sel - 1, 0);
+      highlight();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      execute(current[sel]);
+    } else if (e.key === "Escape") {
+      closeBar();
+    }
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (
+      e.key === "/" &&
+      document.activeElement?.tagName !== "INPUT" &&
+      document.activeElement?.tagName !== "TEXTAREA"
+    ) {
+      e.preventDefault();
+      openBar();
+    } else if (e.key === "Escape") {
+      if (!hireModal.classList.contains("hidden")) closeHire();
+      else closeBar();
+    }
+  });
+
+  bar.addEventListener("click", (e) => {
+    if (e.target === bar) closeBar();
+  });
+
+  // Persist theme
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme && savedTheme !== "green")
+    document.documentElement.setAttribute("data-theme", savedTheme);
+
+  // Expose for global triggers
+  (window as any).__cmd = { open: openBar, hire: openHire };
+</script>

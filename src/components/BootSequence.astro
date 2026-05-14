@@ -1,0 +1,86 @@
+---
+// Boot sequence — plays once per session
+---
+<div id="boot" class="fixed inset-0 z-[100] bg-[var(--color-bg)] text-[var(--color-phosphor)] font-mono text-[13px] md:text-[14px] leading-[1.5] p-6 md:p-10 overflow-hidden hidden">
+  <div class="max-w-3xl mx-auto pt-[10vh]" id="boot-stream">
+    <pre class="text-[var(--color-amber)] glow-soft mb-6 text-[10px] md:text-[12px] leading-[1.05] whitespace-pre">
+███╗   ██╗ ██████╗  ██████╗     ██████╗ ███████╗
+████╗  ██║██╔═══██╗██╔════╝    ██╔═══██╗██╔════╝
+██╔██╗ ██║██║   ██║██║  ███╗   ██║   ██║███████╗
+██║╚██╗██║██║   ██║██║   ██║   ██║   ██║╚════██║
+██║ ╚████║╚██████╔╝╚██████╔╝██╗╚██████╔╝███████║
+╚═╝  ╚═══╝ ╚═════╝  ╚═════╝ ╚═╝ ╚═════╝ ╚══════╝
+   nog-os v26.05 · phosphor build · MX-mor
+</pre>
+    <div id="boot-lines"></div>
+    <div class="mt-6 text-[var(--color-muted)] text-xs"><span class="sigil">[esc]</span> skip · <span class="sigil">[any key]</span> continue</div>
+  </div>
+</div>
+
+<script>
+  const KEY = "nog_boot_done_v1";
+  const boot = document.getElementById("boot")!;
+  const lines = document.getElementById("boot-lines")!;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const seq: Array<[string, number]> = [
+    ["[ OK ] CPU ............... 1x neftali.cortex @ 3.6 GHz", 60],
+    ["[ OK ] MEMORY ............ 16 GiB ECC", 50],
+    ["[ OK ] DISK .............. /dev/sda — ext4 mounted", 50],
+    ["[ OK ] NETWORK ........... eth0 up · MX-MOR-01", 80],
+    ["[ .. ] AUTH .............. validating identity", 220],
+    ["[ OK ] AUTH .............. neftali.odin verified", 80],
+    ["[ OK ] LOCALE ............ es_MX.UTF-8 (en_US fallback)", 60],
+    ["[ OK ] STACK ............. ts · vue · nuxt · laravel · node", 60],
+    ["[ OK ] DAEMON ............ portfolio.service started", 120],
+    ["", 60],
+    ["welcome, visitor. press / to summon command bar.", 0],
+  ];
+
+  function done() {
+    boot.style.transition = "opacity .35s ease, filter .35s ease";
+    boot.style.opacity = "0";
+    boot.style.filter = "blur(6px)";
+    setTimeout(() => { boot.classList.add("hidden"); boot.remove(); }, 360);
+    sessionStorage.setItem(KEY, "1");
+  }
+
+  function run() {
+    if (sessionStorage.getItem(KEY)) return;
+    boot.classList.remove("hidden");
+
+    if (reduced) {
+      lines.innerHTML = seq.map(([t]) => `<div>${t}</div>`).join("");
+      setTimeout(done, 600);
+      return;
+    }
+
+    let i = 0;
+    function next() {
+      if (i >= seq.length) { setTimeout(done, 500); return; }
+      const [t, d] = seq[i++];
+      const div = document.createElement("div");
+      div.textContent = t;
+      if (t.startsWith("[ OK ]")) div.style.color = "var(--color-phosphor)";
+      if (t.startsWith("[ .. ]")) div.style.color = "var(--color-amber)";
+      if (t.startsWith("welcome")) {
+        div.style.color = "var(--color-amber)";
+        div.classList.add("glow-soft");
+      }
+      lines.appendChild(div);
+      setTimeout(next, d);
+    }
+    next();
+
+    const skip = (e: KeyboardEvent | MouseEvent) => {
+      if (e instanceof KeyboardEvent && e.key !== "Escape" && e.key !== "Enter" && e.key !== " ") return;
+      done();
+      window.removeEventListener("keydown", skip as any);
+      window.removeEventListener("click", skip as any);
+    };
+    window.addEventListener("keydown", skip);
+    window.addEventListener("click", skip);
+  }
+
+  run();
+</script>

@@ -1,0 +1,14 @@
+---
+interface Props { cmd: string; label?: string; }
+const { cmd, label } = Astro.props;
+---
+<header class="mb-8 md:mb-12">
+  <div class="flex items-baseline gap-3 flex-wrap">
+    <span class="sigil text-sm">neftali@portfolio</span>
+    <span class="text-[var(--color-muted)] text-sm">~</span>
+    <span class="sigil text-sm">$</span>
+    <code class="text-[var(--color-phosphor)] glow-soft text-sm md:text-base">{cmd}</code>
+    {label && <span class="text-[var(--color-muted)] text-xs ml-auto">// {label}</span>}
+  </div>
+  <hr class="mt-3 border-0 h-px bg-gradient-to-r from-[var(--color-phosphor)] via-[color-mix(in_srgb,var(--color-phosphor)_40%,transparent)] to-transparent" />
+</header>

@@ -1,0 +1,263 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0e0a;
+  --color-bg-elev: #0f140f;
+  --color-phosphor: #39ff14;
+  --color-phosphor-dim: #1f8a0c;
+  --color-amber: #ffb000;
+  --color-magenta: #ff2bd6;
+  --color-cyan: #00f0ff;
+  --color-muted: #6f8a6a;
+  --color-ink: #c8ffb6;
+
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-crt: "VT323", "Courier New", monospace;
+}
+
+:root {
+  --accent: var(--color-phosphor);
+  --accent-glow: 0 0 6px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 40%, transparent);
+  color-scheme: dark;
+}
+
+:root[data-theme="amber"] {
+  --accent: var(--color-amber);
+  --color-ink: #ffe7b0;
+}
+
+:root[data-theme="magenta"] {
+  --accent: var(--color-magenta);
+  --color-ink: #ffd0f4;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-feature-settings: "calt", "ss01";
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.55) 100%),
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Scanlines overlay — fixed, non-interactive */
+.scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,0,0,0.18) 3px,
+    rgba(0,0,0,0) 4px
+  );
+  mix-blend-mode: multiply;
+  z-index: 60;
+  animation: scanmove 8s linear infinite;
+}
+
+@keyframes scanmove {
+  from { background-position: 0 0; }
+  to   { background-position: 0 100px; }
+}
+
+/* Subtle CRT flicker on whole viewport */
+.crt::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+  z-index: 59;
+  animation: flicker 2.8s infinite steps(8);
+  mix-blend-mode: screen;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.35; }
+  10%      { opacity: 0.55; }
+  20%      { opacity: 0.30; }
+  35%      { opacity: 0.50; }
+  60%      { opacity: 0.32; }
+  80%      { opacity: 0.46; }
+}
+
+/* Phosphor glow utility */
+.glow      { text-shadow: var(--accent-glow); }
+.glow-soft { text-shadow: 0 0 4px color-mix(in srgb, var(--accent) 50%, transparent); }
+
+/* Chromatic aberration on H1 */
+.aberrate {
+  text-shadow:
+    -1px 0 0 rgba(255, 0, 80, 0.65),
+     1px 0 0 rgba(0, 200, 255, 0.55),
+     0 0 8px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+/* Blinking caret */
+.caret::after {
+  content: "▮";
+  display: inline-block;
+  margin-left: 0.15em;
+  color: var(--accent);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Typewriter line */
+.typewrite {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 0.6ch solid transparent;
+  animation: tw 1.6s steps(40, end) 0.2s both;
+}
+
+@keyframes tw {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Section wipe reveal */
+.wipe { clip-path: inset(0 100% 0 0); transition: clip-path 0.9s cubic-bezier(.2,.7,.1,1); }
+.wipe.in { clip-path: inset(0 0 0 0); }
+
+/* ASCII frame card */
+.frame {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 4%, transparent), transparent);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(0,0,0,0.3),
+    0 0 22px -8px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.frame::before,
+.frame::after {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: color-mix(in srgb, var(--accent) 70%, transparent);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.frame::before {
+  content: "● ● ●";
+  top: -0.7em;
+  left: 0.8em;
+  background: var(--color-bg);
+  padding: 0 0.4em;
+  color: var(--color-amber);
+  letter-spacing: 0.2em;
+}
+
+.frame::after {
+  content: attr(data-label);
+  top: -0.7em;
+  right: 0.8em;
+  background: var(--color-bg);
+  padding: 0 0.4em;
+}
+
+/* Glitch hover for cards */
+.glitch:hover .glitch-target {
+  animation: glitch 0.5s steps(4) 1;
+}
+
+@keyframes glitch {
+  0%   { transform: translate(0); filter: none; }
+  20%  { transform: translate(-1px, 1px); text-shadow: -2px 0 var(--color-magenta), 2px 0 var(--color-cyan); }
+  40%  { transform: translate(1px, -1px); text-shadow: 2px 0 var(--color-magenta), -2px 0 var(--color-cyan); }
+  60%  { transform: translate(-1px, -1px); }
+  100% { transform: translate(0); text-shadow: none; }
+}
+
+/* Selection */
+::selection {
+  background: var(--accent);
+  color: var(--color-bg);
+  text-shadow: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  border: 2px solid var(--color-bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  text-underline-offset: 3px;
+  transition: text-shadow 0.2s, text-decoration-color 0.2s;
+}
+a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent); }
+
+/* Pill */
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ink) 90%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+
+/* Prompt sigil */
+.sigil { color: var(--color-amber); }
+
+/* Grid bg */
+.grid-bg {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 6%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+
+/* Display H */
+.display {
+  font-family: var(--font-crt);
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .scanlines::before,
+  .crt::after,
+  .caret::after,
+  .typewrite { animation: none !important; }
+  .typewrite { width: auto; white-space: normal; border-right: none; }
+  .wipe { clip-path: none; }
+}
+
+/* Print — clean ATS view */
+@media print {
+  .scanlines::before, .crt::after { display: none; }
+  body { background: white; color: black; }
+  a { color: black; text-shadow: none; }
+  .frame { border-color: #333; box-shadow: none; }
+  .display { font-family: serif; }
+}

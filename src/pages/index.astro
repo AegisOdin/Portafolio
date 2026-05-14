@@ -1,17 +1,476 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BootSequence from "../components/BootSequence.astro";
+import CommandBar from "../components/CommandBar.astro";
+import SectionHeader from "../components/SectionHeader.astro";
 
+const projects = [
+  {
+    slug: "spa-be-perfect",
+    name: "Spa Be Perfect",
+    org: "Flama Agency",
+    role: "Full Stack · autónomo",
+    period: "nov 2025 — actualidad",
+    summary:
+      "App de gestión operativa para clínica de medicina estética. Frontend Nuxt/Vue, backend Strapi v5/TS, tiempo real con Socket.io, almacenamiento en AWS S3 y MySQL gestionado.",
+    stack: ["Nuxt", "Vue", "TypeScript", "Strapi v5", "Socket.io", "AWS S3", "MySQL"],
+    prod: "https://appbeperfect.com",
+    status: "PROD",
+  },
+  {
+    slug: "sim-cle",
+    name: "SIM-CLE",
+    org: "Instituto Tecnológico de Morelia · Depto. de Idiomas",
+    role: "Full Stack · remoto",
+    period: "ene 2026 — actualidad",
+    summary:
+      "Sistema institucional para centralizar inscripciones, gestión de grupos y seguimiento de alumnos del Centro de Lenguas. Frontend reactivo con Livewire y API REST en Laravel.",
+    stack: ["Laravel", "Livewire", "PHP", "REST API", "Java", "GitLab"],
+    status: "ACTIVE",
+  },
+  {
+    slug: "tekniu-odoo",
+    name: "Odoo ERP · Tekniu MX",
+    org: "Tekniu México",
+    role: "Becario Dev · híbrido",
+    period: "mar 2026 — actualidad",
+    summary:
+      "Desarrollo e implementación de módulos Odoo para PyMEs locales e internacionales. Integraciones con servicios externos, mantenimiento de servidores Linux y dockerización de entornos cliente.",
+    stack: ["Odoo", "JavaScript", "Docker", "Linux", "PostgreSQL", "React", "XML"],
+    status: "ACTIVE",
+  },
+];
+
+const experience = [
+  {
+    id: "tekniu",
+    date: "[2026-03]",
+    host: "tekniu.mx",
+    role: "BECARIO_DEV",
+    state: "HIRED",
+    mode: "Híbrido · Jornada parcial",
+    title: "Becario de Desarrollo Web",
+    org: "Tekniu México",
+    bullets: [
+      "Soluciones full stack en consultora especializada en Odoo ERP para PyMEs mexicanas e internacionales.",
+      "Implementación y personalización de módulos ERP, integración con servicios externos.",
+      "Mantenimiento de infraestructura Linux, despliegues con Docker.",
+    ],
+    tech: ["JavaScript", "Odoo", "Docker", "Linux", "PostgreSQL", "React.js", "SSH", "XML", "HTML", "CSS"],
+  },
+  {
+    id: "itm",
+    date: "[2026-01]",
+    host: "itm.edu.mx",
+    role: "FULLSTACK",
+    state: "ACTIVE",
+    mode: "Remoto · Temporal",
+    title: "Programador Full Stack",
+    org: "Instituto Tecnológico de Morelia",
+    bullets: [
+      "Desarrollo del sistema SIM-CLE para el Depto. de Idiomas, frontend y backend.",
+      "Centralización del control de inscripciones, grupos y seguimiento de alumnos.",
+    ],
+    tech: ["Laravel", "Livewire", "PHP", "Java", "REST API", "GitLab", "GitHub", "Git"],
+  },
+  {
+    id: "flama",
+    date: "[2025-11]",
+    host: "flama.agency",
+    role: "FULLSTACK",
+    state: "ACTIVE",
+    mode: "Remoto · Autónomo",
+    title: "Programador Full Stack",
+    org: "Flama Agency",
+    bullets: [
+      "Desarrollo integral de webapp de gestión operativa para Spa Be Perfect (medicina estética).",
+      "Frontend Nuxt/Vue, backend Strapi v5/TS, integración AWS S3, tiempo real con Socket.io.",
+      "Proyecto en producción: appbeperfect.com",
+    ],
+    tech: ["Nuxt.js", "Vue.js", "TypeScript", "Strapi", "REST API", "MySQL", "AWS S3", "Socket.io"],
+  },
+];
+
+const skills = {
+  Frontend: ["JavaScript", "TypeScript", "Vue.js", "Nuxt.js", "React.js", "HTML", "CSS", "Livewire"],
+  Backend: ["Node.js", "PHP", "Laravel", "Python", "Java", "Strapi", "REST API", "Socket.io"],
+  "Bases de datos": ["MySQL", "PostgreSQL"],
+  "DevOps / Cloud": ["Docker", "AWS", "AWS S3", "Linux", "SSH"],
+  "Control de versiones": ["Git", "GitHub", "GitLab"],
+  Otros: ["Odoo ERP", "XML", "Microsoft Excel"],
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <BootSequence />
+  <CommandBar />
+
+  <!-- Top status bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_srgb,var(--color-bg)_85%,transparent)] border-b border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)]">
+    <div class="max-w-6xl mx-auto px-5 md:px-8 py-2.5 flex items-center justify-between text-[11px] md:text-xs tracking-widest uppercase">
+      <div class="flex items-center gap-3 md:gap-5">
+        <span class="text-[var(--color-amber)] glow-soft">●</span>
+        <span class="text-[var(--color-muted)]">neftali@portfolio:~$</span>
+        <span class="hidden md:inline text-[var(--color-ink)]/70">build · 26.05.14</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-5 text-[var(--color-muted)]">
+        <a href="#about" class="no-underline hover:text-[var(--color-phosphor)]">whoami</a>
+        <a href="#projects" class="no-underline hover:text-[var(--color-phosphor)]">projects</a>
+        <a href="#experience" class="no-underline hover:text-[var(--color-phosphor)]">exp.log</a>
+        <a href="#skills" class="no-underline hover:text-[var(--color-phosphor)]">skills</a>
+        <a href="#contact" class="no-underline hover:text-[var(--color-phosphor)]">mail</a>
+      </nav>
+      <button onclick="(window).__cmd?.open()" class="text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">/ cmd</button>
+    </div>
+  </header>
+
+  <main class="relative">
+    <!-- ============ HERO ============ -->
+    <section id="hero" class="relative min-h-[92vh] grid-bg overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none">
+        <!-- decorative ASCII corners -->
+        <pre class="absolute top-6 left-5 text-[10px] text-[color-mix(in_srgb,var(--color-phosphor)_45%,transparent)] leading-[1.1]">┌───────────────┐
+│ session #0001 │
+│ tty: pts/0    │
+│ uptime: 0d 0h │
+└───────────────┘</pre>
+        <pre class="hidden md:block absolute top-6 right-5 text-[10px] text-[color-mix(in_srgb,var(--color-amber)_55%,transparent)] leading-[1.1] text-right">┌──────────────┐
+│ loc: morelia │
+│ mx-mor · gmt-6│
+│ wx: 22°c ☀   │
+└──────────────┘</pre>
+      </div>
+
+      <div class="max-w-6xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 relative">
+        <div class="text-[var(--color-amber)] glow-soft text-xs md:text-sm mb-4 tracking-widest">
+          ⟶ INIT_PROFILE · v2026
+        </div>
+
+        <h1 class="display aberrate text-[clamp(3.4rem,12vw,10rem)] text-[var(--color-phosphor)] font-normal leading-[0.85]">
+          NEFTALI<br/>OD<span class="text-[var(--color-amber)]">Í</span>N.
+        </h1>
+
+        <div class="mt-6 max-w-2xl text-base md:text-lg text-[var(--color-ink)]/90 leading-relaxed">
+          <p class="typewrite font-mono">
+            <span class="sigil">&gt;</span> Full Stack engineer. Morelia, MX. Status:
+            <span class="text-[var(--color-phosphor)] glow caret">AVAILABLE_</span>
+          </p>
+        </div>
+
+        <div class="mt-10 flex flex-wrap gap-3 text-xs md:text-sm">
+          <span class="pill">TS / JS</span>
+          <span class="pill">Vue · Nuxt</span>
+          <span class="pill">Laravel · Livewire</span>
+          <span class="pill">Node · Strapi</span>
+          <span class="pill">Docker · AWS</span>
+          <span class="pill">PostgreSQL · MySQL</span>
+        </div>
+
+        <div class="mt-12 flex flex-wrap items-center gap-4">
+          <a href="#projects" class="no-underline">
+            <span class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-4 !py-2">▸ ls projects</span>
+          </a>
+          <a href="/CV_Neftali_Odin_Garcia.pdf" download class="no-underline">
+            <span class="pill !text-sm !px-4 !py-2">▼ download cv.pdf</span>
+          </a>
+          <button onclick="(window).__cmd?.hire()" class="no-underline cursor-pointer">
+            <span class="pill !text-[var(--color-amber)] !border-[var(--color-amber)] !text-sm !px-4 !py-2">$ sudo hire-me</span>
+          </button>
+        </div>
+
+        <div class="absolute bottom-6 left-5 md:left-8 text-[var(--color-muted)] text-xs flex items-center gap-3">
+          <span class="inline-block w-2 h-2 rounded-full bg-[var(--color-phosphor)] glow"></span>
+          <span>scroll ↓ &nbsp;or press <kbd class="pill !py-[1px]">/</kbd></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
+      <SectionHeader cmd="whoami" label="/etc/identity" />
+
+      <div class="grid md:grid-cols-12 gap-8 md:gap-12">
+        <div class="md:col-span-7 text-[var(--color-ink)]/90 leading-relaxed text-sm md:text-base space-y-5">
+          <p>
+            Desarrollador <strong class="text-[var(--color-phosphor)] glow-soft">Full Stack</strong> con experiencia construyendo aplicaciones web de extremo a extremo — desde la interfaz hasta la infraestructura. Estudiante de <em>Ingeniería en Sistemas Computacionales</em> en el Instituto Tecnológico de Morelia (egreso 2026).
+          </p>
+          <p>
+            Bases sólidas en <span class="pill">JavaScript</span> <span class="pill">TypeScript</span>, ecosistemas <span class="pill">Vue · Nuxt</span> y <span class="pill">Laravel · Node</span>. Cómodo en entornos híbridos y remotos, trabajando con equipos distribuidos.
+          </p>
+          <p class="text-[var(--color-muted)] italic">
+            // tres roles activos en paralelo · una webapp en producción · una promesa: enviar código que funcione.
+          </p>
+        </div>
+
+        <aside class="md:col-span-5">
+          <div class="frame p-5 md:p-6 font-mono text-sm" data-label="stats.json">
+            <div class="space-y-2.5">
+              <div class="flex justify-between gap-4">
+                <span class="text-[var(--color-muted)]">role</span>
+                <span class="text-[var(--color-phosphor)]">"fullstack_dev"</span>
+              </div>
+              <div class="flex justify-between gap-4">
+                <span class="text-[var(--color-muted)]">loc</span>
+                <span class="text-[var(--color-ink)]">"morelia, mx"</span>
+              </div>
+              <div class="flex justify-between gap-4">
+                <span class="text-[var(--color-muted)]">edu</span>
+                <span class="text-[var(--color-ink)]">"ITM · 2021-2026"</span>
+              </div>
+              <div class="flex justify-between gap-4">
+                <span class="text-[var(--color-muted)]">langs</span>
+                <span class="text-[var(--color-ink)]">["es-native", "en-B2+"]</span>
+              </div>
+              <div class="flex justify-between gap-4">
+                <span class="text-[var(--color-muted)]">active_roles</span>
+                <span class="text-[var(--color-amber)]">3</span>
+              </div>
+              <div class="flex justify-between gap-4">
+                <span class="text-[var(--color-muted)]">in_production</span>
+                <span class="text-[var(--color-phosphor)]">true</span>
+              </div>
+              <div class="flex justify-between gap-4">
+                <span class="text-[var(--color-muted)]">status</span>
+                <span class="text-[var(--color-phosphor)] glow">AVAILABLE</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
+      <SectionHeader cmd="ls -la ./projects" label={`${projects.length} items`} />
+
+      <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+        {projects.map((p, i) => (
+          <article
+            class={`frame glitch p-6 md:p-7 relative ${i === 0 ? "md:col-span-2" : ""}`}
+            data-label={`./${p.slug}.md`}
+          >
+            <div class="flex items-start justify-between gap-4 mb-3 flex-wrap">
+              <div>
+                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">{p.org}</div>
+                <h3 class={`display ${i === 0 ? "text-5xl md:text-7xl" : "text-4xl md:text-5xl"} text-[var(--color-phosphor)] glow-soft glitch-target mt-1`}>{p.name}</h3>
+              </div>
+              <span class={`pill ${p.status === "PROD" ? "!text-[var(--color-amber)] !border-[var(--color-amber)]" : ""}`}>● {p.status}</span>
+            </div>
+
+            <div class="text-xs text-[var(--color-muted)] mb-4">
+              {p.role} · <span class="text-[var(--color-ink)]/70">{p.period}</span>
+            </div>
+
+            <p class="text-sm md:text-[15px] text-[var(--color-ink)]/85 leading-relaxed mb-5">
+              {p.summary}
+            </p>
+
+            <div class="flex flex-wrap gap-1.5 mb-5">
+              {p.stack.map((s) => <span class="pill">{s}</span>)}
+            </div>
+
+            {p.prod && (
+              <a href={p.prod} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm">
+                <span class="sigil">↗</span> {p.prod.replace("https://", "")}
+              </a>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section id="experience" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
+      <SectionHeader cmd="cat experience.log" label="3 entries" />
+
+      <div class="frame p-5 md:p-8 font-mono text-sm" data-label="tail -f">
+        <div class="space-y-1.5">
+          {experience.map((e) => (
+            <details class="group border-b border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] last:border-b-0 py-2">
+              <summary class="cursor-pointer list-none flex flex-wrap items-center gap-x-4 gap-y-1 hover:bg-[color-mix(in_srgb,var(--color-phosphor)_5%,transparent)] -mx-2 px-2 py-1.5 rounded-sm">
+                <span class="text-[var(--color-muted)]">{e.date}</span>
+                <span class="text-[var(--color-phosphor)] w-40 truncate">{e.host}</span>
+                <span class="pill !text-[10px]">[{e.role}]</span>
+                <span class={`text-xs ${e.state === "HIRED" ? "text-[var(--color-amber)]" : "text-[var(--color-phosphor)]"}`}>{e.state}</span>
+                <span class="ml-auto text-[var(--color-muted)] text-xs group-open:rotate-90 transition-transform">▸</span>
+              </summary>
+              <div class="pl-2 md:pl-44 pt-3 pb-2 text-[var(--color-ink)]/90 space-y-2">
+                <div>
+                  <span class="text-[var(--color-amber)]">{e.title}</span>
+                  <span class="text-[var(--color-muted)]"> · {e.org} · {e.mode}</span>
+                </div>
+                <ul class="list-none space-y-1">
+                  {e.bullets.map((b) => (
+                    <li class="flex gap-2 text-[13px]">
+                      <span class="sigil shrink-0">—</span><span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  {e.tech.map((t) => <span class="pill !text-[10px]">{t}</span>)}
+                </div>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section id="skills" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
+      <SectionHeader cmd="cat skills.json | jq" label="object" />
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {Object.entries(skills).map(([cat, items]) => (
+          <div class="frame p-5" data-label={cat.toLowerCase().replace(/[^a-z]/g, "_")}>
+            <div class="text-[var(--color-amber)] text-xs uppercase tracking-widest mb-3">{cat}</div>
+            <div class="flex flex-wrap gap-1.5">
+              {items.map((s) => <span class="pill">{s}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]">
+      <SectionHeader cmd="mail compose" label="--new" />
+
+      <div class="grid md:grid-cols-12 gap-8">
+        <form
+          id="contact-form"
+          action="https://formsubmit.co/odingarra@gmail.com"
+          method="POST"
+          class="md:col-span-7 frame p-6 md:p-7 space-y-4 text-sm"
+          data-label="/dev/stdin"
+        >
+          <input type="hidden" name="_subject" value="Portfolio inbound" />
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+          <label class="block">
+            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">to:</span>
+            <div class="mt-1 text-[var(--color-phosphor)]">odingarra@gmail.com <span class="text-[var(--color-muted)]">// locked</span></div>
+          </label>
+
+          <label class="block">
+            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">from:</span>
+            <input type="email" name="email" required placeholder="you@domain.com"
+              class="mt-1 w-full bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]" />
+          </label>
+
+          <label class="block">
+            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">subject:</span>
+            <input type="text" name="subject" required placeholder="re: full-stack role"
+              class="mt-1 w-full bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]" />
+          </label>
+
+          <label class="block">
+            <span class="text-[var(--color-muted)] text-xs uppercase tracking-widest">body:</span>
+            <textarea name="message" required rows="6" placeholder="// write your message — hit send"
+              class="mt-1 w-full bg-transparent border border-[color-mix(in_srgb,var(--color-phosphor)_25%,transparent)] outline-none p-3 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)] resize-none"></textarea>
+          </label>
+
+          <button type="submit" class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-5 !py-2 cursor-pointer hover:!bg-[var(--color-amber)] hover:!border-[var(--color-amber)] transition-colors">
+            ▶ send · ENTER
+          </button>
+        </form>
+
+        <aside class="md:col-span-5 space-y-4 text-sm">
+          <div class="frame p-5" data-label="/etc/contacts">
+            <div class="space-y-3">
+              <div>
+                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">email</div>
+                <a href="mailto:odingarra@gmail.com">odingarra@gmail.com</a>
+              </div>
+              <div>
+                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">tel</div>
+                <a href="tel:+5214432143605">+52 1 443 214 3605</a>
+              </div>
+              <div>
+                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">linkedin</div>
+                <a href="https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/" target="_blank" rel="noopener">in/neftali-odin-garcia-ramirez</a>
+              </div>
+              <div>
+                <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">loc</div>
+                <span class="text-[var(--color-ink)]">Morelia, Michoacán, MX · GMT-6</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="frame p-5" data-label="resume">
+            <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest mb-2">curriculum</div>
+            <a href="/CV_Neftali_Odin_Garcia.pdf" download class="inline-flex items-center gap-2">
+              <span class="sigil">▼</span> CV_Neftali_Odin_Garcia.pdf
+            </a>
+            <div class="text-[var(--color-muted)] text-[11px] mt-2">254 KB · ES · updated 2026-05</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] mt-12">
+      <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 flex flex-wrap items-center justify-between gap-3 text-[11px] text-[var(--color-muted)] uppercase tracking-widest">
+        <div>© 2026 · neftali.odin · built with astro + tailwind</div>
+        <div class="flex items-center gap-4">
+          <span>uptime: <span id="uptime" class="text-[var(--color-phosphor)]">--</span></span>
+          <span>hash: <span class="text-[var(--color-amber)]">a7f3c12</span></span>
+          <span>EOF</span>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Section wipe-in via IntersectionObserver
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).classList.add("in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+
+    const vh = window.innerHeight;
+    document.querySelectorAll("section").forEach((s) => {
+      const r = (s as HTMLElement).getBoundingClientRect();
+      const inView = r.top < vh && r.bottom > 0;
+      s.classList.add("wipe");
+      if (inView) {
+        // already visible on load — reveal immediately, skip observer
+        requestAnimationFrame(() => s.classList.add("in"));
+      } else {
+        io.observe(s);
+      }
+    });
+
+    // Safety net: if observer never fires for a section above fold, reveal all after 1.5s
+    setTimeout(() => {
+      document.querySelectorAll("section.wipe:not(.in)").forEach((s) => {
+        const r = (s as HTMLElement).getBoundingClientRect();
+        if (r.top < window.innerHeight) s.classList.add("in");
+      });
+    }, 1500);
+
+    // Uptime since first visit (or since 2021-08-01 as career start)
+    const start = new Date("2021-08-01T00:00:00Z").getTime();
+    const upt = document.getElementById("uptime");
+    function tick() {
+      const ms = Date.now() - start;
+      const days = Math.floor(ms / 86400000);
+      const hrs = Math.floor((ms % 86400000) / 3600000);
+      const mins = Math.floor((ms % 3600000) / 60000);
+      if (upt) upt.textContent = `${days}d ${hrs}h ${mins}m`;
+    }
+    tick(); setInterval(tick, 60000);
+
+    // Konami → hire-me
+    const konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+    let ki = 0;
+    window.addEventListener("keydown", (e) => {
+      if (e.key === konami[ki]) { ki++; if (ki === konami.length) { (window as any).__cmd?.hire(); ki = 0; } }
+      else { ki = 0; }
+    });
+  </script>
+</BaseLayout>
