@@ -71,7 +71,7 @@ Create:
 
 - `AZURE_VM_HOST`: VM public IP or DNS name.
 - `AZURE_VM_USER`: `deploy`.
-- `AZURE_VM_SSH_KEY`: full private key from `portfolio_azure_deploy`.
+- `AZURE_SSH_KEY`: full private key from `portfolio_azure_deploy`.
 - `AZURE_VM_PORT`: optional, use `22` if you create it.
 
 ## 5. Deploy

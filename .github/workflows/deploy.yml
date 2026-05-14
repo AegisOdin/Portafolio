@@ -1,0 +1,82 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22.12.0
+  PNPM_VERSION: 10.27.0
+  DEPLOY_ROOT: /var/www/portfolio
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Astro site
+        run: pnpm build
+
+      - name: Setup SSH
+        env:
+          AZURE_SSH_KEY: ${{ secrets.AZURE_SSH_KEY }}
+          AZURE_VM_HOST: ${{ secrets.AZURE_VM_HOST }}
+          AZURE_VM_PORT: ${{ secrets.AZURE_VM_PORT }}
+        run: |
+          set -euo pipefail
+
+          : "${AZURE_SSH_KEY:?Missing AZURE_SSH_KEY secret}"
+          : "${AZURE_VM_HOST:?Missing AZURE_VM_HOST secret}"
+          AZURE_VM_PORT="${AZURE_VM_PORT:-22}"
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$AZURE_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "$AZURE_VM_PORT" -H "$AZURE_VM_HOST" >> ~/.ssh/known_hosts
+
+          echo "AZURE_VM_PORT=$AZURE_VM_PORT" >> "$GITHUB_ENV"
+
+      - name: Deploy static files
+        env:
+          AZURE_VM_HOST: ${{ secrets.AZURE_VM_HOST }}
+          AZURE_VM_USER: ${{ secrets.AZURE_VM_USER }}
+        run: |
+          set -euo pipefail
+
+          : "${AZURE_VM_USER:?Missing AZURE_VM_USER secret}"
+          : "${AZURE_VM_HOST:?Missing AZURE_VM_HOST secret}"
+
+          RELEASE_DIR="$DEPLOY_ROOT/releases/$GITHUB_SHA"
+          SSH_TARGET="$AZURE_VM_USER@$AZURE_VM_HOST"
+          SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -p $AZURE_VM_PORT"
+
+          $SSH_COMMAND "$SSH_TARGET" "mkdir -p '$RELEASE_DIR'"
+          rsync -az --delete -e "$SSH_COMMAND" dist/ "$SSH_TARGET:$RELEASE_DIR/"
+          $SSH_COMMAND "$SSH_TARGET" "ln -sfnT '$RELEASE_DIR' '$DEPLOY_ROOT/current' && test -f '$DEPLOY_ROOT/current/index.html'"
