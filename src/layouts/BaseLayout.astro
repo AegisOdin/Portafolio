@@ -129,6 +129,14 @@ const website = {
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
     <script type="application/ld+json" set:html={JSON.stringify(website)} />
+
+    <!-- Early theme restore — prevents flash of wrong theme on reload -->
+    <script is:inline>
+      try {
+        const t = localStorage.getItem("theme");
+        if (t && t !== "green") document.documentElement.setAttribute("data-theme", t);
+      } catch { /* localStorage blocked — fall back to default */ }
+    </script>
   </head>
   <body class="scanlines crt">
     <slot />

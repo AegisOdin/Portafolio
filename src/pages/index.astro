@@ -4,6 +4,7 @@ import BootSequence from "../components/BootSequence.astro";
 import CommandBar from "../components/CommandBar.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import CrtModel from "../components/CrtModel.astro";
+import MatrixScene from "../components/MatrixScene.astro";
 import { i18n, type Lang } from "../i18n";
 
 const lang: Lang = "es";
@@ -192,6 +193,7 @@ const skills: { key: string; items: string[] }[] = [
 <BaseLayout>
   <BootSequence />
   <CommandBar />
+  <MatrixScene />
 
   <!-- Top status bar -->
   <header
@@ -286,7 +288,14 @@ const skills: { key: string; items: string[] }[] = [
         <h1
           class="relative z-1 display aberrate text-[clamp(2.8rem,11vw,10rem)] text-[var(--color-phosphor)] font-normal leading-[0.9] sm:leading-[0.85] wrap-break-word"
         >
-          NEFTALI<br />OD<span class="text-[var(--color-amber)]">Í</span>N.
+          NEFTALI<br />OD<span class="text-[var(--color-amber)]">Í</span>N<button
+            type="button"
+            id="wake-up"
+            class="wake-trigger"
+            aria-label="wake up"
+            title="."
+            onclick="(window).__matrix?.open()"
+          >.</button>
         </h1>
 
         <!-- Mobile/tablet: inline below pills -->

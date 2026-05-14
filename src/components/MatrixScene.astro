@@ -578,9 +578,31 @@
 
     // ---------- Open / close ----------
     let isOpen = false;
+    function isInRealWorld() {
+      return document.documentElement.getAttribute("data-theme") === "realworld";
+    }
+    function adaptCaptions() {
+      const realWorld = isInRealWorld();
+      const blueCap = pillBlue!.querySelector(".cap-line") as HTMLElement | null;
+      const blueSub = pillBlue!.querySelector(".cap-sub") as HTMLElement | null;
+      const redCap = pillRed!.querySelector(".cap-line") as HTMLElement | null;
+      const redSub = pillRed!.querySelector(".cap-sub") as HTMLElement | null;
+      if (realWorld) {
+        if (blueCap) blueCap.textContent = "BLUE PILL";
+        if (blueSub) blueSub.textContent = "// return to the simulation";
+        if (redCap) redCap.textContent = "RED PILL";
+        if (redSub) redSub.textContent = "// remain unplugged";
+      } else {
+        if (blueCap) blueCap.textContent = "BLUE PILL";
+        if (blueSub) blueSub.textContent = "// stay in the simulation";
+        if (redCap) redCap.textContent = "RED PILL";
+        if (redSub) redSub.textContent = "// see the real world";
+      }
+    }
     function open() {
       if (isOpen) return;
       isOpen = true;
+      adaptCaptions();
       scene!.classList.add("open");
       scene!.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
@@ -601,31 +623,52 @@
     }
 
     // ---------- Pill choices ----------
+    // Blue pill: "wake up in your bed" = restore the simulation.
+    //   - From realworld → revert to phosphor-green default.
+    //   - From any sim theme → keep current state, just close.
     function chooseBlue() {
-      if (choiceHint) choiceHint.textContent = "// blue selected — returning to simulation";
-      // Gentle fade-back. Keep CRT theme as-is.
-      flash!.style.background = "rgba(60, 140, 255, 0.9)";
+      const wasReal = isInRealWorld();
+      if (choiceHint) {
+        choiceHint.textContent = wasReal
+          ? "// blue selected — plugging back in"
+          : "// blue selected — nothing changes";
+      }
+      flash!.style.background = wasReal
+        ? "rgba(60, 140, 255, 0.95)"
+        : "rgba(60, 140, 255, 0.7)";
       flash!.classList.remove("fire");
-      // Reflow to restart animation
       void flash!.offsetWidth;
       flash!.classList.add("fire");
       setTimeout(() => {
+        if (wasReal) {
+          document.documentElement.removeAttribute("data-theme");
+          try { localStorage.setItem("theme", "green"); } catch { /* localStorage blocked */ }
+        }
         close();
         flash!.classList.remove("fire");
         flash!.style.background = "#fff";
-      }, 1200);
+      }, wasReal ? 700 : 1100);
     }
 
+    // Red pill: "see how deep the rabbit hole goes" = realworld theme.
+    //   - From any theme → switch to realworld and persist.
+    //   - Already realworld → close (no change).
     function chooseRed() {
-      if (choiceHint) choiceHint.textContent = "// red selected — waking up";
-      // Big white flash, swap theme to realworld, persist.
+      const alreadyReal = isInRealWorld();
+      if (choiceHint) {
+        choiceHint.textContent = alreadyReal
+          ? "// red selected — already awake"
+          : "// red selected — waking up";
+      }
       flash!.style.background = "#fff";
       flash!.classList.remove("fire");
       void flash!.offsetWidth;
       flash!.classList.add("fire");
       setTimeout(() => {
-        document.documentElement.setAttribute("data-theme", "realworld");
-        try { localStorage.setItem("theme", "realworld"); } catch {}
+        if (!alreadyReal) {
+          document.documentElement.setAttribute("data-theme", "realworld");
+          try { localStorage.setItem("theme", "realworld"); } catch { /* localStorage blocked */ }
+        }
         close();
         flash!.classList.remove("fire");
       }, 700);

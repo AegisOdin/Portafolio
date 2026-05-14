@@ -414,6 +414,50 @@ a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent);
   line-height: 0.9;
 }
 
+/* ============================================================
+   WAKE-UP TRIGGER — the hidden period at end of "ODÍN."
+   Indistinguishable from regular punctuation by default.
+   In realworld theme, gains a faint red pulse so the path
+   back to the simulation can be discovered.
+   ============================================================ */
+.wake-trigger {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  display: inline;
+  vertical-align: baseline;
+}
+.wake-trigger:focus-visible {
+  outline: 2px dashed color-mix(in srgb, var(--accent) 70%, transparent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.wake-trigger:hover {
+  text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+
+/* In realworld: the period whispers in red — a way back. */
+:root[data-theme="realworld"] .wake-trigger {
+  color: #c43a3a;
+  text-shadow: 0 0 6px rgba(196, 58, 58, 0.45);
+  animation: wake-pulse 3.4s ease-in-out infinite;
+}
+:root[data-theme="realworld"] .wake-trigger:hover {
+  color: #ff5252;
+  text-shadow: 0 0 14px rgba(255, 82, 82, 0.7);
+}
+@keyframes wake-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
