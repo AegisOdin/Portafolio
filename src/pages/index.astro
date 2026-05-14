@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import BootSequence from "../components/BootSequence.astro";
 import CommandBar from "../components/CommandBar.astro";
 import SectionHeader from "../components/SectionHeader.astro";
+import CrtModel from "../components/CrtModel.astro";
 
 const projects = [
   {
@@ -142,6 +143,11 @@ const skills = {
       </div>
 
       <div class="max-w-6xl mx-auto px-5 md:px-8 pt-24 md:pt-32 pb-16 relative">
+        <!-- Floating 3D CRT model — top-right of hero on desktop -->
+        <div class="hidden lg:block absolute top-24 right-5 md:right-8 w-[340px] h-[340px] xl:w-[400px] xl:h-[400px] z-10 pointer-events-auto">
+          <CrtModel />
+        </div>
+
         <div class="text-[var(--color-amber)] glow-soft text-xs md:text-sm mb-4 tracking-widest">
           ⟶ INIT_PROFILE · v2026
         </div>
@@ -149,6 +155,11 @@ const skills = {
         <h1 class="display aberrate text-[clamp(3.4rem,12vw,10rem)] text-[var(--color-phosphor)] font-normal leading-[0.85]">
           NEFTALI<br/>OD<span class="text-[var(--color-amber)]">Í</span>N.
         </h1>
+
+        <!-- Mobile/tablet: inline below pills -->
+        <div class="lg:hidden mt-10 w-full h-[280px] sm:h-[340px]">
+          <CrtModel />
+        </div>
 
         <div class="mt-6 max-w-2xl text-base md:text-lg text-[var(--color-ink)]/90 leading-relaxed">
           <p class="typewrite font-mono">
