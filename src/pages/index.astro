@@ -291,7 +291,7 @@ const skills: { key: string; items: string[] }[] = [
 
         <!-- Mobile/tablet: inline below pills -->
         <div
-          class="lg:hidden mt-12 mb-2 w-full h-[260px] sm:h-[340px] relative z-1"
+          class="lg:hidden mt-12 mb-2 w-full max-w-105 mx-auto aspect-square relative z-1"
         >
           <CrtModel />
         </div>
@@ -932,39 +932,51 @@ const skills: { key: string; items: string[] }[] = [
       apply(current === "es" ? "en" : "es"),
     );
 
-    // Section wipe-in via IntersectionObserver
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            (e.target as HTMLElement).classList.add("in");
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.05 },
+    // Section reveal: progressive enhancement, never required for scrolling.
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>("main > section:not(#hero)"),
     );
 
-    const vh = window.innerHeight;
-    document.querySelectorAll("section").forEach((s) => {
-      const r = (s as HTMLElement).getBoundingClientRect();
-      const inView = r.top < vh && r.bottom > 0;
-      s.classList.add("wipe");
-      if (inView) {
-        // already visible on load — reveal immediately, skip observer
-        requestAnimationFrame(() => s.classList.add("in"));
-      } else {
-        io.observe(s);
-      }
-    });
+    if ("IntersectionObserver" in window && !reduceMotion) {
+      document.documentElement.classList.add("motion-ready");
 
-    // Safety net: if observer never fires for a section above fold, reveal all after 1.5s
-    setTimeout(() => {
-      document.querySelectorAll("section.wipe:not(.in)").forEach((s) => {
-        const r = (s as HTMLElement).getBoundingClientRect();
-        if (r.top < window.innerHeight) s.classList.add("in");
+      const reveal = (el: HTMLElement) => el.classList.add("in");
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            reveal(entry.target as HTMLElement);
+            io.unobserve(entry.target);
+          });
+        },
+        { rootMargin: "0px 0px -15% 0px", threshold: 0.01 },
+      );
+
+      requestAnimationFrame(() => {
+        const vh = window.innerHeight;
+        sections.forEach((section) => {
+          section.classList.add("wipe");
+          const box = section.getBoundingClientRect();
+          const visibleOnLoad = box.top < vh * 0.92 && box.bottom > 0;
+          if (visibleOnLoad) {
+            // Already visible on load: reveal immediately, skip observer.
+            reveal(section);
+          } else {
+            io.observe(section);
+          }
+        });
       });
-    }, 1500);
+
+      // If an observer stalls, prefer visible content over a stuck reveal.
+      setTimeout(() => {
+        sections.forEach(reveal);
+      }, 2400);
+    } else {
+      sections.forEach((section) => section.classList.add("in"));
+    }
 
     // Uptime since first visit (or since 2021-08-01 as career start)
     const start = new Date("2021-08-01T00:00:00Z").getTime();
