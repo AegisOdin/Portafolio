@@ -116,6 +116,15 @@
   text-transform: uppercase;
 }
 
+/* Hero title — theme-aware size so VT323 (default) and Special Elite (realworld)
+   render at comparable cap-height despite differing glyph metrics. */
+.hero-title {
+  font-size: clamp(3.5rem, 11.5vw, 8rem);
+}
+:root[data-theme="realworld"] .hero-title {
+  font-size: clamp(5rem, 16vw, 11rem);
+}
+
 /* Pills go flat & cold */
 :root[data-theme="realworld"] .pill {
   border-color: #3a4a54;
