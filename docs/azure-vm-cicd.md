@@ -1,4 +1,4 @@
-﻿# CI/CD to Azure VM
+# CI/CD to Azure VM
 
 This project builds a static Astro site into `dist/` and deploys that folder to an Ubuntu Azure VM running Nginx.
 

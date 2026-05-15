@@ -1,4 +1,4 @@
-﻿User-agent: *
+User-agent: *
 Allow: /
 Content-Signal: search=yes, ai-input=yes, ai-train=yes
 

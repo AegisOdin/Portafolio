@@ -1,4 +1,4 @@
-﻿---
+---
 title: Neftali Odin Garcia Ramirez - Full Stack Engineer
 description: Full Stack engineer based in Morelia, Mexico. Builds production web apps with TypeScript, Vue/Nuxt, Laravel, Node.js, Strapi, AWS, Docker, MySQL, and PostgreSQL.
 image: https://odingarra.dev/og.png

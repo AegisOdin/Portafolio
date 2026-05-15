@@ -1,4 +1,4 @@
-﻿# Neftali Odín García Ramírez
+# Neftali Odín García Ramírez
 
 > Full Stack Engineer based in Morelia, Michoacán, México. Building production-grade web applications across the entire stack — from frontend interfaces to backend APIs and cloud infrastructure. Currently available for hire.
 
