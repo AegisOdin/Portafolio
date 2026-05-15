@@ -1,0 +1,6 @@
+# Allow the deploy user to install + reload Nginx config for portfolio
+# without an interactive password. Installed by ops/bootstrap-azure-vm.sh.
+# Validate with: sudo visudo -c -f /etc/sudoers.d/portfolio-deploy
+deploy ALL=(root) NOPASSWD: /usr/bin/install -m 0644 -o root -g root /tmp/portfolio.nginx /etc/nginx/sites-available/portfolio
+deploy ALL=(root) NOPASSWD: /usr/sbin/nginx -t
+deploy ALL=(root) NOPASSWD: /bin/systemctl reload nginx

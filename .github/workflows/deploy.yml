@@ -1,4 +1,4 @@
-name: Deploy to Azure VM
+﻿name: Deploy to Azure VM
 
 on:
   push:
@@ -17,6 +17,7 @@ env:
   NODE_VERSION: 22.12.0
   PNPM_VERSION: 10.27.0
   DEPLOY_ROOT: /var/www/portfolio
+  SITE_DOMAIN: odingarra.dev
 
 jobs:
   deploy:
@@ -80,3 +81,33 @@ jobs:
           $SSH_COMMAND "$SSH_TARGET" "mkdir -p '$RELEASE_DIR'"
           rsync -az --delete -e "$SSH_COMMAND" dist/ "$SSH_TARGET:$RELEASE_DIR/"
           $SSH_COMMAND "$SSH_TARGET" "ln -sfnT '$RELEASE_DIR' '$DEPLOY_ROOT/current' && test -f '$DEPLOY_ROOT/current/index.html'"
+
+      - name: Sync Nginx config
+        env:
+          AZURE_VM_HOST: ${{ secrets.AZURE_VM_HOST }}
+          AZURE_VM_USER: ${{ secrets.AZURE_VM_USER }}
+        run: |
+          set -euo pipefail
+
+          : "${AZURE_VM_USER:?Missing AZURE_VM_USER secret}"
+          : "${AZURE_VM_HOST:?Missing AZURE_VM_HOST secret}"
+
+          SSH_TARGET="$AZURE_VM_USER@$AZURE_VM_HOST"
+          SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -p $AZURE_VM_PORT"
+          SCP_COMMAND="scp -i ~/.ssh/id_ed25519 -P $AZURE_VM_PORT"
+
+          # Render template locally so the VM never sees placeholders.
+          RENDERED="$(mktemp)"
+          sed -e "s|__DOMAIN__|$SITE_DOMAIN|g" \
+              -e "s|__DEPLOY_ROOT__|$DEPLOY_ROOT|g" \
+              ops/nginx/portfolio.conf > "$RENDERED"
+
+          $SCP_COMMAND "$RENDERED" "$SSH_TARGET:/tmp/portfolio.nginx"
+          rm -f "$RENDERED"
+
+          # Install + validate + reload via the sudoers entry from bootstrap.
+          $SSH_COMMAND "$SSH_TARGET" "set -e; \
+            sudo /usr/bin/install -m 0644 -o root -g root /tmp/portfolio.nginx /etc/nginx/sites-available/portfolio; \
+            sudo /usr/sbin/nginx -t; \
+            sudo /bin/systemctl reload nginx; \
+            rm -f /tmp/portfolio.nginx"

@@ -1,8 +1,8 @@
----
+﻿---
 title: Neftali Odin Garcia Ramirez - Full Stack Engineer
 description: Full Stack engineer based in Morelia, Mexico. Builds production web apps with TypeScript, Vue/Nuxt, Laravel, Node.js, Strapi, AWS, Docker, MySQL, and PostgreSQL.
-image: https://neftali-odin.dev/og.png
-canonical: https://neftali-odin.dev/
+image: https://odingarra.dev/og.png
+canonical: https://odingarra.dev/
 language: es-MX
 ---
 
@@ -12,10 +12,10 @@ Full Stack engineer based in Morelia, Michoacan, Mexico. Builds production-grade
 
 ## Primary Actions
 
-- HTML portfolio: https://neftali-odin.dev/
-- Markdown homepage: https://neftali-odin.dev/index.md
-- LLM-friendly summary: https://neftali-odin.dev/llms.txt
-- CV PDF: https://neftali-odin.dev/CV_Neftali_Odin_Garcia.pdf
+- HTML portfolio: https://odingarra.dev/
+- Markdown homepage: https://odingarra.dev/index.md
+- LLM-friendly summary: https://odingarra.dev/llms.txt
+- CV PDF: https://odingarra.dev/CV_Neftali_Odin_Garcia.pdf
 - Email: mailto:odingarra@gmail.com
 - Phone: tel:+5214432143605
 - LinkedIn: https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/
@@ -94,8 +94,8 @@ For hiring inquiries, professional collaboration, or technical questions, reach 
 
 ## Machine-Readable Resources
 
-- Discovery catalog: https://neftali-odin.dev/.well-known/api-catalog
-- Sitemap index: https://neftali-odin.dev/sitemap-index.xml
-- Robots policy: https://neftali-odin.dev/robots.txt
+- Discovery catalog: https://odingarra.dev/.well-known/api-catalog
+- Sitemap index: https://odingarra.dev/sitemap-index.xml
+- Robots policy: https://odingarra.dev/robots.txt
 - HTML responses advertise these resources with RFC 8288 Link headers.
 - Requests to the homepage with `Accept: text/markdown` should receive this markdown representation with `Content-Type: text/markdown`.

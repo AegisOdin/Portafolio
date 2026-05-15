@@ -1,4 +1,4 @@
-# CI/CD to Azure VM
+﻿# CI/CD to Azure VM
 
 This project builds a static Astro site into `dist/` and deploys that folder to an Ubuntu Azure VM running Nginx.
 
@@ -7,8 +7,10 @@ This project builds a static Astro site into `dist/` and deploys that folder to 
 In the Azure Portal, open the VM networking settings and allow inbound:
 
 - `22/tcp` for SSH.
-- `80/tcp` for HTTP.
-- `443/tcp` later, when TLS is configured.
+- `80/tcp` for HTTP (used for Let's Encrypt HTTP-01 challenges + the HTTP→HTTPS redirect).
+- `443/tcp` for HTTPS.
+
+Make sure DNS A/AAAA records for both the apex (`odingarra.dev`) and `www.odingarra.dev` resolve to the VM. SEMRUSH flags the missing subdomain as a "DNS resolution issue" and as a missing-HSTS warning until both names are reachable over TLS.
 
 ## 2. Bootstrap the VM
 
@@ -27,7 +29,7 @@ ssh azureuser@YOUR_VM_PUBLIC_IP
 Run the script:
 
 ```bash
-sudo bash /tmp/bootstrap-azure-vm.sh neftali-odin.dev deploy /var/www/portfolio
+sudo bash /tmp/bootstrap-azure-vm.sh odingarra.dev deploy /var/www/portfolio
 ```
 
 If the domain is not pointing to the VM yet, use `_` as the first argument:
@@ -36,7 +38,22 @@ If the domain is not pointing to the VM yet, use `_` as the first argument:
 sudo bash /tmp/bootstrap-azure-vm.sh _ deploy /var/www/portfolio
 ```
 
-The script installs `nginx`, `rsync`, and `ufw`, creates a `deploy` user, and serves `/var/www/portfolio/current`.
+The script installs `nginx`, `rsync`, `ufw`, and `certbot`, creates a `deploy` user, renders the Nginx site from [`ops/nginx/portfolio.conf`](../ops/nginx/portfolio.conf), and installs the sudoers entry from [`ops/sudoers.d/portfolio-deploy`](../ops/sudoers.d/portfolio-deploy) so CI can later install + reload the config without an interactive password.
+
+On a brand-new VM the bootstrap writes an HTTP-only stub until certificates exist. Issue the cert and re-render the full config:
+
+```bash
+sudo certbot --nginx -d odingarra.dev -d www.odingarra.dev \
+  --redirect --hsts --staple-ocsp -m odingarra@gmail.com --agree-tos -n
+
+sudo sed -e 's|__DOMAIN__|odingarra.dev|g' \
+         -e 's|__DEPLOY_ROOT__|/var/www/portfolio|g' \
+         /tmp/ops/nginx/portfolio.conf \
+  | sudo tee /etc/nginx/sites-available/portfolio >/dev/null
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+The full template enables HSTS (`max-age=63072000; includeSubDomains; preload`), gzip for HTML/CSS/JS/JSON/SVG/fonts, a `301 /sitemap.xml → /sitemap-index.xml` alias for crawlers like SEMRUSH, and redirects `www` → apex over HTTPS.
 
 ## 3. Create a deploy SSH key
 
@@ -86,11 +103,17 @@ The workflow:
 4. Uploads `dist/` as an artifact.
 5. Deploys the artifact to `/var/www/portfolio/releases/<commit-sha>`.
 6. Points `/var/www/portfolio/current` at that release.
+7. Renders `ops/nginx/portfolio.conf` with `SITE_DOMAIN` + `DEPLOY_ROOT` substituted, scps it to the VM, then runs `install`, `nginx -t`, and `systemctl reload nginx` via the `portfolio-deploy` sudoers entry. Edit `ops/nginx/portfolio.conf` and push to roll out config changes — no manual SSH needed.
 
 ## Notes
 
 - The current workflow intentionally uses `pnpm build` as the deployment gate.
 - `pnpm lint` currently reports pre-existing lint errors, so add it to the workflow only after those are cleaned up.
 - `pnpm astro check` requires `@astrojs/check`; install it before adding that command to CI.
-- The Nginx bootstrap config adds RFC 8288 Link headers and serves `/index.md` for homepage requests with `Accept: text/markdown`. If the VM was bootstrapped before this config existed, rerun the bootstrap script or manually update `/etc/nginx/sites-available/portfolio`, then run `sudo nginx -t && sudo systemctl reload nginx`.
-- Validate agent discovery with `curl -I https://neftali-odin.dev/` and markdown negotiation with `curl -I -H "Accept: text/markdown" https://neftali-odin.dev/`.
+- The Nginx config (now in [`ops/nginx/portfolio.conf`](../ops/nginx/portfolio.conf)) adds RFC 8288 Link headers, serves `/index.md` for homepage requests with `Accept: text/markdown`, enables gzip for text assets, and emits HSTS on both apex and `www`. The CI workflow syncs it on every push to `master`.
+- Pre-existing VMs need the sudoers entry once: `sudo install -m 0440 -o root -g root ops/sudoers.d/portfolio-deploy /etc/sudoers.d/portfolio-deploy && sudo visudo -c -f /etc/sudoers.d/portfolio-deploy`. After that, every deploy keeps Nginx config in sync.
+- Validate the SEO-relevant headers:
+  - `curl -I https://odingarra.dev/` should show `Strict-Transport-Security`, `Content-Encoding: gzip` (when `Accept-Encoding: gzip` is sent), and the agent-discovery `Link` header.
+  - `curl -I https://www.odingarra.dev/` should `301` to the apex.
+  - `curl -I https://odingarra.dev/sitemap.xml` should `301` to `/sitemap-index.xml`.
+  - `curl -I -H "Accept: text/markdown" https://odingarra.dev/` should return `text/markdown`.

@@ -1,46 +1,46 @@
-{
+﻿{
   "linkset": [
     {
-      "anchor": "https://neftali-odin.dev/",
+      "anchor": "https://odingarra.dev/",
       "api-catalog": [
         {
-          "href": "https://neftali-odin.dev/.well-known/api-catalog",
+          "href": "https://odingarra.dev/.well-known/api-catalog",
           "type": "application/linkset+json",
           "title": "Portfolio discovery catalog"
         }
       ],
       "service-doc": [
         {
-          "href": "https://neftali-odin.dev/llms.txt",
+          "href": "https://odingarra.dev/llms.txt",
           "type": "text/markdown",
           "title": "LLM-friendly portfolio summary"
         },
         {
-          "href": "https://neftali-odin.dev/index.md",
+          "href": "https://odingarra.dev/index.md",
           "type": "text/markdown",
           "title": "Markdown homepage"
         }
       ],
       "describedby": [
         {
-          "href": "https://neftali-odin.dev/robots.txt",
+          "href": "https://odingarra.dev/robots.txt",
           "type": "text/plain",
           "title": "Crawler policy"
         },
         {
-          "href": "https://neftali-odin.dev/sitemap-index.xml",
+          "href": "https://odingarra.dev/sitemap-index.xml",
           "type": "application/xml",
           "title": "Sitemap index"
         }
       ],
       "alternate": [
         {
-          "href": "https://neftali-odin.dev/",
+          "href": "https://odingarra.dev/",
           "type": "text/html",
           "title": "Interactive portfolio homepage"
         },
         {
-          "href": "https://neftali-odin.dev/index.md",
+          "href": "https://odingarra.dev/index.md",
           "type": "text/markdown",
           "title": "Markdown homepage"
         }
