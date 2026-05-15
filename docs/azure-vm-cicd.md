@@ -92,3 +92,5 @@ The workflow:
 - The current workflow intentionally uses `pnpm build` as the deployment gate.
 - `pnpm lint` currently reports pre-existing lint errors, so add it to the workflow only after those are cleaned up.
 - `pnpm astro check` requires `@astrojs/check`; install it before adding that command to CI.
+- The Nginx bootstrap config adds RFC 8288 Link headers and serves `/index.md` for homepage requests with `Accept: text/markdown`. If the VM was bootstrapped before this config existed, rerun the bootstrap script or manually update `/etc/nginx/sites-available/portfolio`, then run `sudo nginx -t && sudo systemctl reload nginx`.
+- Validate agent discovery with `curl -I https://neftali-odin.dev/` and markdown negotiation with `curl -I -H "Accept: text/markdown" https://neftali-odin.dev/`.

@@ -6,7 +6,13 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://neftali-odin.dev',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      changefreq: 'monthly',
+      priority: 1.0,
+      lastmod: new Date(),
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },

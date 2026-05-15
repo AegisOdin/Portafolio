@@ -15,6 +15,12 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "hero.btnHire": "$ sudo contrátame",
     "hero.scroll": 'desplaza ↓ &nbsp;o pulsa <kbd class="pill !py-[1px]">/</kbd>',
 
+    "about.heading": "Sobre mí",
+    "projects.heading": "Proyectos",
+    "experience.heading": "Experiencia",
+    "skills.heading": "Habilidades",
+    "contact.heading": "Contacto",
+
     "about.label": "/etc/identidad",
     "about.p1":
       'Desarrollador <strong class="text-[var(--color-phosphor)] glow-soft">Full Stack</strong> con experiencia construyendo aplicaciones web de extremo a extremo — desde la interfaz hasta la infraestructura. Estudiante de <em>Ingeniería en Sistemas Computacionales</em> en el Instituto Tecnológico de Morelia (egreso 2026).',
@@ -93,6 +99,12 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "hero.btnCv": "▼ download cv.pdf",
     "hero.btnHire": "$ sudo hire-me",
     "hero.scroll": 'scroll ↓ &nbsp;or press <kbd class="pill !py-[1px]">/</kbd>',
+
+    "about.heading": "About",
+    "projects.heading": "Projects",
+    "experience.heading": "Experience",
+    "skills.heading": "Skills",
+    "contact.heading": "Contact",
 
     "about.label": "/etc/identity",
     "about.p1":

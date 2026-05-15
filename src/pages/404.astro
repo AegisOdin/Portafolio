@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="404 · Segmentation fault — Neftali Odín García Ramírez"
+  description="Página no encontrada. Vuelve al portafolio de Neftali Odín García Ramírez — Ingeniero Full Stack en Morelia, MX."
+>
+  <main
+    class="max-w-3xl mx-auto px-5 md:px-8 py-24 md:py-32 min-h-[80vh] grid-bg"
+  >
+    <div class="frame p-6 md:p-8 font-mono" data-label="/dev/null">
+      <div class="text-[var(--color-amber)] glow-soft text-xs tracking-widest mb-3">
+        ⟶ ERR_NOT_FOUND · 404
+      </div>
+      <h1 class="display aberrate text-phosphor text-6xl md:text-8xl leading-[0.9] mb-6">
+        4<span class="text-[var(--color-amber)]">0</span>4
+      </h1>
+      <p class="text-[var(--color-ink)]/90 mb-6 leading-relaxed">
+        <span class="sigil">&gt;</span> Segmentation fault. La ruta solicitada no existe en este servidor.
+      </p>
+      <pre
+        class="text-xs md:text-sm text-[var(--color-muted)] mb-8 overflow-x-auto"
+      >$ cat /var/log/portfolio.log
+[ERR] route_not_found: redirige al índice.</pre>
+      <div class="flex flex-wrap gap-3 text-xs md:text-sm">
+        <a href="/" class="no-underline">
+          <span
+            class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-4 !py-2"
+            >▸ cd ~ · volver al inicio</span
+          >
+        </a>
+        <a href="/#contact" class="no-underline">
+          <span
+            class="pill !text-[var(--color-amber)] !border-[var(--color-amber)] !text-sm !px-4 !py-2"
+            >$ mail compose</span
+          >
+        </a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

@@ -18,6 +18,7 @@ const ogImage = new URL(image, SITE_URL).toString();
 const person = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${SITE_URL}/#person`,
   name: "Neftali Odín García Ramírez",
   alternateName: ["Neftali Odin", "Odin Garcia"],
   url: SITE_URL,
@@ -62,11 +63,31 @@ const person = {
 const website = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
   url: SITE_URL,
   name: "Neftali Odín — Portfolio",
   description,
-  author: { "@type": "Person", name: "Neftali Odín García Ramírez" },
+  author: { "@id": `${SITE_URL}/#person` },
   inLanguage: ["es-MX", "en-US"],
+};
+
+const profilePage = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": `${canonical}#profile`,
+  url: canonical,
+  name: title,
+  description,
+  inLanguage: "es-MX",
+  isPartOf: { "@id": `${SITE_URL}/#website` },
+  about: { "@id": `${SITE_URL}/#person` },
+  mainEntity: { "@id": `${SITE_URL}/#person` },
+  primaryImageOfPage: {
+    "@type": "ImageObject",
+    url: ogImage,
+    width: 1200,
+    height: 630,
+  },
 };
 ---
 <!doctype html>
@@ -85,10 +106,15 @@ const website = {
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <meta name="googlebot" content="index, follow" />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es-MX" href={canonical} />
+    <link rel="alternate" hreflang="en" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
 
     <!-- AI / LLM crawler hints -->
     <meta name="ai-content" content="portfolio, professional profile, full stack engineer" />
-    <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM-friendly summary" />
+    <link rel="alternate" type="text/markdown" href="/index.md" title="Markdown homepage" />
+    <link rel="service-doc describedby" type="text/markdown" href="/llms.txt" title="LLM-friendly summary" />
+    <link rel="api-catalog service-desc" type="application/linkset+json" href="/.well-known/api-catalog" title="Agent discovery catalog" />
 
     <!-- Open Graph -->
     <meta property="og:site_name" content="Neftali Odín — Portfolio" />
@@ -99,6 +125,10 @@ const website = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Neftali Odín — Full Stack Engineer" />
     <meta property="profile:first_name" content="Neftali Odín" />
     <meta property="profile:last_name" content="García Ramírez" />
@@ -109,6 +139,7 @@ const website = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Neftali Odín — Full Stack Engineer" />
 
     <!-- Icons -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -123,13 +154,21 @@ const website = {
     <meta name="msapplication-TileColor" content="#0a0e0a" />
     <meta name="msapplication-TileImage" content="/android-chrome-192.png" />
 
-    <!-- Fonts -->
+    <!-- Fonts: non-blocking load via preload+swap. Falls back to system fonts until ready. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&family=VT323&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Special+Elite&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&family=VT323&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Special+Elite&display=swap"
+      />
+    </noscript>
 
     <!-- Sitemap hint -->
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
@@ -137,6 +176,8 @@ const website = {
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
     <script type="application/ld+json" set:html={JSON.stringify(website)} />
+    <script type="application/ld+json" set:html={JSON.stringify(profilePage)} />
+    <slot name="head-extras" />
 
     <!-- Early theme restore — prevents flash of wrong theme on reload -->
     <script is:inline>

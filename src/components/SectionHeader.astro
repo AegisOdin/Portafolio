@@ -1,9 +1,17 @@
 ---
-interface Props { cmd: string; label?: string; labelKey?: string; }
-const { cmd, label, labelKey } = Astro.props;
+interface Props {
+  cmd: string;
+  label?: string;
+  labelKey?: string;
+  heading?: string;
+  headingKey?: string;
+}
+const { cmd, label, labelKey, heading, headingKey } = Astro.props;
+const a11yHeading = heading ?? cmd;
 ---
 <header class="mb-8 md:mb-12">
-  <div class="flex items-baseline gap-3 flex-wrap">
+  <h2 class="sr-only" data-i18n={headingKey}>{a11yHeading}</h2>
+  <div class="flex items-baseline gap-3 flex-wrap" aria-hidden="true">
     <span class="sigil text-sm">neftali@portfolio</span>
     <span class="text-[var(--color-muted)] text-sm">~</span>
     <span class="sigil text-sm">$</span>

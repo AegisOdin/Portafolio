@@ -11,6 +11,8 @@ import { i18n, type Lang } from "../i18n";
 const lang: Lang = "es";
 const t = i18n[lang];
 
+const SITE_URL = "https://neftali-odin.dev";
+
 const projects = [
   {
     slug: "spa-be-perfect",
@@ -192,9 +194,38 @@ const skills: { key: string; items: string[] }[] = [
   { key: "Vcs", items: ["Git", "GitHub", "GitLab"] },
   { key: "Other", items: ["Odoo ERP", "XML", "Microsoft Excel"] },
 ];
+
+const projectList = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Projects · Neftali Odín García Ramírez",
+  numberOfItems: projects.length,
+  itemListOrder: "https://schema.org/ItemListOrderDescending",
+  itemListElement: projects.map((p, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "CreativeWork",
+      name: p.name,
+      url: p.prod,
+      description: p.summary,
+      keywords: p.stack.join(", "),
+      about: p.org,
+      creator: { "@id": `${SITE_URL}/#person` },
+      author: { "@id": `${SITE_URL}/#person` },
+      inLanguage: ["es-MX", "en-US"],
+    },
+  })),
+};
 ---
 
 <BaseLayout>
+  <script
+    slot="head-extras"
+    type="application/ld+json"
+    set:html={JSON.stringify(projectList)}
+  />
+
   <BootSequence />
   <CommandBar />
   <MatrixScene />
@@ -369,6 +400,8 @@ const skills: { key: string; items: string[] }[] = [
         cmd="whoami"
         label={t["about.label"]}
         labelKey="about.label"
+        heading={t["about.heading"]}
+        headingKey="about.heading"
       />
 
       <div class="grid md:grid-cols-12 gap-8 md:gap-12">
@@ -434,6 +467,8 @@ const skills: { key: string; items: string[] }[] = [
         cmd="ls -la ./projects"
         label={t["projects.label"]}
         labelKey="projects.label"
+        heading={t["projects.heading"]}
+        headingKey="projects.heading"
       />
 
       <div class="grid md:grid-cols-2 gap-6 md:gap-8">
@@ -514,6 +549,8 @@ const skills: { key: string; items: string[] }[] = [
         cmd="cat experience.log"
         label={t["experience.label"]}
         labelKey="experience.label"
+        heading={t["experience.heading"]}
+        headingKey="experience.heading"
       />
 
       <div class="frame p-5 md:p-8 font-mono text-sm" data-label="tail -f">
@@ -592,7 +629,12 @@ const skills: { key: string; items: string[] }[] = [
       id="skills"
       class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
     >
-      <SectionHeader cmd="cat skills.json | jq" label="object" />
+      <SectionHeader
+        cmd="cat skills.json | jq"
+        label="object"
+        heading={t["skills.heading"]}
+        headingKey="skills.heading"
+      />
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         {
@@ -620,7 +662,12 @@ const skills: { key: string; items: string[] }[] = [
       id="contact"
       class="max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32 border-t border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
     >
-      <SectionHeader cmd="mail compose" label="--new" />
+      <SectionHeader
+        cmd="mail compose"
+        label="--new"
+        heading={t["contact.heading"]}
+        headingKey="contact.heading"
+      />
 
       <div class="grid md:grid-cols-12 gap-8">
         <form

@@ -26,7 +26,7 @@ find "${DEPLOY_ROOT}" -type d -exec chmod 775 {} \;
 find "${DEPLOY_ROOT}" -type f -exec chmod 664 {} \;
 
 cat > /etc/nginx/sites-available/portfolio <<'NGINX'
-# Markdown for Agents: requests with Accept: text/markdown get llms.txt
+# Markdown for Agents: requests with Accept: text/markdown get index.md
 # as the markdown alternate of the homepage.
 map $http_accept $serve_markdown {
     default            0;
@@ -44,23 +44,48 @@ server {
     access_log /var/log/nginx/portfolio.access.log;
     error_log /var/log/nginx/portfolio.error.log;
 
-    # Agent discovery: advertise resources via RFC 8288 Link headers on
-    # every successful response (also exposed via "always" on errors).
-    add_header Link '</llms.txt>; rel="service-doc"; type="text/markdown", </sitemap-index.xml>; rel="sitemap", </CV_Neftali_Odin_Garcia.pdf>; rel="alternate"; type="application/pdf", </robots.txt>; rel="describedby"' always;
+    set $agent_link_header '</.well-known/api-catalog>; rel="api-catalog service-desc"; type="application/linkset+json", </index.md>; rel="alternate"; type="text/markdown", </llms.txt>; rel="service-doc describedby"; type="text/markdown", </sitemap-index.xml>; rel="describedby"; type="application/xml"';
+
+    # Agent discovery: advertise resources via RFC 8288 Link headers.
+    add_header Link $agent_link_header always;
     add_header Vary "Accept" always;
 
     location = / {
         if ($serve_markdown) {
-            rewrite ^ /llms.txt last;
+            rewrite ^ /index.md last;
         }
         try_files /index.html =404;
     }
 
-    location = /llms.txt {
+    location = /index.html {
+        if ($serve_markdown) {
+            rewrite ^ /index.md last;
+        }
+        try_files /index.html =404;
+    }
+
+    location = /index.md {
+        types {}
         default_type text/markdown;
         charset utf-8;
-        add_header Content-Type "text/markdown; charset=utf-8" always;
-        add_header Link '</>; rel="canonical"; type="text/html"' always;
+        add_header Link $agent_link_header always;
+        add_header Vary "Accept" always;
+        add_header x-markdown-tokens "1184" always;
+        try_files /index.md =404;
+    }
+
+    location = /llms.txt {
+        types {}
+        default_type text/markdown;
+        charset utf-8;
+        try_files /llms.txt =404;
+    }
+
+    location = /.well-known/api-catalog {
+        types {}
+        default_type application/linkset+json;
+        charset utf-8;
+        try_files /.well-known/api-catalog =404;
     }
 
     location / {
