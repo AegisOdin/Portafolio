@@ -395,13 +395,66 @@ a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent);
 /* Pill */
 .pill {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--color-ink) 90%, transparent);
   background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+
+/* Interactive pills (links/buttons containing a .pill) get a guaranteed tap target on touch devices. */
+a > .pill,
+button > .pill,
+.pill-tap {
+  min-height: 36px;
+  line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+}
+@media (pointer: coarse) {
+  a > .pill,
+  button > .pill,
+  .pill-tap {
+    min-height: 44px;
+    padding-inline: 14px;
+    font-size: 13px;
+  }
+}
+
+/* Focus ring — high contrast on phosphor bg */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible {
+  text-shadow: var(--accent-glow);
+}
+
+/* Skip-to-content — keyboard-only escape from boot/CRT chrome */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 8px;
+  z-index: 200;
+  background: var(--color-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-decoration: none;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 8px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* Prompt sigil */
@@ -513,8 +566,11 @@ a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent);
   .crt::after,
   .caret::after,
   .typewrite { animation: none !important; }
+  .scanlines::before { background: none; }
+  .crt::after { opacity: 0; }
   .typewrite { width: auto; white-space: normal; border-right: none; }
   .wipe { clip-path: none; }
+  .aberrate { text-shadow: 0 0 6px color-mix(in srgb, var(--accent) 50%, transparent); }
 }
 
 /* Print — clean ATS view */

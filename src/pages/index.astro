@@ -245,7 +245,7 @@ const projectList = {
           >build · 26.05.14</span
         >
       </div>
-      <nav class="hidden md:flex items-center gap-5 text-[var(--color-muted)]">
+      <nav class="hidden md:flex items-center gap-5 text-[var(--color-muted)]" aria-label="Primary">
         <a href="#about" class="no-underline hover:text-[var(--color-phosphor)]"
           >whoami</a
         >
@@ -268,21 +268,47 @@ const projectList = {
       </nav>
       <div class="flex items-center gap-2">
         <button
+          id="mobile-nav-toggle"
+          type="button"
+          aria-label="Abrir menú de navegación"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+          class="md:hidden text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+        >☰ menu</button>
+        <button
           id="lang-toggle"
-          aria-label="Toggle language"
+          type="button"
+          aria-label="Cambiar idioma"
           class="text-[var(--color-amber)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-amber)_15%,transparent)]"
           data-i18n="lang.toggle">{t["lang.toggle"]}</button
         >
         <button
+          type="button"
           onclick="(window).__cmd?.open()"
-          class="text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+          aria-label="Abrir barra de comandos"
+          class="hidden md:inline-block text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
           >/ cmd</button
         >
       </div>
     </div>
+
+    <!-- Mobile nav drawer -->
+    <nav
+      id="mobile-nav"
+      aria-label="Mobile"
+      class="md:hidden hidden border-t border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)] bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)]"
+    >
+      <ul class="max-w-6xl mx-auto px-5 py-3 flex flex-col text-sm">
+        <li><a href="#about" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>whoami</a></li>
+        <li><a href="#projects" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>projects</a></li>
+        <li><a href="#experience" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>exp.log</a></li>
+        <li><a href="#skills" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>skills</a></li>
+        <li><a href="#contact" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>mail</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <main class="relative">
+  <main id="main" class="relative">
     <!-- ============ HERO ============ -->
     <section
       id="hero"
@@ -328,7 +354,7 @@ const projectList = {
             type="button"
             id="wake-up"
             class="wake-trigger"
-            aria-label="wake up"
+            aria-label="Easter egg"
             title="."
             onclick="(window).__matrix?.open()"
           >.</button>
@@ -373,7 +399,9 @@ const projectList = {
             >
           </a>
           <button
+            type="button"
             onclick="(window).__cmd?.hire()"
+            aria-label="Contratar — abrir contacto"
             class="no-underline cursor-pointer"
           >
             <span
@@ -973,6 +1001,28 @@ const projectList = {
 
   <script>
     import { i18n, type Lang } from "../i18n";
+
+    // Mobile nav drawer
+    const mobileToggle = document.getElementById("mobile-nav-toggle");
+    const mobileNav = document.getElementById("mobile-nav");
+    function closeMobileNav() {
+      if (!mobileNav || !mobileToggle) return;
+      mobileNav.classList.add("hidden");
+      mobileToggle.setAttribute("aria-expanded", "false");
+    }
+    mobileToggle?.addEventListener("click", () => {
+      if (!mobileNav) return;
+      const isOpen = !mobileNav.classList.contains("hidden");
+      if (isOpen) {
+        closeMobileNav();
+      } else {
+        mobileNav.classList.remove("hidden");
+        mobileToggle.setAttribute("aria-expanded", "true");
+      }
+    });
+    document.querySelectorAll("[data-mobile-link]").forEach((a) => {
+      a.addEventListener("click", closeMobileNav);
+    });
 
     const stored = localStorage.getItem("lang") as Lang | null;
     let current: Lang = stored === "en" || stored === "es" ? stored : "es";
