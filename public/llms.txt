@@ -1,45 +1,45 @@
 # Neftali Odín García Ramírez
 
-> Full Stack Engineer based in Morelia, Michoacán, México. Building production-grade web applications across the entire stack — from frontend interfaces to backend APIs and cloud infrastructure. Currently available for hire.
+> Full Stack Developer and Computer Systems Engineering student based in Morelia, Michoacán, México. Builds web applications across frontend interfaces, backend APIs, databases, and cloud infrastructure. Currently available for hire.
 
 ## Identity
 
 - **Full name:** Neftali Odín García Ramírez
-- **Role:** Full Stack Engineer / Desarrollador Full Stack
+- **Role:** Full Stack Developer / Desarrollador Full Stack
 - **Location:** Morelia, Michoacán, México (GMT-6)
 - **Email:** odingarra@gmail.com
 - **Phone:** +52 1 443 214 3605
 - **LinkedIn:** https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/
-- **Languages:** Spanish (native), English (B2+)
+- **Languages:** Spanish (native), English (advanced, B2+)
 - **Status:** Available for full-time, contract, hybrid (Morelia) or remote work.
 
 ## Education
 
-- **Ingeniería en Sistemas Computacionales** — Instituto Tecnológico de Morelia (2021 – 2026)
+- **Student of Ingeniería en Sistemas Computacionales** — Instituto Tecnológico de Morelia (2021 – 2026)
 
-## Active Roles (concurrent)
+## Professional Experience
 
 ### Becario de Desarrollo Web · Tekniu México (March 2026 – present)
-Hybrid, part-time. Full stack work at an Odoo ERP consultancy serving Mexican and international SMBs. Implements and customizes ERP modules, integrates external services, maintains Linux infrastructure.
-Stack: JavaScript, Odoo, Docker, Linux, PostgreSQL, React.js, SSH, XML, HTML, CSS.
+Hybrid, part-time. Full stack work at an Odoo ERP consultancy serving Mexican and international SMBs. Implements and customizes ERP modules, integrates external services, and maintains Linux infrastructure. Develops Wiki Tekniu, an internal web platform for documenting company repositories, built entirely in TypeScript across frontend and backend with a Next.js frontend.
+Stack: JavaScript, TypeScript, Odoo, Docker, Linux, PostgreSQL, React.js, Next.js, SSH, XML, HTML, CSS.
 
-### Programador Full Stack · Instituto Tecnológico de Morelia (January 2026 – present)
-Remote, contract. Builds the SIM-CLE system for the institute's Language Department — centralizes enrollment, group management, and student tracking.
+### Programador Full Stack · Instituto Tecnológico de Morelia (January 2026 – June 2026)
+Remote, temporary. Developed the SIM-CLE system for the institute's Language Department — centralizes enrollment, group management, and student tracking.
 Stack: Laravel, Livewire, PHP, Java, REST API, GitLab, GitHub, Git.
 
-### Programador Full Stack · Flama Agency (November 2025 – present)
-Remote, freelance. Built and ships the operational management webapp for Spa Be Perfect (medical aesthetics). Frontend in Nuxt.js / Vue.js, backend in Strapi v5 / TypeScript. Integrated AWS S3 storage, real-time communication with Socket.io, MySQL database.
+### Programador Full Stack · Flama Agency (November 2025 – August 2026)
+Remote, freelance. Developed and shipped the operational management webapp for Spa Be Perfect (medical aesthetics), which remains in production. Frontend in Nuxt.js / Vue.js, backend in Strapi v5 / TypeScript. Integrated AWS S3 storage, real-time communication with Socket.io, MySQL database.
 Production URL: https://appbeperfect.com
 Stack: Nuxt.js, Vue.js, TypeScript, Strapi, REST API, MySQL, AWS S3, Socket.io.
 
 ## Technical Skills
 
-- **Frontend:** JavaScript, TypeScript, Vue.js, Nuxt.js, React.js, Astro, HTML, CSS, Livewire
+- **Frontend:** JavaScript, TypeScript, Vue.js, Nuxt.js, React.js, Next.js, HTML, CSS, Livewire
 - **Backend:** Node.js, PHP, Laravel, Python, Java, Strapi, REST API, Socket.io
 - **Databases:** MySQL, PostgreSQL
-- **DevOps / Cloud:** Docker, AWS, AWS S3, Linux, SSH, CI/CD
+- **DevOps / Cloud:** Docker, AWS, AWS S3, Linux, SSH
 - **Version control:** Git, GitHub, GitLab
-- **Other:** Odoo ERP, XML
+- **Other:** Odoo ERP, XML, Microsoft Excel
 
 ## Contact
 

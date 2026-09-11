@@ -1,0 +1,14 @@
+{
+  "mode": "Built-in image_gen",
+  "model": "The built-in tool does not expose model selection or report the model version; exact gpt-image-2 cannot be verified.",
+  "assets": [
+    {
+      "path": "src/assets/pill-blue.png",
+      "prompt": "Use case: product-mockup. Asset for a cinematic Matrix-inspired choice screen in a developer portfolio. Generate one isolated photorealistic glossy BLUE capsule pill, deep cobalt blue translucent lacquered gelatine, visible fine center seam joining the two halves, believable volume and rich optical reflections, refined studio macro product photography. The capsule floats diagonally from lower left to upper right at 25 degrees, perfectly centered, fills 68 percent of square canvas width. Dark moody lighting, precise thin cool white rectangular softbox highlights, subtle cyan rim. Entire capsule in sharp focus, no blur. Pure solid BLACK background all the way to edges for seamless blending into a black website. No ground plane, no cast shadow outside the capsule, no glow cloud, no text, no logos, no hands, no other objects, no borders. Square 1024x1024 composition. High quality final website asset."
+    },
+    {
+      "path": "src/assets/pill-red.png",
+      "prompt": "Use case: product-mockup. Asset for a cinematic Matrix-inspired choice screen in a developer portfolio. Generate one isolated photorealistic glossy RED capsule pill, deep ruby crimson translucent lacquered gelatine, visible fine center seam joining the two halves, believable volume and rich optical reflections, refined studio macro product photography. The capsule floats diagonally from lower left to upper right at 25 degrees, perfectly centered, fills 68 percent of square canvas width. Dark moody lighting, precise thin warm white rectangular softbox highlights, subtle scarlet rim. Entire capsule in sharp focus, no blur. Pure solid BLACK background all the way to edges for seamless blending into a black website. No ground plane, no cast shadow outside the capsule, no glow cloud, no text, no logos, no hands, no other objects, no borders. Square 1024x1024 composition. High quality final website asset."
+    }
+  ]
+}

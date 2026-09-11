@@ -1,0 +1,27 @@
+---
+const rows = [Array.from("NEFTALI"), Array.from("ODÍN")];
+---
+
+<h1 class="reactive-name hero-title relative z-1 display aberrate text-phosphor font-normal">
+  <span class="sr-only">Neftali Odín</span>
+  {rows.map((row, index) => (
+    <span class="name-line">
+      {row.map((letter) => (
+        <span class:list={["name-letter", { "name-letter-accent": letter === "Í" }]} aria-hidden="true">{letter}</span>
+      ))}
+      {index === 1 && <button type="button" id="wake-up" class="wake-trigger" aria-label="Explorar el otro lado de la terminal" title="." onclick="window.__matrix?.open()">.</button>}
+    </span>
+  ))}
+</h1>
+
+<style>
+  .reactive-name { line-height: 0.88; }
+  .name-line { display: block; white-space: nowrap; }
+  .name-letter { display: inline-block; vertical-align: baseline; }
+  .name-letter-accent { color: var(--color-amber); }
+  @media (hover: hover) and (pointer: fine) {
+    :global(:root:not([data-theme="realworld"])) .name-letter:hover {
+      color: var(--color-amber);
+    }
+  }
+</style>

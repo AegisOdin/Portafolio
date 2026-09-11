@@ -13,7 +13,7 @@
    nog-os v26.05 · phosphor build · MX-mor
 </pre>
     <div id="boot-lines"></div>
-    <div class="mt-6 text-[var(--color-muted)] text-xs"><span class="sigil">[esc]</span> skip · <span class="sigil">[any key]</span> continue</div>
+    <div class="mt-6 text-[var(--color-muted)] text-xs"><span class="sigil">[esc]</span> saltar · <span class="sigil">[enter / espacio]</span> continuar</div>
   </div>
 </div>
 
@@ -21,7 +21,9 @@
   const KEY = "nog_boot_done_v1";
   const boot = document.getElementById("boot")!;
   const lines = document.getElementById("boot-lines")!;
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let timer: number | undefined;
+  let finished = false;
 
   const seq: Array<[string, number]> = [
     ["[ OK ] CPU ............... 1x neftali.cortex @ 3.6 GHz", 60],
@@ -37,27 +39,64 @@
     ["welcome, visitor. press / to summon command bar.", 0],
   ];
 
-  function done() {
+  function done(immediate = false) {
+    if (finished) return;
+    finished = true;
+    window.clearTimeout(timer);
+    timer = undefined;
+    window.removeEventListener("keydown", skip, true);
+    boot.removeEventListener("click", skip);
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+    reduced.removeEventListener("change", onMotionChange);
+    try { sessionStorage.setItem(KEY, "1"); } catch { /* Boot is optional without storage. */ }
+    // A skipped or reduced-motion boot must release the page immediately.
+    if (immediate || reduced.matches) {
+      boot.remove();
+      return;
+    }
+    boot.style.pointerEvents = "none";
+    boot.setAttribute("aria-hidden", "true");
     boot.style.transition = "opacity .35s ease, filter .35s ease";
     boot.style.opacity = "0";
     boot.style.filter = "blur(6px)";
-    setTimeout(() => { boot.classList.add("hidden"); boot.remove(); }, 360);
-    sessionStorage.setItem(KEY, "1");
+    timer = window.setTimeout(() => { timer = undefined; boot.remove(); }, 360);
+  }
+
+  function skip(event: KeyboardEvent | MouseEvent) {
+    if (event instanceof KeyboardEvent) {
+      if (event.key !== "Escape" && event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    done(true);
+  }
+
+  function onVisibilityChange() {
+    if (document.hidden) done(true);
+  }
+
+  function onMotionChange() {
+    if (reduced.matches) done(true);
   }
 
   function run() {
-    if (sessionStorage.getItem(KEY)) return;
-    boot.classList.remove("hidden");
-
-    if (reduced) {
-      lines.innerHTML = seq.map(([t]) => `<div>${t}</div>`).join("");
-      setTimeout(done, 600);
+    let seen: boolean;
+    try { seen = Boolean(sessionStorage.getItem(KEY)); }
+    catch { done(true); return; }
+    if (seen || reduced.matches || document.hidden) {
+      done(true);
       return;
     }
+    boot.classList.remove("hidden");
+    window.addEventListener("keydown", skip, true);
+    boot.addEventListener("click", skip);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    reduced.addEventListener("change", onMotionChange);
 
     let i = 0;
     function next() {
-      if (i >= seq.length) { setTimeout(done, 500); return; }
+      if (finished) return;
+      if (i >= seq.length) { timer = window.setTimeout(() => done(), 500); return; }
       const [t, d] = seq[i++];
       const div = document.createElement("div");
       div.textContent = t;
@@ -68,18 +107,9 @@
         div.classList.add("glow-soft");
       }
       lines.appendChild(div);
-      setTimeout(next, d);
+      timer = window.setTimeout(next, d);
     }
     next();
-
-    const skip = (e: KeyboardEvent | MouseEvent) => {
-      if (e instanceof KeyboardEvent && e.key !== "Escape" && e.key !== "Enter" && e.key !== " ") return;
-      done();
-      window.removeEventListener("keydown", skip as any);
-      window.removeEventListener("click", skip as any);
-    };
-    window.addEventListener("keydown", skip);
-    window.addEventListener("click", skip);
   }
 
   run();

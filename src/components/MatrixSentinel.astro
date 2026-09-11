@@ -1,0 +1,29 @@
+<div class="matrix-sentinel" aria-hidden="true" data-matrix-sentinel>
+  <canvas></canvas>
+</div>
+
+<style>
+  .matrix-sentinel {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    display: none;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 48%);
+  }
+  :global(:root[data-theme="realworld"]) .matrix-sentinel { display: block; }
+  .matrix-sentinel canvas { width: 100%; height: 100%; opacity: 0; }
+  /* The machine occupies the cube's space in the alternative world. */
+  :global(:root[data-theme="realworld"].sentinel-ready .signal-core) { visibility: hidden; }
+  @media (max-width: 767px) {
+    .matrix-sentinel { mask-image: linear-gradient(90deg, transparent, #000 80%); }
+  }
+  @media print { .matrix-sentinel { display: none !important; } }
+</style>
+
+<script>
+  import { mountSentinel } from "../lib/sentinel-scene";
+  const mount = document.querySelector<HTMLElement>("[data-matrix-sentinel]");
+  if (mount) mountSentinel(mount);
+</script>

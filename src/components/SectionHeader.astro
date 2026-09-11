@@ -9,8 +9,7 @@ interface Props {
 const { cmd, label, labelKey, heading, headingKey } = Astro.props;
 const a11yHeading = heading ?? cmd;
 ---
-<header class="mb-8 md:mb-12">
-  <h2 class="sr-only" data-i18n={headingKey}>{a11yHeading}</h2>
+<header class="section-heading">
   <div class="flex items-baseline gap-3 flex-wrap" aria-hidden="true">
     <span class="sigil text-sm">neftali@portfolio</span>
     <span class="text-[var(--color-muted)] text-sm">~</span>
@@ -18,5 +17,5 @@ const a11yHeading = heading ?? cmd;
     <code class="text-[var(--color-phosphor)] glow-soft text-sm md:text-base">{cmd}</code>
     {label && <span class="text-[var(--color-muted)] text-xs ml-auto">// <span data-i18n={labelKey}>{label}</span></span>}
   </div>
-  <hr class="mt-3 border-0 h-px bg-gradient-to-r from-[var(--color-phosphor)] via-[color-mix(in_srgb,var(--color-phosphor)_40%,transparent)] to-transparent" />
+  <h2 class="display" data-i18n={headingKey}>{a11yHeading}</h2>
 </header>

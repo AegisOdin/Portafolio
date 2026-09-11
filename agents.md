@@ -32,3 +32,8 @@ Single-page portfolio. Everything renders from `src/pages/index.astro` — no ro
 - TS uses `astro/tsconfigs/strict`. ESLint disables `no-undef` for `.astro`/`.ts` (Astro handles its own typing).
 - Spanish copy throughout user-facing strings; keep locale unless explicitly changing.
 - New colors/fonts go into `@theme` as CSS vars, not hardcoded hex in components.
+
+## User preferences (persistent memory)
+
+- The user personally reviews the design in the browser. Do not open a browser, take screenshots, or run browser/Playwright visual checks unless the user explicitly asks. Use code review and build/lint checks for technical validation. Recorded at the user's request on 2026-09-11.
+- Preserve the existing CRT/phosphor terminal identity when improving the design.

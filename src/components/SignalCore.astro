@@ -1,0 +1,371 @@
+---
+const faces = ["front", "back", "left", "right", "top", "bottom"];
+---
+
+<figure class="signal-core" data-signal-core>
+  <div class="signal-core__viewport" aria-hidden="true">
+    <div class="signal-core__reticle"></div>
+    <div class="signal-core__space">
+      <div class="signal-core__floor"></div>
+      <div class="signal-core__orbit signal-core__orbit--equator">
+        <span class="signal-core__satellite"></span>
+      </div>
+      <div class="signal-core__orbit signal-core__orbit--meridian"></div>
+      <div class="signal-core__cube">
+        {faces.map((face) => (
+          <div class={`signal-core__face signal-core__face--${face}`}>
+            <span class="signal-core__node"></span>
+          </div>
+        ))}
+        <div class="signal-core__kernel">
+          {faces.map((face) => (
+            <div class={`signal-core__kernel-face signal-core__face--${face}`}>
+              {face === "front" && <span>&lt;/&gt;</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+      <span class="signal-core__anchor signal-core__anchor--a">+</span>
+      <span class="signal-core__anchor signal-core__anchor--b">+</span>
+    </div>
+    <div class="signal-core__coordinates">
+      <span>n / o</span>
+      <span>∴</span>
+    </div>
+  </div>
+  <figcaption class="signal-core__caption">
+    <span>
+      <span class="signal-core__es">Ideas que toman forma.</span>
+      <span class="signal-core__en" lang="en">Ideas taking shape.</span>
+    </span>
+    <span class="signal-core__hint">
+      <span class="signal-core__es">Explora al bajar ↓</span>
+      <span class="signal-core__en" lang="en">Explore as you scroll ↓</span>
+    </span>
+  </figcaption>
+</figure>
+
+<style>
+  .signal-core {
+    --core-rx: -23deg;
+    --core-ry: -33deg;
+    --core-rz: -8deg;
+    --core-y: 0px;
+    --floor-y: 0px;
+    --orbit-turn: 0deg;
+    --pointer-x: 0px;
+    --pointer-y: 0px;
+    container-type: inline-size;
+    margin: 0;
+    width: 100%;
+    color: var(--accent);
+  }
+
+  .signal-core__viewport {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    font-size: clamp(0.65rem, 3.65cqw, 1.2rem);
+    perspective: 58em;
+    perspective-origin: 50% 42%;
+    background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 68%);
+  }
+
+  .signal-core__reticle {
+    position: absolute;
+    inset: 8% 6% 7%;
+    border: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+    border-radius: 50%;
+  }
+
+  .signal-core__reticle::before,
+  .signal-core__reticle::after {
+    content: "";
+    position: absolute;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+
+  .signal-core__reticle::before {
+    left: -5%;
+    top: 50%;
+    width: 110%;
+    height: 1px;
+  }
+
+  .signal-core__reticle::after {
+    left: 50%;
+    top: -5%;
+    width: 1px;
+    height: 110%;
+  }
+
+  .signal-core__space {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: translate3d(var(--pointer-x), var(--pointer-y), 0);
+  }
+
+  .signal-core__floor {
+    position: absolute;
+    left: 50%;
+    top: 74%;
+    width: 31em;
+    height: 22em;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--accent) 17%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--accent) 17%, transparent) 1px, transparent 1px);
+    background-size: 2em 2em;
+    mask-image: radial-gradient(ellipse, black 12%, transparent 68%);
+    transform: translate(-50%, -50%) translateY(var(--floor-y)) rotateX(71deg) rotateZ(-15deg) translateZ(-4em);
+  }
+
+  .signal-core__cube {
+    --depth: 5em;
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 10em;
+    height: 10em;
+    margin: -5em;
+    transform-style: preserve-3d;
+    transform: translateY(var(--core-y)) rotateX(var(--core-rx)) rotateY(var(--core-ry)) rotateZ(var(--core-rz));
+  }
+
+  .signal-core__face,
+  .signal-core__kernel-face {
+    position: absolute;
+    inset: 0;
+    border: 1px solid color-mix(in srgb, var(--accent) 85%, transparent);
+    background-color: color-mix(in srgb, var(--accent) 3%, transparent);
+    backface-visibility: visible;
+  }
+
+  .signal-core__face {
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--accent) 16%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--accent) 16%, transparent) 1px, transparent 1px);
+    background-size: 20% 20%;
+    box-shadow: 0 0 0.6em color-mix(in srgb, var(--accent) 9%, transparent), inset 0 0 1.5em color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+
+  .signal-core__face::before {
+    content: "";
+    position: absolute;
+    inset: 0.55em;
+    border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+
+  .signal-core__face--front { transform: translateZ(var(--depth)); }
+  .signal-core__face--back { transform: rotateY(180deg) translateZ(var(--depth)); }
+  .signal-core__face--left { transform: rotateY(-90deg) translateZ(var(--depth)); }
+  .signal-core__face--right { transform: rotateY(90deg) translateZ(var(--depth)); }
+  .signal-core__face--top { transform: rotateX(90deg) translateZ(var(--depth)); }
+  .signal-core__face--bottom { transform: rotateX(-90deg) translateZ(var(--depth)); }
+
+  .signal-core__node {
+    position: absolute;
+    left: -0.15em;
+    top: -0.15em;
+    width: 0.3em;
+    height: 0.3em;
+    background: var(--color-ink);
+    box-shadow: 0 0 0.65em color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+
+  .signal-core__kernel {
+    --depth: 1.7em;
+    position: absolute;
+    inset: 3.3em;
+    transform-style: preserve-3d;
+    transform: rotateY(21deg) rotateX(-15deg);
+    color: var(--color-amber);
+  }
+
+  .signal-core__kernel-face {
+    display: grid;
+    place-items: center;
+    border-color: var(--color-amber);
+    background: color-mix(in srgb, var(--color-amber) 9%, transparent);
+    box-shadow: inset 0 0 1.3em color-mix(in srgb, var(--color-amber) 12%, transparent);
+  }
+
+  .signal-core__kernel-face span {
+    font-family: var(--font-crt);
+    font-size: 1.8em;
+    line-height: 1;
+    text-shadow: 0 0 0.5em color-mix(in srgb, var(--color-amber) 50%, transparent);
+  }
+
+  .signal-core__orbit {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 22em;
+    height: 22em;
+    margin: -11em;
+    border: 1px solid color-mix(in srgb, var(--color-amber) 60%, transparent);
+    border-radius: 50%;
+    transform-style: preserve-3d;
+  }
+
+  .signal-core__orbit--equator {
+    transform: translateY(var(--core-y)) rotateX(72deg) rotateY(-12deg) rotateZ(var(--orbit-turn));
+  }
+
+  .signal-core__orbit--meridian {
+    border-color: color-mix(in srgb, var(--accent) 36%, transparent);
+    transform: translateY(var(--core-y)) rotateY(69deg) rotateX(-25deg) rotateZ(var(--orbit-turn));
+  }
+
+  .signal-core__satellite {
+    position: absolute;
+    left: 50%;
+    top: -0.2em;
+    width: 0.4em;
+    height: 0.4em;
+    background: var(--color-amber);
+    box-shadow: 0 0 0.75em color-mix(in srgb, var(--color-amber) 65%, transparent);
+  }
+
+  .signal-core__anchor {
+    position: absolute;
+    font-family: var(--font-crt);
+    font-size: 1.6em;
+    line-height: 1;
+    color: color-mix(in srgb, var(--accent) 55%, transparent);
+    transform: translateY(var(--floor-y));
+  }
+
+  .signal-core__anchor--a { left: 10%; top: 24%; }
+  .signal-core__anchor--b { right: 9%; bottom: 21%; }
+
+  .signal-core__coordinates {
+    position: absolute;
+    inset: auto 6% 4%;
+    display: flex;
+    justify-content: space-between;
+    color: color-mix(in srgb, var(--color-ink) 60%, transparent);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+  }
+
+  .signal-core__caption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-inline: 6%;
+    padding-block: 0.9rem;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    color: var(--color-ink);
+    font-size: 0.6875rem;
+    line-height: 1.6;
+  }
+
+  .signal-core__hint { color: color-mix(in srgb, var(--color-ink) 66%, transparent); }
+  .signal-core__en { display: none; }
+  :global(html:lang(en)) .signal-core__es { display: none; }
+  :global(html:lang(en)) .signal-core__en { display: inline; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .signal-core__space,
+    .signal-core__cube,
+    .signal-core__floor,
+    .signal-core__orbit,
+    .signal-core__anchor {
+      transition: transform 130ms ease-out;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signal-core__hint { display: none; }
+  }
+
+  @media print {
+    .signal-core { display: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-signal-core]").forEach((mount) => {
+    const pointerSurface = mount.closest<HTMLElement>("#hero") ?? mount;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    let inView = false;
+    let frame = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    const clamp = (value: number, min = -1, max = 1) => Math.min(max, Math.max(min, value));
+
+    const render = () => {
+      frame = 0;
+      if (!inView || document.hidden || reduced.matches) return;
+      const rect = mount.getBoundingClientRect();
+      const progress = clamp((window.innerHeight * 0.52 - rect.top - rect.height / 2) / window.innerHeight);
+      const set = (name: string, value: number, unit: string) => mount.style.setProperty(name, `${value.toFixed(2)}${unit}`);
+
+      set("--core-rx", -23 + progress * 34 - pointerY * 22, "deg");
+      set("--core-ry", -33 + progress * 110 + pointerX * 36, "deg");
+      set("--core-rz", -8 + progress * 12, "deg");
+      set("--core-y", progress * -25, "px");
+      set("--floor-y", progress * 20, "px");
+      set("--orbit-turn", progress * -54 + pointerX * 8, "deg");
+      set("--pointer-x", pointerX * 5, "px");
+      set("--pointer-y", pointerY * 4, "px");
+    };
+
+    // One frame per input burst; no idle animation loop or scroll interception.
+    const requestRender = () => {
+      if (!frame && inView && !document.hidden && !reduced.matches) {
+        frame = window.requestAnimationFrame(render);
+      }
+    };
+
+    const cancelFrame = () => {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const resetPointer = () => {
+      pointerX = 0;
+      pointerY = 0;
+      requestRender();
+    };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      if (inView) requestRender();
+      else {
+        cancelFrame();
+        pointerX = 0;
+        pointerY = 0;
+      }
+    });
+    observer.observe(mount);
+
+    pointerSurface.addEventListener("pointermove", (event) => {
+      if (!finePointer.matches || reduced.matches || event.pointerType === "touch" || !inView) return;
+      const rect = pointerSurface.getBoundingClientRect();
+      pointerX = clamp(((event.clientX - rect.left) / rect.width - 0.5) * 2);
+      pointerY = clamp(((event.clientY - rect.top) / rect.height - 0.5) * 2);
+      requestRender();
+    }, { passive: true });
+    pointerSurface.addEventListener("pointerleave", resetPointer);
+    window.addEventListener("scroll", requestRender, { passive: true });
+    window.addEventListener("resize", requestRender, { passive: true });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) cancelFrame();
+      else requestRender();
+    });
+    finePointer.addEventListener("change", resetPointer);
+    reduced.addEventListener("change", () => {
+      cancelFrame();
+      pointerX = 0;
+      pointerY = 0;
+      mount.removeAttribute("style");
+      requestRender();
+    });
+  });
+</script>

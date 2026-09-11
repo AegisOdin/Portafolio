@@ -3,9 +3,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import BootSequence from "../components/BootSequence.astro";
 import CommandBar from "../components/CommandBar.astro";
 import SectionHeader from "../components/SectionHeader.astro";
-import CrtModel from "../components/CrtModel.astro";
 import MatrixScene from "../components/MatrixScene.astro";
 import AccessModal from "../components/AccessModal.astro";
+import SignalCore from "../components/SignalCore.astro";
+import ReactiveName from "../components/ReactiveName.astro";
+import SignalGame from "../components/SignalGame.astro";
+import ScrollAtmosphere from "../components/ScrollAtmosphere.astro";
+import MatrixSentinel from "../components/MatrixSentinel.astro";
 import { i18n, type Lang } from "../i18n";
 
 const lang: Lang = "es";
@@ -19,9 +23,9 @@ const projects = [
     name: "Spa Be Perfect",
     org: "Flama Agency",
     role: "Full Stack · autónomo",
-    period: "nov 2025 — actualidad",
+    period: "nov 2025 — ago 2026",
     summary:
-      "App de gestión operativa para clínica de medicina estética. Frontend Nuxt/Vue, backend Strapi v5/TS, tiempo real con Socket.io, almacenamiento en AWS S3 y MySQL gestionado.",
+      "App de gestión operativa para clínica de medicina estética. Frontend Nuxt/Vue, backend Strapi v5/TS, tiempo real con Socket.io, almacenamiento en AWS S3 y MySQL.",
     stack: [
       "Nuxt",
       "Vue",
@@ -39,58 +43,52 @@ const projects = [
     name: "SIM-CLE",
     org: "Instituto Tecnológico de Morelia · Depto. de Idiomas",
     role: "Full Stack · remoto",
-    period: "ene 2026 — actualidad",
+    period: "ene 2026 — jun 2026",
     summary:
-      "Sistema institucional para centralizar inscripciones, gestión de grupos y seguimiento de alumnos del Centro de Lenguas. Frontend reactivo con Livewire y API REST en Laravel.",
-    stack: ["Laravel", "Livewire", "PHP", "REST API", "Java", "GitLab"],
+      "Sistema institucional para centralizar inscripciones, gestión de grupos y seguimiento de alumnos del Centro de Lenguas. Frontend reactivo con Livewire y backend en Laravel.",
+    stack: ["Laravel", "Livewire", "PHP", "REST API", "Java", "GitLab", "GitHub", "Git"],
     prod: "https://sim-cle.morelia.tecnm.mx/login",
-    status: "ACTIVE",
+    status: "COMPLETED",
   },
   {
-    slug: "tekniu-odoo",
-    name: "Odoo ERP · Tekniu MX",
+    slug: "wiki-tekniu",
+    name: "Wiki Tekniu",
     org: "Tekniu México",
     role: "Becario Dev · híbrido",
     period: "mar 2026 — actualidad",
     summary:
-      "Desarrollo e implementación de módulos Odoo para PyMEs locales e internacionales. Integraciones con servicios externos, mantenimiento de servidores Linux y dockerización de entornos cliente.",
-    stack: [
-      "Odoo",
-      "JavaScript",
-      "Docker",
-      "Linux",
-      "PostgreSQL",
-      "React",
-      "XML",
-    ],
+      "Sitio interno para consultar la documentación de los repositorios de Tekniu. Frontend y backend desarrollados en TypeScript, con Next.js en el frontend.",
+    stack: ["TypeScript", "Next.js", "React.js"],
     prod: "https://wiki.tekniu.org/login?from=%2F",
-    status: "ACTIVE",
+    status: "INTERNAL",
   },
 ];
 
 const experience = [
   {
     id: "tekniu",
-    date: "[2026-03]",
+    date: "[mar 2026 — actualidad]",
     host: "tekniu.mx",
     url: "https://wiki.tekniu.org/login?from=%2F",
     role: "BECARIO_DEV",
-    state: "HIRED",
+    state: "ACTIVE",
     mode: "Híbrido · Jornada parcial",
     title: "Becario de Desarrollo Web",
     org: "Tekniu México",
     bullets: [
       "Soluciones full stack en consultora especializada en Odoo ERP para PyMEs mexicanas e internacionales.",
-      "Implementación y personalización de módulos ERP, integración con servicios externos.",
-      "Mantenimiento de infraestructura Linux, despliegues con Docker.",
+      "Desarrollo de Wiki Tekniu para consultar la documentación de los repositorios de la empresa, con TypeScript en frontend y backend y Next.js en el frontend.",
+      "Implementación y personalización de módulos ERP, integración con servicios externos y mantenimiento de infraestructura Linux.",
     ],
     tech: [
       "JavaScript",
+      "TypeScript",
       "Odoo",
       "Docker",
       "Linux",
       "PostgreSQL",
       "React.js",
+      "Next.js",
       "SSH",
       "XML",
       "HTML",
@@ -99,11 +97,11 @@ const experience = [
   },
   {
     id: "itm",
-    date: "[2026-01]",
+    date: "[ene 2026 — jun 2026]",
     host: "itm.edu.mx",
     url: "https://sim-cle.morelia.tecnm.mx/login",
     role: "FULLSTACK",
-    state: "ACTIVE",
+    state: "COMPLETED",
     mode: "Remoto · Temporal",
     title: "Programador Full Stack",
     org: "Instituto Tecnológico de Morelia",
@@ -124,17 +122,17 @@ const experience = [
   },
   {
     id: "flama",
-    date: "[2025-11]",
+    date: "[nov 2025 — ago 2026]",
     host: "flama.agency",
     url: "https://appbeperfect.com",
     role: "FULLSTACK",
-    state: "ACTIVE",
+    state: "COMPLETED",
     mode: "Remoto · Autónomo",
     title: "Programador Full Stack",
     org: "Flama Agency",
     bullets: [
       "Desarrollo integral de webapp de gestión operativa para Spa Be Perfect (medicina estética).",
-      "Frontend Nuxt/Vue, backend Strapi v5/TS, integración AWS S3, tiempo real con Socket.io.",
+      "Frontend Nuxt/Vue, backend Strapi v5/TS, integración AWS S3, tiempo real con Socket.io y base de datos MySQL.",
       "Proyecto en producción: appbeperfect.com",
     ],
     tech: [
@@ -159,7 +157,7 @@ const skills: { key: string; items: string[] }[] = [
       "Vue.js",
       "Nuxt.js",
       "React.js",
-      "Astro",
+      "Next.js",
       "HTML",
       "CSS",
       "Livewire",
@@ -185,8 +183,6 @@ const skills: { key: string; items: string[] }[] = [
       "Docker",
       "AWS",
       "AWS S3",
-      "Microsoft Azure",
-      "CI/CD",
       "Linux",
       "SSH",
     ],
@@ -233,19 +229,16 @@ const projectList = {
 
   <!-- Top status bar -->
   <header
-    class="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_srgb,var(--color-bg)_85%,transparent)] border-b border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)]"
+    class="site-header sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_srgb,var(--color-bg)_85%,transparent)] border-b border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)]"
   >
     <div
       class="max-w-6xl mx-auto px-5 md:px-8 py-2.5 flex items-center justify-between text-[11px] md:text-xs tracking-widest uppercase"
     >
       <div class="flex items-center gap-3 md:gap-5">
         <span class="text-[var(--color-amber)] glow-soft">●</span>
-        <span class="text-[var(--color-muted)]">neftali@portfolio:~$</span>
-        <span class="hidden md:inline text-[var(--color-ink)]/70"
-          >build · 26.05.14</span
-        >
+        <a href="#hero" class="text-[var(--color-muted)] no-underline" aria-label="Volver al inicio">neftali<span class="hidden sm:inline">@portfolio</span>:~$</a>
       </div>
-      <nav class="hidden md:flex items-center gap-5 text-[var(--color-muted)]" aria-label="Primary">
+      <nav class="hidden lg:flex items-center gap-5 text-[var(--color-muted)]" aria-label="Navegación principal">
         <a href="#about" class="no-underline hover:text-[var(--color-phosphor)]"
           >whoami</a
         >
@@ -262,6 +255,10 @@ const projectList = {
           class="no-underline hover:text-[var(--color-phosphor)]">skills</a
         >
         <a
+          href="#arcade"
+          class="no-underline hover:text-[var(--color-phosphor)]">arcade</a
+        >
+        <a
           href="#contact"
           class="no-underline hover:text-[var(--color-phosphor)]">mail</a
         >
@@ -273,7 +270,7 @@ const projectList = {
           aria-label="Abrir menú de navegación"
           aria-expanded="false"
           aria-controls="mobile-nav"
-          class="md:hidden text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+          class="lg:hidden text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
         >☰ menu</button>
         <button
           id="lang-toggle"
@@ -286,7 +283,7 @@ const projectList = {
           type="button"
           onclick="(window).__cmd?.open()"
           aria-label="Abrir barra de comandos"
-          class="hidden md:inline-block text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
+          class="hidden lg:inline-block text-[var(--color-phosphor)] glow-soft pill !bg-transparent !cursor-pointer hover:!bg-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)]"
           >/ cmd</button
         >
       </div>
@@ -295,26 +292,29 @@ const projectList = {
     <!-- Mobile nav drawer -->
     <nav
       id="mobile-nav"
-      aria-label="Mobile"
-      class="md:hidden hidden border-t border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)] bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)]"
+      aria-label="Navegación móvil"
+      class="lg:hidden hidden border-t border-[color-mix(in_srgb,var(--color-phosphor)_18%,transparent)] bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)]"
     >
       <ul class="max-w-6xl mx-auto px-5 py-3 flex flex-col text-sm">
         <li><a href="#about" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>whoami</a></li>
         <li><a href="#projects" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>projects</a></li>
         <li><a href="#experience" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>exp.log</a></li>
         <li><a href="#skills" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>skills</a></li>
+        <li><a href="#arcade" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>arcade</a></li>
         <li><a href="#contact" class="block py-3 no-underline hover:text-[var(--color-phosphor)]" data-mobile-link>mail</a></li>
       </ul>
     </nav>
   </header>
 
   <main id="main" class="relative">
+    <ScrollAtmosphere />
+    <MatrixSentinel />
     <!-- ============ HERO ============ -->
     <section
       id="hero"
-      class="relative min-h-[min(92vh,900px)] lg:min-h-[92vh] grid-bg overflow-hidden"
+      class="hero-section relative overflow-hidden"
     >
-      <div class="absolute inset-0 pointer-events-none">
+      <div class="hero-coordinates absolute inset-0 pointer-events-none" aria-hidden="true">
         <!-- decorative ASCII corners -->
         <div
           class="hidden sm:block absolute top-6 left-6 text-[11px] font-mono text-[color-mix(in_srgb,var(--color-phosphor)_55%,transparent)] leading-[1.3] px-3 py-1.5 border border-[color-mix(in_srgb,var(--color-phosphor)_40%,transparent)]">
@@ -326,20 +326,14 @@ const projectList = {
           class="hidden md:block absolute top-6 right-6 text-[11px] font-mono text-[color-mix(in_srgb,var(--color-amber)_65%,transparent)] leading-[1.3] px-3 py-1.5 border border-[color-mix(in_srgb,var(--color-amber)_45%,transparent)] text-right">
           <div>loc: morelia</div>
           <div>mx-mor · gmt-6</div>
-          <div>wx: 22°c sunny</div>
+          <div>full stack developer</div>
         </div>
       </div>
 
       <div
-        class="max-w-6xl mx-auto px-5 md:px-8 pt-20 sm:pt-24 md:pt-32 pb-24 sm:pb-20 relative"
+        class="hero-layout max-w-6xl mx-auto px-5 md:px-8 relative"
       >
-        <!-- Floating 3D CRT model — top-right of hero on desktop -->
-        <div
-          class="hidden lg:block absolute top-24 right-5 md:right-8 w-[340px] h-[340px] xl:w-[400px] xl:h-[400px] z-10 pointer-events-auto"
-        >
-          <CrtModel />
-        </div>
-
+        <div class="hero-copy">
         <div
           class="relative z-1 text-[var(--color-amber)] glow-soft text-xs md:text-sm mb-4 tracking-widest"
           data-i18n="hero.tag"
@@ -347,46 +341,30 @@ const projectList = {
           {t["hero.tag"]}
         </div>
 
-        <h1
-          class="hero-title relative z-1 display aberrate text-phosphor font-normal leading-[0.88] wrap-break-word"
-        >
-          NEFTALI<br />OD<span class="text-[var(--color-amber)]">Í</span>N<button
-            type="button"
-            id="wake-up"
-            class="wake-trigger"
-            aria-label="Easter egg"
-            title="."
-            onclick="(window).__matrix?.open()"
-          >.</button>
-        </h1>
-
-        <!-- Mobile/tablet: inline below pills -->
-        <div
-          class="lg:hidden mt-12 mb-2 w-full max-w-105 mx-auto aspect-square relative z-1"
-        >
-          <CrtModel />
+        <div class="hero-name">
+          <ReactiveName />
         </div>
 
-        <div
-          class="mt-8 max-w-2xl text-base md:text-lg text-[var(--color-ink)]/90 leading-relaxed relative z-1"
-        >
+        <div class="hero-description">
           <p
-            class="typewrite font-mono"
+            class="font-mono"
             data-i18n="hero.subtitle"
             set:html={t["hero.subtitle"]}
           />
+          <p class="hero-statement" data-i18n="hero.statement">{t["hero.statement"]}</p>
         </div>
 
-        <div class="mt-10 flex flex-wrap gap-3 text-xs md:text-sm">
+        <div class="hero-stack flex flex-wrap gap-2 text-xs">
           <span class="pill">TS / JS</span>
           <span class="pill">Vue · Nuxt</span>
+          <span class="pill">React · Next.js</span>
           <span class="pill">Laravel · Livewire</span>
           <span class="pill">Node · Strapi</span>
           <span class="pill">Docker · AWS</span>
           <span class="pill">PostgreSQL · MySQL</span>
         </div>
 
-        <div class="mt-12 flex flex-wrap items-center gap-4">
+        <div class="hero-actions flex flex-wrap items-center gap-3">
           <a href="#projects" class="no-underline">
             <span
               class="pill !text-[var(--color-bg)] !bg-[var(--color-phosphor)] !border-[var(--color-phosphor)] !text-sm !px-4 !py-2"
@@ -411,13 +389,11 @@ const projectList = {
           </button>
         </div>
 
-        <div
-          class="absolute bottom-6 left-5 md:left-8 text-[var(--color-muted)] text-xs flex items-center gap-3"
-        >
-          <span
-            class="inline-block w-2 h-2 rounded-full bg-[var(--color-phosphor)] glow"
-          ></span>
-          <span data-i18n="hero.scroll" set:html={t["hero.scroll"]} />
+        </div>
+        <div class="hero-visual"><SignalCore /></div>
+        <div class="hero-baseline">
+          <a href="#about" class="hero-scroll no-underline"><span aria-hidden="true">↓</span><span data-i18n="hero.explore">{t["hero.explore"]}</span></a>
+          <span class="hero-location">Morelia, México <span aria-hidden="true">/</span> 19.70° N · 101.19° O</span>
         </div>
       </div>
     </section>
@@ -445,7 +421,7 @@ const projectList = {
 
         <aside class="md:col-span-5">
           <div
-            class="frame p-5 md:p-6 font-mono text-sm"
+            class="identity-panel frame p-5 md:p-6 font-mono text-sm"
             data-label="stats.json"
           >
             <div class="space-y-2.5">
@@ -470,7 +446,7 @@ const projectList = {
               </div>
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">active_roles</span>
-                <span class="text-[var(--color-amber)]">3</span>
+                <span class="text-[var(--color-amber)]">{experience.filter((e) => e.state === "ACTIVE").length}</span>
               </div>
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">in_production</span>
@@ -503,9 +479,10 @@ const projectList = {
         {
           projects.map((p, i) => (
             <article
-              class={`frame glitch p-6 md:p-7 relative ${i === 0 ? "md:col-span-2" : ""}`}
+              class={`project-card frame p-6 md:p-7 relative ${i === 0 ? "project-featured md:col-span-2" : ""}`}
               data-label={`./${p.slug}.md`}
             >
+              <div class="project-copy">
               <div class="flex items-start justify-between gap-4 mb-3 flex-wrap">
                 <div>
                   <div class="text-[var(--color-muted)] text-xs uppercase tracking-widest">
@@ -557,10 +534,21 @@ const projectList = {
                   rel="noopener"
                   data-access-link
                   data-access-host={p.prod.replace(/^https?:\/\//, "").replace(/\/.*$/, "")}
-                  class="inline-flex items-center gap-2 text-sm"
+                  class="project-link inline-flex items-center gap-2 text-sm"
                 >
                   <span class="sigil">↗</span> {p.prod.replace("https://", "")}
                 </a>
+              )}
+              </div>
+              {i === 0 && (
+                <div class="project-system" aria-label={t["projects.architecture"]} data-i18n-attr="aria-label:projects.architecture">
+                  <span class="project-system-caption" data-i18n="projects.architecture">{t["projects.architecture"]}</span>
+                  <div class="system-node"><span data-i18n="projects.interface">{t["projects.interface"]}</span><strong>Nuxt / Vue</strong></div>
+                  <div class="system-connector" aria-hidden="true">↓ ↑</div>
+                  <div class="system-node"><span>API + realtime</span><strong>Strapi / Socket.io</strong></div>
+                  <div class="system-connector" aria-hidden="true">↓ ↑</div>
+                  <div class="system-node"><span data-i18n="projects.data">{t["projects.data"]}</span><strong>MySQL / AWS S3</strong></div>
+                </div>
               )}
             </article>
           ))
@@ -584,16 +572,16 @@ const projectList = {
       <div class="frame p-5 md:p-8 font-mono text-sm" data-label="tail -f">
         <div class="space-y-1.5">
           {
-            experience.map((e) => (
-              <details class="group border-b border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] last:border-b-0 py-2">
+            experience.map((e, i) => (
+              <details open={i === 0} class="experience-entry group border-b border-[color-mix(in_srgb,var(--color-phosphor)_15%,transparent)] last:border-b-0 py-2">
                 <summary class="cursor-pointer list-none flex flex-wrap items-center gap-x-4 gap-y-1 hover:bg-[color-mix(in_srgb,var(--color-phosphor)_5%,transparent)] -mx-2 px-2 py-1.5 rounded-sm">
-                  <span class="text-[var(--color-muted)]">{e.date}</span>
+                  <span class="text-[var(--color-muted)]" data-i18n={`exp-${e.id}-date`}>{t[`exp-${e.id}-date`] ?? e.date}</span>
                   <span class="text-[var(--color-phosphor)] w-40 truncate">
                     {e.host}
                   </span>
                   <span class="pill !text-[10px]">[{e.role}]</span>
                   <span
-                    class={`text-xs ${e.state === "HIRED" ? "text-[var(--color-amber)]" : "text-[var(--color-phosphor)]"}`}
+                    class={`text-xs ${e.state === "ACTIVE" ? "text-[var(--color-amber)]" : "text-[var(--color-phosphor)]"}`}
                   >
                     {e.state}
                   </span>
@@ -664,24 +652,40 @@ const projectList = {
         headingKey="skills.heading"
       />
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="skills-grid">
         {
           skills.map((cat) => (
-            <div class="frame p-5" data-label={cat.key.toLowerCase()}>
-              <div
-                class="text-[var(--color-amber)] text-xs uppercase tracking-widest mb-3"
+            <div class="skill-category">
+              <h3
+                class="skill-title"
                 data-i18n={`skills.${cat.key}`}
               >
                 {t[`skills.${cat.key}`] ?? cat.key}
-              </div>
-              <div class="flex flex-wrap gap-1.5">
+              </h3>
+              <ul class="skill-items">
                 {cat.items.map((s) => (
-                  <span class="pill">{s}</span>
+                  <li class="skill-item">{s}</li>
                 ))}
-              </div>
+              </ul>
             </div>
           ))
         }
+      </div>
+    </section>
+
+    <section id="arcade" class="arcade-section max-w-6xl mx-auto px-5 md:px-8 py-24 md:py-32">
+      <SectionHeader cmd="./play snake" label="local / offline" heading={t["arcade.heading"]} headingKey="arcade.heading" />
+      <div class="arcade-layout">
+        <div class="arcade-copy">
+          <p class="arcade-lead display" data-i18n="arcade.lead">{t["arcade.lead"]}</p>
+          <p data-i18n="arcade.description">{t["arcade.description"]}</p>
+          <div class="arcade-instructions">
+            <span class="sigil" aria-hidden="true">&gt;</span>
+            <p data-i18n="arcade.instructions">{t["arcade.instructions"]}</p>
+          </div>
+          <a href="#contact" class="arcade-contact" data-i18n="arcade.contact">{t["arcade.contact"]}</a>
+        </div>
+        <SignalGame />
       </div>
     </section>
 
@@ -697,6 +701,7 @@ const projectList = {
         headingKey="contact.heading"
       />
 
+      <p class="contact-intro" data-i18n="contact.intro">{t["contact.intro"]}</p>
       <div class="grid md:grid-cols-12 gap-8">
         <form
           id="contact-form"
@@ -729,11 +734,12 @@ const projectList = {
           <label class="block">
             <span
               class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
-              >from:</span
+              data-i18n="contact.from">{t["contact.from"]}</span
             >
             <input
               type="email"
               name="email"
+              autocomplete="email"
               required
               placeholder="you@domain.com"
               class="mt-1 w-full bg-transparent border-0 border-b border-[color-mix(in_srgb,var(--color-phosphor)_35%,transparent)] outline-none py-1.5 text-[var(--color-ink)] focus:border-[var(--color-phosphor)] caret-[var(--color-phosphor)]"
@@ -743,7 +749,7 @@ const projectList = {
           <label class="block">
             <span
               class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
-              >subject:</span
+              data-i18n="contact.subject">{t["contact.subject"]}</span
             >
             <input
               type="text"
@@ -758,7 +764,7 @@ const projectList = {
           <label class="block">
             <span
               class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
-              >body:</span
+              data-i18n="contact.message">{t["contact.message"]}</span
             >
             <textarea
               name="message"
@@ -772,9 +778,10 @@ const projectList = {
 
           <!-- Captcha: in-page math challenge + honeypot + min-time check -->
           <div class="block">
-            <span
+            <label
+              for="captcha-input"
               class="text-[var(--color-muted)] text-xs uppercase tracking-widest"
-              >captcha:</span
+              data-i18n="contact.challenge">{t["contact.challenge"]}</label
             >
             <div class="mt-1 flex items-center gap-3 flex-wrap">
               <code
@@ -787,7 +794,8 @@ const projectList = {
                 name="captcha_answer"
                 type="text"
                 inputmode="numeric"
-                pattern="-?\\d+"
+                pattern="-?[0-9]+"
+                aria-describedby="captcha-q captcha-status"
                 autocomplete="off"
                 required
                 placeholder="= ?"
@@ -796,11 +804,12 @@ const projectList = {
               <button
                 type="button"
                 id="captcha-refresh"
-                aria-label="refresh captcha"
+                aria-label={t["contact.refresh"]}
+                data-i18n-attr="aria-label:contact.refresh"
                 class="text-[var(--color-muted)] hover:text-[var(--color-phosphor)] cursor-pointer text-xs"
-                >↻ new</button
+                data-i18n="contact.refresh">{t["contact.refresh"]}</button
               >
-              <span id="captcha-status" class="text-xs ml-auto"></span>
+              <span id="captcha-status" role="status" aria-live="polite" class="text-xs"></span>
             </div>
             <input
               type="hidden"
@@ -822,6 +831,7 @@ const projectList = {
         </form>
 
         <script>
+          import { i18n } from "../i18n";
           (() => {
             const form = document.getElementById(
               "contact-form",
@@ -837,6 +847,7 @@ const projectList = {
             const statusEl = document.getElementById("captcha-status")!;
             const tsEl = document.getElementById("form-ts") as HTMLInputElement;
             const refresh = document.getElementById("captcha-refresh")!;
+            const message = (key: string) => i18n[document.documentElement.lang === "en" ? "en" : "es"][key];
 
             const rand = (min: number, max: number) =>
               Math.floor(Math.random() * (max - min + 1)) + min;
@@ -847,7 +858,7 @@ const projectList = {
               const a = rand(2, 12);
               const b = rand(2, 12);
               const op: Op = ops[rand(0, ops.length - 1)];
-              let answer = 0;
+              let answer: number;
               if (op === "+") answer = a + b;
               else if (op === "-") answer = a - b;
               else answer = a * b;
@@ -885,7 +896,7 @@ const projectList = {
               const elapsed = Date.now() - Number(tsEl.value || 0);
               if (elapsed < 3000) {
                 e.preventDefault();
-                statusEl.textContent = "✗ too fast — try again";
+                statusEl.textContent = message("contact.tooFast");
                 statusEl.style.color = "var(--color-magenta)";
                 return;
               }
@@ -893,10 +904,10 @@ const projectList = {
               // captcha
               if (inputEl.value.trim() !== expectedEl.value) {
                 e.preventDefault();
-                statusEl.textContent = "✗ wrong — retry";
+                newChallenge();
+                statusEl.textContent = message("contact.wrong");
                 statusEl.style.color = "var(--color-magenta)";
                 inputEl.focus();
-                newChallenge();
                 return;
               }
             });
@@ -1023,8 +1034,15 @@ const projectList = {
     document.querySelectorAll("[data-mobile-link]").forEach((a) => {
       a.addEventListener("click", closeMobileNav);
     });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && mobileToggle?.getAttribute("aria-expanded") === "true") {
+        closeMobileNav();
+        mobileToggle.focus();
+      }
+    });
 
-    const stored = localStorage.getItem("lang") as Lang | null;
+    let stored: string | null = null;
+    try { stored = localStorage.getItem("lang"); } catch { /* Keep the default language when storage is unavailable. */ }
     let current: Lang = stored === "en" || stored === "es" ? stored : "es";
 
     function apply(lang: Lang) {
@@ -1047,7 +1065,7 @@ const projectList = {
           const val = dict[key];
           if (val != null) el.setAttribute(attr, val);
         });
-      localStorage.setItem("lang", lang);
+      try { localStorage.setItem("lang", lang); } catch { /* Language switching works without storage. */ }
       current = lang;
     }
 
@@ -1132,10 +1150,14 @@ const projectList = {
     ];
     let ki = 0;
     window.addEventListener("keydown", (e) => {
+      if (e.defaultPrevented || (e.target instanceof HTMLElement && e.target.closest("input, textarea, select, [contenteditable], [data-signal-game]")) || document.querySelector('[aria-modal="true"][aria-hidden="false"]')) {
+        ki = 0;
+        return;
+      }
       if (e.key === konami[ki]) {
         ki++;
         if (ki === konami.length) {
-          (window as any).__cmd?.hire();
+          window.__cmd?.hire();
           ki = 0;
         }
       } else {

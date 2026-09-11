@@ -7,8 +7,8 @@ interface Props {
 }
 const SITE_URL = "https://odingarra.dev";
 const {
-  title = "Neftali Odín García Ramírez — Full Stack Engineer · Morelia, MX",
-  description = "Full Stack engineer based in Morelia, México. Building production web apps with TypeScript, Vue/Nuxt, Laravel, Node.js, Strapi, AWS and Docker. Available for hire.",
+  title = "Neftali Odín García Ramírez — Full Stack Developer · Morelia, MX",
+  description = "Full Stack developer and Computer Systems Engineering student based in Morelia, México. Building web apps with TypeScript, Vue/Nuxt, React/Next.js, Laravel, Strapi and Odoo ERP.",
   image = "/og.png",
 } = Astro.props;
 
@@ -23,7 +23,7 @@ const person = {
   alternateName: ["Neftali Odin", "Odin Garcia"],
   url: SITE_URL,
   image: ogImage,
-  jobTitle: "Full Stack Engineer",
+  jobTitle: "Full Stack Developer",
   description,
   email: "mailto:odingarra@gmail.com",
   telephone: "+52-1-443-214-3605",
@@ -36,18 +36,18 @@ const person = {
   sameAs: [
     "https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/",
   ],
-  alumniOf: {
+  affiliation: {
     "@type": "CollegeOrUniversity",
     name: "Instituto Tecnológico de Morelia",
     sameAs: "https://www.morelia.tecnm.mx/",
   },
-  knowsLanguage: ["Spanish", "English"],
+  knowsLanguage: ["Spanish (native)", "English (advanced, B2+)"],
   knowsAbout: [
-    "JavaScript", "TypeScript", "Vue.js", "Nuxt.js", "React.js", "Astro",
+    "JavaScript", "TypeScript", "Vue.js", "Nuxt.js", "React.js", "Next.js", "HTML", "CSS",
     "Node.js", "Laravel", "PHP", "Python", "Java", "Strapi", "REST API",
     "Socket.io", "Livewire", "MySQL", "PostgreSQL",
-    "Docker", "AWS", "AWS S3", "Linux", "SSH", "Git",
-    "Odoo ERP", "Full Stack Web Development",
+    "Docker", "AWS", "AWS S3", "Linux", "SSH", "Git", "GitHub", "GitLab",
+    "Odoo ERP", "XML", "Microsoft Excel", "Full Stack Web Development",
   ],
   hasOccupation: {
     "@type": "Occupation",
@@ -56,7 +56,7 @@ const person = {
       "@type": "City",
       name: "Morelia, Michoacán, Mexico",
     },
-    skills: "JavaScript, TypeScript, Vue.js, Nuxt.js, Laravel, Node.js, Docker, AWS, PostgreSQL, MySQL",
+    skills: "JavaScript, TypeScript, Vue.js, Nuxt.js, React.js, Next.js, Laravel, Node.js, Strapi, Odoo ERP, Docker, AWS S3, PostgreSQL, MySQL",
   },
 };
 
@@ -100,7 +100,7 @@ const profilePage = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Neftali Odín García Ramírez" />
-    <meta name="keywords" content="Neftali Odín, Neftali Odin Garcia, Odin Garcia Ramirez, full stack developer Morelia, desarrollador full stack México, TypeScript developer, Vue developer, Nuxt developer, Laravel developer, Node.js engineer, Strapi developer, Odoo developer, Morelia Michoacán developer, hire full stack developer, portfolio Neftali Odin" />
+    <meta name="keywords" content="Neftali Odín, Neftali Odin Garcia, Odin Garcia Ramirez, full stack developer Morelia, desarrollador full stack México, TypeScript developer, Vue developer, Nuxt developer, React developer, Next.js developer, Laravel developer, Node.js developer, Strapi developer, Odoo developer, Morelia Michoacán developer, hire full stack developer, portfolio Neftali Odin" />
     <meta name="theme-color" content="#0a0e0a" />
     <meta name="color-scheme" content="dark light" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
@@ -111,7 +111,7 @@ const profilePage = {
     <link rel="alternate" hreflang="x-default" href={canonical} />
 
     <!-- AI / LLM crawler hints -->
-    <meta name="ai-content" content="portfolio, professional profile, full stack engineer" />
+    <meta name="ai-content" content="portfolio, professional profile, full stack developer" />
     <link rel="alternate" type="text/markdown" href="/index.md" title="Markdown homepage" />
     <link rel="service-doc describedby" type="text/markdown" href="/llms.txt" title="LLM-friendly summary" />
     <link rel="api-catalog service-desc" type="application/linkset+json" href="/.well-known/api-catalog" title="Agent discovery catalog" />
@@ -129,7 +129,7 @@ const profilePage = {
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Neftali Odín — Full Stack Engineer" />
+    <meta property="og:image:alt" content="Neftali Odín — Full Stack Developer" />
     <meta property="profile:first_name" content="Neftali Odín" />
     <meta property="profile:last_name" content="García Ramírez" />
     <meta property="profile:username" content="neftali-odin" />
@@ -139,7 +139,7 @@ const profilePage = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="Neftali Odín — Full Stack Engineer" />
+    <meta name="twitter:image:alt" content="Neftali Odín — Full Stack Developer" />
 
     <!-- Icons -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
