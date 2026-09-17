@@ -122,7 +122,7 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "contact.subjectPlaceholder": "re: rol full-stack",
     "contact.send": "▶ Enviar mensaje",
     "contact.cvLabel": "currículum",
-    "contact.cvMeta": "51 KB · PDF · EN",
+    "contact.cvMeta": "86 KB · PDF · ES",
     "contact.locked": "// bloqueado",
 
     "footer.built": "construido con astro + tailwind",
@@ -251,7 +251,7 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "contact.subjectPlaceholder": "re: full-stack role",
     "contact.send": "▶ Send message",
     "contact.cvLabel": "resume",
-    "contact.cvMeta": "51 KB · PDF · English",
+    "contact.cvMeta": "86 KB · PDF · Spanish",
     "contact.locked": "// locked",
 
     "footer.built": "built with astro + tailwind",
