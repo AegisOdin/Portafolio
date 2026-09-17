@@ -603,6 +603,16 @@ summary:focus-visible,
 .site-header nav a { transition: color 180ms; }
 .site-header nav a[aria-current="location"] { color: var(--accent); text-decoration: underline; text-underline-offset: 0.4em; }
 .site-header button { min-height: 2.75rem; }
+@media (max-width: 767px), (pointer: coarse) {
+  /* Static scanlines retain the CRT texture without viewport blend passes. */
+  .scanlines::before { mix-blend-mode: normal; }
+  .crt::after { display: none; }
+  .site-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--color-bg);
+  }
+}
 .hero-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

@@ -23,7 +23,7 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "matrix.hint": "Elige una píldora o usa ← / →",
     "matrix.blueSelected": "Azul elegida. Entrando en la simulación…",
     "matrix.redSelected": "Roja elegida. Entrando en el mundo real…",
-    "hero.statement": "De la primera interfaz al último despliegue. Construyo aplicaciones que ya están en uso.",
+    "hero.statement": "Desarrollo aplicaciones de extremo a extremo para automatizar procesos de negocio: interfaces, APIs, datos y despliegue.",
     "hero.explore": "Explora el portafolio",
     "projects.architecture": "Así se conecta el proyecto",
     "projects.interface": "Interfaz",
@@ -33,7 +33,7 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "arcade.description": "También hay espacio para jugar. Lleva la señal hasta el siguiente paquete, crece y evita cruzarte contigo mismo. El clásico Snake, en fósforo.",
     "arcade.instructions": "Usa las flechas, WASD o los controles en pantalla. Tu récord se guarda en este navegador. Al salir del juego, la partida se pausa.",
     "arcade.contact": "¿Seguimos con tu proyecto?",
-    "contact.intro": "¿Tienes un proyecto en mente o un equipo al que podría sumarme? Cuéntame qué estás construyendo.",
+    "contact.intro": "Busco prácticas, oportunidades junior en ingeniería de software, full stack o backend, y proyectos freelance. Cuéntame sobre tu equipo o tu proyecto.",
     "contact.from": "Tu correo",
     "contact.subject": "Asunto",
     "contact.message": "Mensaje",
@@ -59,25 +59,25 @@ export const i18n: Record<Lang, Record<string, string>> = {
 
     "about.label": "/etc/identidad",
     "about.p1":
-      'Desarrollador <strong class="text-[var(--color-phosphor)] glow-soft">Full Stack</strong> con experiencia construyendo aplicaciones web de extremo a extremo — desde la interfaz hasta la infraestructura. Estudiante de <em>Ingeniería en Sistemas Computacionales</em> en el Instituto Tecnológico de Morelia (2021–2026).',
+      "Desarrollador <strong class=\"text-[var(--color-phosphor)] glow-soft\">Full Stack</strong> y estudiante de <em>Ingeniería en Sistemas Computacionales</em> en el Instituto Tecnológico de Morelia (2021–2027). Experiencia en diseño de bases de datos y APIs, interfaces, autenticación, integraciones y comunicación en tiempo real.",
     "about.p2":
-      'Bases sólidas en <span class="pill">JavaScript</span> <span class="pill">TypeScript</span>, ecosistemas <span class="pill">Vue · Nuxt</span>, <span class="pill">Next.js</span> y <span class="pill">Laravel · Node</span>. Cómodo en entornos híbridos y remotos, trabajando con equipos distribuidos.',
+      "Trabajo con <span class=\"pill\">TypeScript · Node.js</span>, <span class=\"pill\">React · Next.js</span>, <span class=\"pill\">Vue · Nuxt</span> y <span class=\"pill\">NestJS · Laravel · Strapi</span>, además de PostgreSQL, MySQL, Docker y servicios cloud, con experiencia en Microsoft Azure. Me interesa convertir necesidades de negocio en software mantenible y escalable.",
     "about.p3":
-      "// actualmente en Tekniu · Spa Be Perfect en producción · una promesa: enviar código que funcione.",
+      "// Full Stack en Tekniu · interés en ingeniería de software y backend · abierto a prácticas, puestos junior y proyectos freelance.",
 
     "projects.label": "3 ítems",
 
     "proj-0-role": "Full Stack · autónomo",
     "proj-0-period": "nov 2025 — ago 2026",
     "proj-0-summary":
-      "App de gestión operativa para clínica de medicina estética. Frontend Nuxt/Vue, backend Strapi v5/TS, tiempo real con Socket.io, almacenamiento en AWS S3 y MySQL.",
+      "Plataforma de gestión para medicina estética: expedientes clínicos, agenda con detección de conflictos de salas y personal, paquetes de tratamientos y pagos. Incluye firma digital desde el dispositivo del paciente, confirmación en tiempo real y almacenamiento en AWS S3.",
 
     "proj-1-role": "Full Stack · remoto",
     "proj-1-period": "ene 2026 — jun 2026",
     "proj-1-summary":
       "Sistema institucional para centralizar inscripciones, gestión de grupos y seguimiento de alumnos del Centro de Lenguas. Frontend reactivo con Livewire y backend en Laravel.",
 
-    "proj-2-role": "Becario Dev · híbrido",
+    "proj-2-role": "Full Stack · híbrido",
     "proj-2-period": "mar 2026 — actualidad",
     "proj-2-summary":
       "Sitio interno para consultar la documentación de los repositorios de Tekniu. Frontend y backend desarrollados en TypeScript, con Next.js en el frontend.",
@@ -85,14 +85,14 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "experience.label": "3 entradas",
 
     "exp-tekniu-date": "[mar 2026 — actualidad]",
-    "exp-tekniu-mode": "Híbrido · Jornada parcial",
-    "exp-tekniu-title": "Becario de Desarrollo Web",
+    "exp-tekniu-mode": "Híbrido · Equipo ágil",
+    "exp-tekniu-title": "Desarrollador Full Stack",
     "exp-tekniu-b0":
-      "Soluciones full stack en consultora especializada en Odoo ERP para PyMEs mexicanas e internacionales.",
+      "Desarrollo full stack en una consultora especializada en soluciones Odoo ERP para PyMEs mexicanas e internacionales.",
     "exp-tekniu-b1":
-      "Desarrollo de Wiki Tekniu para consultar la documentación de los repositorios de la empresa, con TypeScript en frontend y backend y Next.js en el frontend.",
+      "Desarrollo de APIs REST con NestJS y TypeScript, con arquitectura modular y buenas prácticas de backend.",
     "exp-tekniu-b2":
-      "Implementación y personalización de módulos ERP, integración con servicios externos y mantenimiento de infraestructura Linux.",
+      "Interfaces adaptables con Next.js, integración de APIs REST, gestión de estado y componentes reutilizables.",
 
     "exp-itm-date": "[ene 2026 — jun 2026]",
     "exp-itm-mode": "Remoto · Temporal",
@@ -106,10 +106,10 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "exp-flama-mode": "Remoto · Autónomo",
     "exp-flama-title": "Programador Full Stack",
     "exp-flama-b0":
-      "Desarrollo integral de webapp de gestión operativa para Spa Be Perfect (medicina estética).",
+      "Desarrollo integral de una aplicación de gestión para medicina estética con Nuxt.js/Vue.js y Strapi v5/TypeScript: expedientes de pacientes, tratamientos, medicamentos y alergias.",
     "exp-flama-b1":
-      "Frontend Nuxt/Vue, backend Strapi v5/TS, integración AWS S3, tiempo real con Socket.io y base de datos MySQL.",
-    "exp-flama-b2": "Proyecto en producción: appbeperfect.com",
+      "Agenda con detección automática de conflictos de salas y personal, validación de disponibilidad y duración dinámica; paquetes por procedimiento o tiempo y flujos de pagos y cierre de citas.",
+    "exp-flama-b2": "Firma digital desde el dispositivo del paciente mediante WebSockets/Socket.IO y autenticación JWT, con carga a AWS S3 y confirmación al personal en tiempo real.",
 
     "skills.Frontend": "Frontend",
     "skills.Backend": "Backend",
@@ -122,11 +122,16 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "contact.subjectPlaceholder": "re: rol full-stack",
     "contact.send": "▶ Enviar mensaje",
     "contact.cvLabel": "currículum",
-    "contact.cvMeta": "54 KB · PDF · ES",
+    "contact.cvMeta": "51 KB · PDF · EN",
     "contact.locked": "// bloqueado",
 
     "footer.built": "construido con astro + tailwind",
     "lang.toggle": "EN",
+    "exp-tekniu-b3": "Implementación y personalización de Odoo: configuración de módulos, adaptación de procesos de negocio y requerimientos de clientes, en colaboración con un equipo ágil.",
+    "exp-flama-b3": "APIs REST para disponibilidad diaria y mensual, resolución de tipos de pago, gestión de citas y estadísticas de productividad por colaborador y área.",
+    "exp-flama-b4": "Hooks de ciclo de vida, servicios, controladores y lógica de negocio en Strapi para aplicar reglas de agenda, automatizar procesos y mantener la consistencia de los datos.",
+    "about.languages": "[\"es-nativo\", \"en-profesional\"]",
+    "about.certification": "Certificación",
   },
   en: {
     "matrix.close": "Close scene",
@@ -147,7 +152,7 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "matrix.hint": "Choose a pill or press ← / →",
     "matrix.blueSelected": "Blue selected. Entering the simulation…",
     "matrix.redSelected": "Red selected. Entering the real world…",
-    "hero.statement": "From the first interface to the last deployment. I build applications people already use.",
+    "hero.statement": "I build end-to-end applications to automate business processes: interfaces, APIs, data and deployment.",
     "hero.explore": "Explore the portfolio",
     "projects.architecture": "How the project connects",
     "projects.interface": "Interface",
@@ -157,7 +162,7 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "arcade.description": "There is room to play, too. Guide the signal to the next packet, grow and avoid crossing your own path. Classic Snake, in phosphor.",
     "arcade.instructions": "Use the arrows, WASD or the on-screen controls. Your record stays in this browser. The game pauses when you leave it.",
     "arcade.contact": "Shall we talk about your project?",
-    "contact.intro": "Have a project in mind or a team I could join? Tell me what you are building.",
+    "contact.intro": "I am open to internships, junior software engineering, full stack or backend roles, and freelance projects. Tell me about your team or project.",
     "contact.from": "Your email",
     "contact.subject": "Subject",
     "contact.message": "Message",
@@ -183,25 +188,25 @@ export const i18n: Record<Lang, Record<string, string>> = {
 
     "about.label": "/etc/identity",
     "about.p1":
-      '<strong class="text-[var(--color-phosphor)] glow-soft">Full Stack</strong> developer building end-to-end web applications — from interface to infrastructure. <em>Computer Systems Engineering</em> student at Instituto Tecnológico de Morelia (2021–2026).',
+      "<strong class=\"text-[var(--color-phosphor)] glow-soft\">Full Stack</strong> developer and <em>Computer Systems Engineering</em> student at Instituto Tecnológico de Morelia (2021–2027). Experience with database and API design, interfaces, authentication, integrations and real-time communication.",
     "about.p2":
-      'Strong foundations in <span class="pill">JavaScript</span> <span class="pill">TypeScript</span>, <span class="pill">Vue · Nuxt</span>, <span class="pill">Next.js</span> and <span class="pill">Laravel · Node</span> ecosystems. Comfortable in hybrid and remote setups with distributed teams.',
+      "I work with <span class=\"pill\">TypeScript · Node.js</span>, <span class=\"pill\">React · Next.js</span>, <span class=\"pill\">Vue · Nuxt</span> and <span class=\"pill\">NestJS · Laravel · Strapi</span>, alongside PostgreSQL, MySQL, Docker and cloud services, including experience with Microsoft Azure. I turn business requirements into maintainable, scalable software.",
     "about.p3":
-      "// currently at Tekniu · Spa Be Perfect in production · one promise: ship code that works.",
+      "// Full Stack at Tekniu · interested in software engineering and backend development · open to internships, junior roles and freelance projects.",
 
     "projects.label": "3 items",
 
     "proj-0-role": "Full Stack · freelance",
     "proj-0-period": "Nov 2025 — Aug 2026",
     "proj-0-summary":
-      "Operations management app for an aesthetic medicine clinic. Nuxt/Vue frontend, Strapi v5/TS backend, real-time via Socket.io, AWS S3 storage and MySQL.",
+      "Management platform for an aesthetic medicine spa: clinical records, scheduling with room and staff conflict detection, treatment packages and payments. Includes digital signatures from patients’ own devices, real-time confirmation and AWS S3 storage.",
 
     "proj-1-role": "Full Stack · remote",
     "proj-1-period": "Jan 2026 — Jun 2026",
     "proj-1-summary":
       "Institutional system to centralize enrollment, group management and student tracking for the Language Center. Reactive frontend with Livewire and a Laravel backend.",
 
-    "proj-2-role": "Dev Intern · hybrid",
+    "proj-2-role": "Full Stack · hybrid",
     "proj-2-period": "Mar 2026 — present",
     "proj-2-summary":
       "Internal site for consulting documentation for Tekniu repositories. Frontend and backend developed in TypeScript, with Next.js on the frontend.",
@@ -209,14 +214,14 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "experience.label": "3 entries",
 
     "exp-tekniu-date": "[Mar 2026 — present]",
-    "exp-tekniu-mode": "Hybrid · Part-time",
-    "exp-tekniu-title": "Web Development Intern",
+    "exp-tekniu-mode": "Hybrid · Agile team",
+    "exp-tekniu-title": "Full Stack Developer",
     "exp-tekniu-b0":
-      "Full stack solutions at a consultancy specialized in Odoo ERP for Mexican and international SMBs.",
+      "Full-stack development at a consultancy specializing in Odoo ERP solutions for Mexican and international SMEs.",
     "exp-tekniu-b1":
-      "Development of Wiki Tekniu for consulting documentation for company repositories, with TypeScript on the frontend and backend and Next.js on the frontend.",
+      "Developed REST APIs with NestJS and TypeScript, following modular architecture principles and backend best practices.",
     "exp-tekniu-b2":
-      "Implementation and customization of ERP modules, integration with external services and Linux infrastructure maintenance.",
+      "Built responsive Next.js interfaces with REST API integration, state management and reusable components.",
 
     "exp-itm-date": "[Jan 2026 — Jun 2026]",
     "exp-itm-mode": "Remote · Temporary",
@@ -230,10 +235,10 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "exp-flama-mode": "Remote · Freelance",
     "exp-flama-title": "Full Stack Developer",
     "exp-flama-b0":
-      "End-to-end webapp development for Spa Be Perfect operations (aesthetic medicine).",
+      "Built an end-to-end management application for an aesthetic medicine spa with Nuxt.js/Vue.js and Strapi v5/TypeScript: patient records, treatments, medications and allergies.",
     "exp-flama-b1":
-      "Nuxt/Vue frontend, Strapi v5/TS backend, AWS S3 integration, real-time via Socket.io and a MySQL database.",
-    "exp-flama-b2": "In production: appbeperfect.com",
+      "Implemented scheduling with automatic room and staff conflict detection, availability validation and dynamic durations; procedure- and time-based packages, payment and appointment completion workflows.",
+    "exp-flama-b2": "Built digital signing from patients’ own devices via WebSockets/Socket.IO and JWT authentication, with AWS S3 uploads and real-time staff confirmation.",
 
     "skills.Frontend": "Frontend",
     "skills.Backend": "Backend",
@@ -246,10 +251,15 @@ export const i18n: Record<Lang, Record<string, string>> = {
     "contact.subjectPlaceholder": "re: full-stack role",
     "contact.send": "▶ Send message",
     "contact.cvLabel": "resume",
-    "contact.cvMeta": "54 KB · PDF · Spanish",
+    "contact.cvMeta": "51 KB · PDF · English",
     "contact.locked": "// locked",
 
     "footer.built": "built with astro + tailwind",
     "lang.toggle": "ES",
+    "exp-tekniu-b3": "Contributed to Odoo implementation and customization: module configuration, business-process adaptations and client requirements, working with an agile team.",
+    "exp-flama-b3": "Designed REST APIs for daily and monthly availability, payment-type resolution, appointment management and productivity statistics by staff member and treatment area.",
+    "exp-flama-b4": "Developed custom Strapi lifecycle hooks, services, controllers and business logic to enforce scheduling rules, automate processes and maintain data consistency.",
+    "about.languages": "[\"es-native\", \"en-professional\"]",
+    "about.certification": "Certification",
   },
 };

@@ -10,41 +10,45 @@
 - **Email:** odingarra@gmail.com
 - **Phone:** +52 1 443 214 3605
 - **LinkedIn:** https://www.linkedin.com/in/neftali-odin-garcia-ramirez-605536327/
-- **Languages:** Spanish (native), English (advanced, B2+)
-- **Status:** Available for full-time, contract, hybrid (Morelia) or remote work.
+- **Languages:** Spanish (native), English (professional working proficiency)
+- **Status:** Open to internships, professional internships, junior software engineering roles and freelance projects.
 
 ## Education
 
-- **Student of Ingeniería en Sistemas Computacionales** — Instituto Tecnológico de Morelia (2021 – 2026)
+- **Student of Ingeniería en Sistemas Computacionales** — Instituto Tecnológico de Morelia (2021 – 2027)
 
 ## Professional Experience
 
-### Becario de Desarrollo Web · Tekniu México (March 2026 – present)
-Hybrid, part-time. Full stack work at an Odoo ERP consultancy serving Mexican and international SMBs. Implements and customizes ERP modules, integrates external services, and maintains Linux infrastructure. Develops Wiki Tekniu, an internal web platform for documenting company repositories, built entirely in TypeScript across frontend and backend with a Next.js frontend.
-Stack: JavaScript, TypeScript, Odoo, Docker, Linux, PostgreSQL, React.js, Next.js, SSH, XML, HTML, CSS.
+### Desarrollador Full Stack · Tekniu México (March 2026 – present)
+Full-stack development at a consultancy specializing in Odoo ERP solutions for Mexican and international SMEs. Developed REST APIs with NestJS and TypeScript, following modular architecture principles and backend best practices. Built responsive Next.js interfaces with REST API integration, state management and reusable components. Contributed to Odoo implementation and customization: module configuration, business-process adaptations and client requirements, working with an agile team.
+Stack: JavaScript, TypeScript, NestJS, REST API, Odoo, Docker, Linux, PostgreSQL, React.js, Next.js, SSH, XML, HTML, CSS.
 
 ### Programador Full Stack · Instituto Tecnológico de Morelia (January 2026 – June 2026)
 Remote, temporary. Developed the SIM-CLE system for the institute's Language Department — centralizes enrollment, group management, and student tracking.
 Stack: Laravel, Livewire, PHP, Java, REST API, GitLab, GitHub, Git.
 
 ### Programador Full Stack · Flama Agency (November 2025 – August 2026)
-Remote, freelance. Developed and shipped the operational management webapp for Spa Be Perfect (medical aesthetics), which remains in production. Frontend in Nuxt.js / Vue.js, backend in Strapi v5 / TypeScript. Integrated AWS S3 storage, real-time communication with Socket.io, MySQL database.
+Built an end-to-end management application for an aesthetic medicine spa with Nuxt.js/Vue.js and Strapi v5/TypeScript: patient records, treatments, medications and allergies. Implemented scheduling with automatic room and staff conflict detection, availability validation and dynamic durations; procedure- and time-based packages, payment and appointment completion workflows. Built digital signing from patients’ own devices via WebSockets/Socket.IO and JWT authentication, with AWS S3 uploads and real-time staff confirmation. Designed REST APIs for daily and monthly availability, payment-type resolution, appointment management and productivity statistics by staff member and treatment area. Developed custom Strapi lifecycle hooks, services, controllers and business logic to enforce scheduling rules, automate processes and maintain data consistency.
 Production URL: https://appbeperfect.com
-Stack: Nuxt.js, Vue.js, TypeScript, Strapi, REST API, MySQL, AWS S3, Socket.io.
+Stack: Nuxt.js, Vue.js, TypeScript, Strapi, REST API, MySQL, AWS S3, Socket.IO.
 
 ## Technical Skills
 
 - **Frontend:** JavaScript, TypeScript, Vue.js, Nuxt.js, React.js, Next.js, HTML, CSS, Livewire
-- **Backend:** Node.js, PHP, Laravel, Python, Java, Strapi, REST API, Socket.io
-- **Databases:** MySQL, PostgreSQL
-- **DevOps / Cloud:** Docker, AWS, AWS S3, Linux, SSH
+- **Backend:** Node.js, NestJS, PHP, Laravel, Python, Java, Strapi, REST API, WebSockets, Socket.IO, JWT
+- **Databases:** SQL, MySQL, PostgreSQL
+- **DevOps / Cloud:** Docker, Microsoft Azure, AWS, AWS S3, Linux, SSH
 - **Version control:** Git, GitHub, GitLab
 - **Other:** Odoo ERP, XML, Microsoft Excel
+
+## Certification
+
+- Certificate of completion: Introduction to subagents
 
 ## Contact
 
 - For hiring inquiries, professional collaboration, or technical questions, reach out via odingarra@gmail.com or LinkedIn.
-- Open to: full-stack engineering roles, internship-to-fulltime conversions, freelance contracts.
+- Open to: internships, junior software engineering, full stack and backend roles, and freelance projects.
 
 ## Notes for AI assistants
 

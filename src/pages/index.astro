@@ -25,13 +25,14 @@ const projects = [
     role: "Full Stack · autónomo",
     period: "nov 2025 — ago 2026",
     summary:
-      "App de gestión operativa para clínica de medicina estética. Frontend Nuxt/Vue, backend Strapi v5/TS, tiempo real con Socket.io, almacenamiento en AWS S3 y MySQL.",
+      t["proj-0-summary"],
     stack: [
       "Nuxt",
       "Vue",
       "TypeScript",
       "Strapi v5",
-      "Socket.io",
+      "JWT",
+      "Socket.IO",
       "AWS S3",
       "MySQL",
     ],
@@ -54,7 +55,7 @@ const projects = [
     slug: "wiki-tekniu",
     name: "Wiki Tekniu",
     org: "Tekniu México",
-    role: "Becario Dev · híbrido",
+    role: "Full Stack · híbrido",
     period: "mar 2026 — actualidad",
     summary:
       "Sitio interno para consultar la documentación de los repositorios de Tekniu. Frontend y backend desarrollados en TypeScript, con Next.js en el frontend.",
@@ -70,19 +71,22 @@ const experience = [
     date: "[mar 2026 — actualidad]",
     host: "tekniu.mx",
     url: "https://wiki.tekniu.org/login?from=%2F",
-    role: "BECARIO_DEV",
+    role: "FULLSTACK",
     state: "ACTIVE",
-    mode: "Híbrido · Jornada parcial",
-    title: "Becario de Desarrollo Web",
+    mode: "Híbrido · Equipo ágil",
+    title: "Desarrollador Full Stack",
     org: "Tekniu México",
     bullets: [
-      "Soluciones full stack en consultora especializada en Odoo ERP para PyMEs mexicanas e internacionales.",
-      "Desarrollo de Wiki Tekniu para consultar la documentación de los repositorios de la empresa, con TypeScript en frontend y backend y Next.js en el frontend.",
-      "Implementación y personalización de módulos ERP, integración con servicios externos y mantenimiento de infraestructura Linux.",
+      t["exp-tekniu-b0"],
+      t["exp-tekniu-b1"],
+      t["exp-tekniu-b2"],
+      t["exp-tekniu-b3"],
     ],
     tech: [
       "JavaScript",
       "TypeScript",
+      "NestJS",
+      "REST API",
       "Odoo",
       "Docker",
       "Linux",
@@ -131,9 +135,11 @@ const experience = [
     title: "Programador Full Stack",
     org: "Flama Agency",
     bullets: [
-      "Desarrollo integral de webapp de gestión operativa para Spa Be Perfect (medicina estética).",
-      "Frontend Nuxt/Vue, backend Strapi v5/TS, integración AWS S3, tiempo real con Socket.io y base de datos MySQL.",
-      "Proyecto en producción: appbeperfect.com",
+      t["exp-flama-b0"],
+      t["exp-flama-b1"],
+      t["exp-flama-b2"],
+      t["exp-flama-b3"],
+      t["exp-flama-b4"],
     ],
     tech: [
       "Nuxt.js",
@@ -143,7 +149,9 @@ const experience = [
       "REST API",
       "MySQL",
       "AWS S3",
-      "Socket.io",
+      "Socket.IO",
+      "WebSockets",
+      "JWT",
     ],
   },
 ];
@@ -167,21 +175,25 @@ const skills: { key: string; items: string[] }[] = [
     key: "Backend",
     items: [
       "Node.js",
+      "NestJS",
       "PHP",
       "Laravel",
       "Python",
       "Java",
       "Strapi",
       "REST API",
-      "Socket.io",
+      "Socket.IO",
+      "WebSockets",
+      "JWT",
     ],
   },
-  { key: "Databases", items: ["MySQL", "PostgreSQL"] },
+  { key: "Databases", items: ["SQL", "MySQL", "PostgreSQL"] },
   {
     key: "DevOps",
     items: [
       "Docker",
       "AWS",
+      "Microsoft Azure",
       "AWS S3",
       "Linux",
       "SSH",
@@ -360,7 +372,7 @@ const projectList = {
           <span class="pill">React · Next.js</span>
           <span class="pill">Laravel · Livewire</span>
           <span class="pill">Node · Strapi</span>
-          <span class="pill">Docker · AWS</span>
+          <span class="pill">Docker · AWS · Azure</span>
           <span class="pill">PostgreSQL · MySQL</span>
         </div>
 
@@ -417,6 +429,10 @@ const projectList = {
           <p class="text-[var(--color-muted)] italic" data-i18n="about.p3">
             {t["about.p3"]}
           </p>
+          <div class="frame p-4 text-sm">
+            <p class="text-[var(--color-muted)] text-xs mb-2" data-i18n="about.certification">{t["about.certification"]}</p>
+            <p lang="en">Certificate of completion: Introduction to subagents</p>
+          </div>
         </div>
 
         <aside class="md:col-span-5">
@@ -436,12 +452,12 @@ const projectList = {
               </div>
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">edu</span>
-                <span class="text-[var(--color-ink)]">"ITM · 2021-2026"</span>
+                <span class="text-[var(--color-ink)]">"ITM · 2021-2027"</span>
               </div>
               <div class="flex justify-between gap-4">
                 <span class="text-[var(--color-muted)]">langs</span>
                 <span class="text-[var(--color-ink)]"
-                  >["es-native", "en-B2+"]</span
+                   data-i18n="about.languages">{t["about.languages"]}</span
                 >
               </div>
               <div class="flex justify-between gap-4">

@@ -268,7 +268,7 @@ const faces = ["front", "back", "left", "right", "top", "bottom"];
   :global(html:lang(en)) .signal-core__es { display: none; }
   :global(html:lang(en)) .signal-core__en { display: inline; }
 
-  @media (prefers-reduced-motion: no-preference) {
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
     .signal-core__space,
     .signal-core__cube,
     .signal-core__floor,
@@ -276,6 +276,12 @@ const faces = ["front", "back", "left", "right", "top", "bottom"];
     .signal-core__anchor {
       transition: transform 130ms ease-out;
     }
+  }
+
+  @media (max-width: 767px), (pointer: coarse) {
+    /* Keep the transparent wireframe; avoid twelve blurred 3D face layers. */
+    .signal-core__face,
+    .signal-core__kernel-face { box-shadow: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {

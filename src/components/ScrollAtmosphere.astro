@@ -17,24 +17,45 @@
   if (atmosphere) {
     const root = document.documentElement;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const mobile = matchMedia("(max-width: 767px), (pointer: coarse)");
+    const header = document.querySelector<HTMLElement>(".site-header");
     const sections = Array.from(document.querySelectorAll<HTMLElement>("main > section"));
     const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".site-header nav a[href^='#']"));
     let frame = 0;
     let activeId = "";
+    let geometryDirty = true;
+    let range = 1;
+    let sectionTops: number[] = [];
 
     function renderDepth() {
       frame = 0;
       if (document.hidden) return;
-      const range = Math.max(1, root.scrollHeight - innerHeight);
-      const progress = Math.min(1, Math.max(0, scrollY / range));
-      root.style.setProperty("--scroll-progress", String(progress));
-      atmosphere!.style.setProperty("--depth-drift", `${reduced.matches ? 0 : -progress * 260}px`);
-      atmosphere!.style.setProperty("--orbit-drift", `${reduced.matches ? 0 : -progress * 450}px`);
-      let current = sections[0]?.id ?? "";
-      for (const section of sections) {
-        if (section.getBoundingClientRect().top <= innerHeight * 0.4) current = section.id;
+      // Measure before writing styles; cache document coordinates between resizes.
+      if (geometryDirty) {
+        range = Math.max(1, root.scrollHeight - innerHeight);
+        sectionTops = sections.map((section) => {
+          // Layout offsets exclude the temporary translateY used by section reveals.
+          let top = 0;
+          let element: HTMLElement | null = section;
+          while (element) {
+            top += element.offsetTop;
+            element = element.offsetParent as HTMLElement | null;
+          }
+          return top;
+        });
+        geometryDirty = false;
       }
+      const progress = Math.min(1, Math.max(0, scrollY / range));
+      let current = sections[0]?.id ?? "";
+      sectionTops.forEach((top, index) => {
+        if (top <= scrollY + innerHeight * 0.4) current = sections[index].id;
+      });
       if (progress > 0.99) current = sections.at(-1)?.id ?? current;
+      header?.style.setProperty("--scroll-progress", String(progress));
+      if (!mobile.matches && !reduced.matches) {
+        atmosphere!.style.setProperty("--depth-drift", `${-progress * 260}px`);
+        atmosphere!.style.setProperty("--orbit-drift", `${-progress * 450}px`);
+      }
       if (activeId === current) return;
       activeId = current;
       links.forEach((link) => {
@@ -46,11 +67,23 @@
     function scheduleDepth() {
       if (!frame && !document.hidden) frame = requestAnimationFrame(renderDepth);
     }
+    function invalidateGeometry() {
+      geometryDirty = true;
+      scheduleDepth();
+    }
+    function resetDepth() {
+      atmosphere!.style.removeProperty("--depth-drift");
+      atmosphere!.style.removeProperty("--orbit-drift");
+      invalidateGeometry();
+    }
     addEventListener("scroll", scheduleDepth, { passive: true });
-    addEventListener("resize", scheduleDepth, { passive: true });
-    document.addEventListener("visibilitychange", scheduleDepth);
-    reduced.addEventListener("change", scheduleDepth);
-    new ResizeObserver(scheduleDepth).observe(document.body);
+    addEventListener("resize", invalidateGeometry, { passive: true });
+    document.addEventListener("visibilitychange", invalidateGeometry);
+    reduced.addEventListener("change", resetDepth);
+    mobile.addEventListener("change", resetDepth);
+    const resizeObserver = new ResizeObserver(invalidateGeometry);
+    resizeObserver.observe(document.body);
+    sections.forEach((section) => resizeObserver.observe(section));
     scheduleDepth();
   }
 </script>

@@ -8,7 +8,7 @@ language: es-MX
 
 # Neftali Odin Garcia Ramirez
 
-Full Stack developer and Computer Systems Engineering student based in Morelia, Michoacan, Mexico. Builds web applications across frontend, backend APIs, databases, real-time systems, and cloud infrastructure. Available for full-time roles, contract work, hybrid work in Morelia, and remote collaboration.
+Full Stack developer and Computer Systems Engineering student based in Morelia, Michoacan, Mexico. Builds web applications across frontend, backend APIs, databases, real-time systems, and cloud infrastructure. Open to internships, professional internships, junior software engineering roles and freelance projects.
 
 ## Primary Actions
 
@@ -25,13 +25,13 @@ Full Stack developer and Computer Systems Engineering student based in Morelia, 
 - Full name: Neftali Odin Garcia Ramirez
 - Role: Full Stack Developer / Desarrollador Full Stack
 - Location: Morelia, Michoacan, Mexico (GMT-6)
-- Languages: Spanish native, English advanced B2+
-- Education: Student of Ingenieria en Sistemas Computacionales, Instituto Tecnologico de Morelia, 2021-2026
+- Languages: Spanish native, English professional working proficiency
+- Education: Student of Ingenieria en Sistemas Computacionales, Instituto Tecnologico de Morelia, 2021-2027
 - Status: Available
 
 ## About
 
-Developer with experience building end-to-end web applications, from interface to infrastructure. Works with JavaScript, TypeScript, Vue, Nuxt, React, Next.js, Laravel, Node.js, Strapi, relational databases, Docker, AWS S3, and Linux. Currently a web development intern at Tekniu Mexico, working on Odoo ERP solutions and the company's internal documentation platform.
+Full Stack developer with experience in database and API design, interfaces, authentication, third-party integrations, real-time communication and deployment. Works with TypeScript, JavaScript, Node.js, React, Vue, Nuxt, Strapi, Laravel, PHP, PostgreSQL/MySQL, Docker and cloud services, including experience with Microsoft Azure. Interested in software engineering, full stack and backend development, with a focus on maintainable and scalable business software. Currently works at Tekniu México with NestJS, Next.js and Odoo ERP.
 
 ## Projects
 
@@ -42,8 +42,8 @@ Developer with experience building end-to-end web applications, from interface t
 - Period: November 2025-August 2026
 - Status: Production
 - URL: https://appbeperfect.com
-- Summary: Operations management app for an aesthetic medicine clinic. Nuxt/Vue frontend, Strapi v5/TypeScript backend, real-time updates with Socket.io, AWS S3 storage, and MySQL.
-- Stack: Nuxt, Vue, TypeScript, Strapi v5, Socket.io, AWS S3, MySQL
+- Summary: Management platform for an aesthetic medicine spa: clinical records, scheduling with room and staff conflict detection, treatment packages and payments. Includes digital signatures from patients’ own devices, real-time confirmation and AWS S3 storage.
+- Stack: Nuxt, Vue, TypeScript, Strapi v5, Socket.IO, AWS S3, MySQL
 
 ### SIM-CLE
 
@@ -58,7 +58,7 @@ Developer with experience building end-to-end web applications, from interface t
 ### Wiki Tekniu
 
 - Organization: Tekniu Mexico
-- Role: Web Development Intern, hybrid, part-time
+- Role: Full Stack Developer, hybrid
 - Period: March 2026-present
 - Status: Internal
 - URL: https://wiki.tekniu.org/login?from=%2F
@@ -67,9 +67,9 @@ Developer with experience building end-to-end web applications, from interface t
 
 ## Experience
 
-### Web Development Intern - Tekniu Mexico
+### Full Stack Developer - Tekniu Mexico
 
-March 2026-present. Hybrid, part-time role at an Odoo ERP consultancy serving Mexican and international SMBs. Implements and customizes ERP modules, integrates external services, and maintains Linux infrastructure. Develops Wiki Tekniu, an internal repository documentation platform built entirely in TypeScript with a Next.js frontend.
+March 2026-present. Full-stack development at a consultancy specializing in Odoo ERP solutions for Mexican and international SMEs. Developed REST APIs with NestJS and TypeScript, following modular architecture principles and backend best practices. Built responsive Next.js interfaces with REST API integration, state management and reusable components. Contributed to Odoo implementation and customization: module configuration, business-process adaptations and client requirements, working with an agile team.
 
 ### Full Stack Developer - Instituto Tecnologico de Morelia
 
@@ -77,16 +77,20 @@ January 2026-June 2026. Remote, temporary role developing SIM-CLE for the Depart
 
 ### Full Stack Developer - Flama Agency
 
-November 2025-August 2026. Remote freelance role developing and shipping the Spa Be Perfect operations webapp, which remains in production at https://appbeperfect.com. Work included Nuxt/Vue frontend development, Strapi v5/TypeScript backend development, AWS S3 integration, Socket.io real-time features, and MySQL.
+November 2025-August 2026. Built an end-to-end management application for an aesthetic medicine spa with Nuxt.js/Vue.js and Strapi v5/TypeScript: patient records, treatments, medications and allergies. Implemented scheduling with automatic room and staff conflict detection, availability validation and dynamic durations; procedure- and time-based packages, payment and appointment completion workflows. Built digital signing from patients’ own devices via WebSockets/Socket.IO and JWT authentication, with AWS S3 uploads and real-time staff confirmation. Designed REST APIs for daily and monthly availability, payment-type resolution, appointment management and productivity statistics by staff member and treatment area. Developed custom Strapi lifecycle hooks, services, controllers and business logic to enforce scheduling rules, automate processes and maintain data consistency.
 
 ## Technical Skills
 
 - Frontend: JavaScript, TypeScript, Vue.js, Nuxt.js, React.js, Next.js, HTML, CSS, Livewire
-- Backend: Node.js, PHP, Laravel, Python, Java, Strapi, REST API, Socket.io
-- Databases: MySQL, PostgreSQL
-- DevOps and cloud: Docker, AWS, AWS S3, Linux, SSH
+- Backend: Node.js, NestJS, PHP, Laravel, Python, Java, Strapi, REST API, WebSockets, Socket.IO, JWT
+- Databases: SQL, MySQL, PostgreSQL
+- DevOps and cloud: Docker, Microsoft Azure, AWS, AWS S3, Linux, SSH
 - Version control: Git, GitHub, GitLab
 - Other: Odoo ERP, XML, Microsoft Excel
+
+## Certification
+
+- Certificate of completion: Introduction to subagents
 
 ## Contact
 

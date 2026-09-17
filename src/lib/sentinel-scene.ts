@@ -16,7 +16,8 @@ export function mountSentinel(mount: HTMLElement) {
       if (disposed) return;
       const canvas = mount.querySelector("canvas")!;
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "low-power" });
-      renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+      const mobileResolution = matchMedia("(max-width: 767px), (pointer: coarse)");
+      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobileResolution.matches ? 1 : 1.5));
       renderer.setClearColor(0, 0);
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
@@ -81,6 +82,8 @@ export function mountSentinel(mount: HTMLElement) {
       }
       function resize() {
         if (!active) return;
+        const pixelRatio = Math.min(devicePixelRatio || 1, mobileResolution.matches ? 1 : 1.5);
+        if (renderer.getPixelRatio() !== pixelRatio) renderer.setPixelRatio(pixelRatio);
         renderer.setSize(innerWidth, innerHeight, false);
         camera.aspect = innerWidth / Math.max(1, innerHeight);
         camera.updateProjectionMatrix();
@@ -115,6 +118,7 @@ export function mountSentinel(mount: HTMLElement) {
       document.addEventListener("visibilitychange", update);
       reduced.addEventListener("change", update);
       fine.addEventListener("change", resetPointer);
+      mobileResolution.addEventListener("change", resize);
       canvas.addEventListener("webglcontextlost", lost);
       canvas.addEventListener("webglcontextrestored", restored);
       const sizeObserver = new ResizeObserver(scroll);
@@ -133,6 +137,7 @@ export function mountSentinel(mount: HTMLElement) {
         document.removeEventListener("visibilitychange", update);
         reduced.removeEventListener("change", update);
         fine.removeEventListener("change", resetPointer);
+        mobileResolution.removeEventListener("change", resize);
         canvas.removeEventListener("webglcontextlost", lost);
         canvas.removeEventListener("webglcontextrestored", restored);
         sentinel.dispose();

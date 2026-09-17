@@ -8,7 +8,7 @@ interface Props {
 const SITE_URL = "https://odingarra.dev";
 const {
   title = "Neftali Odín García Ramírez — Full Stack Developer · Morelia, MX",
-  description = "Full Stack developer and Computer Systems Engineering student based in Morelia, México. Building web apps with TypeScript, Vue/Nuxt, React/Next.js, Laravel, Strapi and Odoo ERP.",
+  description = "Desarrollador Full Stack en Morelia y estudiante de Ingeniería en Sistemas Computacionales (2021–2027). TypeScript, Node.js, NestJS, Next.js, Vue, Laravel y Odoo ERP.",
   image = "/og.png",
 } = Astro.props;
 
@@ -41,12 +41,12 @@ const person = {
     name: "Instituto Tecnológico de Morelia",
     sameAs: "https://www.morelia.tecnm.mx/",
   },
-  knowsLanguage: ["Spanish (native)", "English (advanced, B2+)"],
+  knowsLanguage: ["Spanish (native or bilingual)", "English (professional working proficiency)"],
   knowsAbout: [
     "JavaScript", "TypeScript", "Vue.js", "Nuxt.js", "React.js", "Next.js", "HTML", "CSS",
-    "Node.js", "Laravel", "PHP", "Python", "Java", "Strapi", "REST API",
-    "Socket.io", "Livewire", "MySQL", "PostgreSQL",
-    "Docker", "AWS", "AWS S3", "Linux", "SSH", "Git", "GitHub", "GitLab",
+    "Node.js", "NestJS", "Laravel", "PHP", "Python", "Java", "Strapi", "REST API",
+    "Socket.IO", "WebSockets", "JWT", "Livewire", "SQL", "MySQL", "PostgreSQL",
+    "Docker", "Microsoft Azure", "AWS", "AWS S3", "Linux", "SSH", "Git", "GitHub", "GitLab",
     "Odoo ERP", "XML", "Microsoft Excel", "Full Stack Web Development",
   ],
   hasOccupation: {
@@ -56,7 +56,12 @@ const person = {
       "@type": "City",
       name: "Morelia, Michoacán, Mexico",
     },
-    skills: "JavaScript, TypeScript, Vue.js, Nuxt.js, React.js, Next.js, Laravel, Node.js, Strapi, Odoo ERP, Docker, AWS S3, PostgreSQL, MySQL",
+    skills: "JavaScript, TypeScript, Vue.js, Nuxt.js, React.js, Next.js, NestJS, Laravel, Node.js, Strapi, Odoo ERP, Docker, Microsoft Azure, AWS S3, PostgreSQL, MySQL, SQL, WebSockets, JWT",
+  },
+  hasCredential: {
+    "@type": "EducationalOccupationalCredential",
+    name: "Certificate of completion: Introduction to subagents",
+    credentialCategory: "Certificate of completion",
   },
 };
 
