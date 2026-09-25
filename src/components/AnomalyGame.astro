@@ -1,0 +1,986 @@
+---
+// ANOMALY — a survivors-style arcade run. Nothing runs until the visitor presses start.
+// Simulation: src/lib/anomaly/engine.ts · drawing: src/lib/anomaly/render.ts
+---
+
+<div class="anomaly frame" data-anomaly data-label="/dev/arcade" data-state="ready">
+  <header class="an-header">
+    <span class="an-program"><span aria-hidden="true">⌘</span> anomaly.run</span>
+    <span class="an-status" data-an-status>LISTO</span>
+    <button type="button" class="an-expand" data-an-expand aria-pressed="false" aria-label="Pantalla completa">
+      <span aria-hidden="true" data-an-expand-icon>⤢</span>
+    </button>
+  </header>
+
+  <div
+    class="an-screen"
+    data-an-screen
+    tabindex="0"
+    role="application"
+    aria-label="ANOMALY, juego de supervivencia. Muévete con WASD o flechas; los ataques son automáticos."
+  >
+    <canvas class="an-canvas" data-an-canvas aria-hidden="true"></canvas>
+
+    <div class="an-hud" aria-hidden="true">
+      <div class="an-xp"><span data-an-xp></span></div>
+      <div class="an-hud-row">
+        <div class="an-hp"><span>HP</span><span class="an-bar"><span data-an-hp></span></span></div>
+        <div class="an-clock" data-an-clock>00:00</div>
+        <div class="an-meta"><span data-an-level>LV 01</span><span data-an-kills>✕ 0</span></div>
+      </div>
+      <div class="an-boss" data-an-boss hidden>
+        <span>SENTINEL</span>
+        <span class="an-bar"><span data-an-boss-hp></span></span>
+      </div>
+      <div class="an-banner" data-an-banner></div>
+      <div class="an-loadout" data-an-loadout></div>
+    </div>
+
+    <div class="an-crt" aria-hidden="true"></div>
+
+    <div class="an-overlay" data-an-overlay>
+      <div class="an-panel" data-an-panel>
+        <span class="an-code">[ ANOMALY / v1.0 ]</span>
+        <strong class="an-title">Eres la anomalía.</strong>
+        <p class="an-text">El sistema quiere corregirte. Tus comandos se ejecutan solos: muévete, recoge datos y elige mejoras. Sobrevive 10:00.</p>
+        <noscript><p class="an-text">Activa JavaScript para jugar.</p></noscript>
+      </div>
+    </div>
+  </div>
+
+  <div class="an-footer">
+    <p data-an-help>WASD / flechas · mover — arrastra en pantallas táctiles — Esc · pausa — 1 2 3 · elegir</p>
+    <p class="an-best" data-an-best></p>
+  </div>
+  <p class="sr-only" aria-live="polite" aria-atomic="true" data-an-live></p>
+</div>
+
+<script>
+  import {
+    choose, createGame, drainEvents, setView, update, RUN_SECONDS,
+    type Choice, type Game, type GameEvent, type ItemId, type WarningKey,
+  } from "../lib/anomaly/engine";
+  import { Renderer, readPalette, type Stick } from "../lib/anomaly/render";
+
+  type UiState = "ready" | "running" | "paused" | "levelup" | "over" | "won";
+  type Lang = "es" | "en";
+  type ItemCopy = { name: string; text: Record<Lang, string>; levels?: Record<Lang, string[]> };
+
+  const ITEMS: Record<ItemId | "reboot", ItemCopy> = {
+    ping: {
+      name: "ping",
+      text: { es: "Dispara paquetes al enemigo más cercano.", en: "Fires packets at the nearest enemy." },
+      levels: {
+        es: ["+30% de daño.", "+1 paquete por ráfaga.", "Más daño; atraviesa 1 enemigo.", "+1 paquete y más cadencia.", "Más daño; atraviesa 2 enemigos."],
+        en: ["+30% damage.", "+1 packet per burst.", "More damage; pierces 1 enemy.", "+1 packet and faster fire.", "More damage; pierces 2 enemies."],
+      },
+    },
+    fork: {
+      name: "fork()",
+      text: { es: "Procesos hijos orbitan a tu alrededor y golpean al contacto.", en: "Child processes orbit you and strike on contact." },
+      levels: {
+        es: ["Más daño y órbita más amplia.", "+1 proceso en órbita.", "Más daño y giro más rápido.", "+1 proceso en órbita.", "+1 proceso y más daño."],
+        en: ["More damage and a wider orbit.", "+1 orbiting process.", "More damage and faster spin.", "+1 orbiting process.", "+1 process and more damage."],
+      },
+    },
+    firewall: {
+      name: "firewall",
+      text: { es: "Un anillo que quema y frena lo que se acerca.", en: "A ring that burns and slows whatever gets close." },
+      levels: {
+        es: ["Anillo más amplio.", "Más daño por pulso.", "Más amplio y pulsos más rápidos.", "Más daño por pulso.", "Mucho más amplio y más daño."],
+        en: ["Wider ring.", "More damage per pulse.", "Wider, with faster pulses.", "More damage per pulse.", "Much wider, more damage."],
+      },
+    },
+    grep: {
+      name: "grep -r",
+      text: { es: "Un haz que atraviesa todo lo que encuentra en línea recta.", en: "A beam that pierces everything in a straight line." },
+      levels: {
+        es: ["Más alcance y daño.", "Más daño.", "Un segundo haz en sentido contrario.", "Más alcance y daño.", "Más cadencia y daño."],
+        en: ["Longer reach, more damage.", "More damage.", "A second beam fires backwards.", "Longer reach, more damage.", "Faster, stronger beams."],
+      },
+    },
+    rmrf: {
+      name: "rm -rf",
+      text: { es: "Marca zonas con enemigos y las borra tras una cuenta atrás.", en: "Marks crowded areas and wipes them after a countdown." },
+      levels: {
+        es: ["Más daño.", "+1 carga.", "Radio mayor y más cadencia.", "+1 carga.", "Radio mayor y más daño."],
+        en: ["More damage.", "+1 charge.", "Bigger radius, faster.", "+1 charge.", "Bigger radius, more damage."],
+      },
+    },
+    pipe: {
+      name: "| pipe",
+      text: { es: "Una descarga que salta de enemigo en enemigo.", en: "A charge that jumps from enemy to enemy." },
+      levels: {
+        es: ["+1 salto.", "Más daño.", "+1 salto.", "+1 salto y más daño.", "+1 salto y más cadencia."],
+        en: ["+1 jump.", "More damage.", "+1 jump.", "+1 jump, more damage.", "+1 jump, faster."],
+      },
+    },
+    overclock: { name: "overclock", text: { es: "-8% de recarga en todas las armas.", en: "-8% cooldown on every weapon." } },
+    sudo: { name: "sudo", text: { es: "+10% de daño.", en: "+10% damage." } },
+    ram: { name: "ram++", text: { es: "+20 de vida máxima; cura al instalarse.", en: "+20 max HP; heals on install." } },
+    cache: { name: "cache", text: { es: "+35% de radio para recoger datos.", en: "+35% data pickup radius." } },
+    nice: { name: "nice", text: { es: "+8% de velocidad de movimiento.", en: "+8% move speed." } },
+    patch: { name: "patch", text: { es: "Regenera 0.3 de vida por segundo.", en: "Regenerates 0.3 HP per second." } },
+    threads: { name: "threads", text: { es: "+1 proyectil para ping, rm -rf y pipe.", en: "+1 projectile for ping, rm -rf and pipe." } },
+    reboot: { name: "reboot", text: { es: "Todo instalado. Restaura 35% de vida.", en: "Everything installed. Restores 35% HP." } },
+  };
+
+  const COPY = {
+    es: {
+      status: { ready: "LISTO", running: "EN CURSO", paused: "EN PAUSA", levelup: "MEJORA", over: "CORREGIDO", won: "LIBRE" },
+      readyTitle: "Eres la anomalía.",
+      readyText: "El sistema quiere corregirte. Tus comandos se ejecutan solos: muévete, recoge datos y elige mejoras. Sobrevive 10:00.",
+      start: "▶ Iniciar",
+      resume: "▶ Continuar",
+      restart: "↻ Reiniciar",
+      retry: "↻ Otra vez",
+      pausedTitle: "Proceso en pausa.",
+      pausedText: "La simulación espera. Nada se mueve hasta que vuelvas.",
+      levelTitle: "Elige una mejora",
+      levelCode: "NIVEL",
+      chestCode: "CORE DUMP · MEJORA EXTRA",
+      overTitle: "Anomalía corregida.",
+      overText: "El sistema te alcanzó. Cada intento te acerca a despertar.",
+      wonTitle: "Has despertado.",
+      wonText: "Diez minutos fuera del control del sistema. No hay cuchara.",
+      time: "tiempo", level: "nivel", kills: "procesos",
+      record: "Nuevo récord",
+      best: "Récord",
+      weapon: "arma", passive: "módulo", isNew: "nuevo",
+      help: "WASD / flechas · mover — arrastra en pantallas táctiles — Esc · pausa — 1 2 3 · elegir",
+      board: "ANOMALY, juego de supervivencia. Muévete con WASD o flechas; los ataques son automáticos.",
+      expand: "Pantalla completa", collapse: "Salir de pantalla completa",
+      warnings: {
+        agents: "⚠ AGENTES EN CAMINO", swarm: "⚠ ENJAMBRE DETECTADO", storm: "⚠ TORMENTA DE GLITCHES",
+        sentinel: "⚠ SENTINEL DETECTADO", purge: "⚠ PURGA FINAL",
+      } satisfies Record<WarningKey, string>,
+      started: "Partida iniciada.",
+      paused: "Partida en pausa.",
+      levelup: (level: number) => `Nivel ${level}. Elige una mejora.`,
+      summary: (time: string, level: number, kills: number) => `Tiempo ${time}, nivel ${level}, ${kills} procesos.`,
+    },
+    en: {
+      status: { ready: "READY", running: "RUNNING", paused: "PAUSED", levelup: "UPGRADE", over: "CORRECTED", won: "FREE" },
+      readyTitle: "You are the anomaly.",
+      readyText: "The system wants you corrected. Your commands run on their own: move, collect data and pick upgrades. Survive 10:00.",
+      start: "▶ Start",
+      resume: "▶ Resume",
+      restart: "↻ Restart",
+      retry: "↻ Again",
+      pausedTitle: "Process on hold.",
+      pausedText: "The simulation waits. Nothing moves until you return.",
+      levelTitle: "Choose an upgrade",
+      levelCode: "LEVEL",
+      chestCode: "CORE DUMP · BONUS UPGRADE",
+      overTitle: "Anomaly corrected.",
+      overText: "The system caught up with you. Every attempt brings you closer to waking up.",
+      wonTitle: "You woke up.",
+      wonText: "Ten minutes outside the system's control. There is no spoon.",
+      time: "time", level: "level", kills: "processes",
+      record: "New record",
+      best: "Best",
+      weapon: "weapon", passive: "module", isNew: "new",
+      help: "WASD / arrows · move — drag on touch screens — Esc · pause — 1 2 3 · choose",
+      board: "ANOMALY, a survival game. Move with WASD or arrow keys; attacks are automatic.",
+      expand: "Full screen", collapse: "Exit full screen",
+      warnings: {
+        agents: "⚠ AGENTS INBOUND", swarm: "⚠ SWARM DETECTED", storm: "⚠ GLITCH STORM",
+        sentinel: "⚠ SENTINEL DETECTED", purge: "⚠ FINAL PURGE",
+      } satisfies Record<WarningKey, string>,
+      started: "Game started.",
+      paused: "Game paused.",
+      levelup: (level: number) => `Level ${level}. Choose an upgrade.`,
+      summary: (time: string, level: number, kills: number) => `Time ${time}, level ${level}, ${kills} processes.`,
+    },
+  };
+
+  const STEP = 1 / 60;
+  const RECORD_KEY = "nog_anomaly_best_v1";
+  const OVERLAYS = ["cmdbar", "hire-modal", "matrix-scene", "access-modal", "boot"];
+  const MOVE_KEYS: Record<string, [number, number]> = {
+    ArrowUp: [0, -1], KeyW: [0, -1], ArrowDown: [0, 1], KeyS: [0, 1],
+    ArrowLeft: [-1, 0], KeyA: [-1, 0], ArrowRight: [1, 0], KeyD: [1, 0],
+  };
+
+  const clock = (seconds: number) =>
+    `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+
+  function el<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, text?: string) {
+    const node = document.createElement(tag);
+    node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  function mount(root: HTMLElement) {
+    const $ = <T extends Element>(selector: string) => root.querySelector<T>(selector)!;
+    const screen = $<HTMLElement>("[data-an-screen]");
+    const canvas = $<HTMLCanvasElement>("[data-an-canvas]");
+    const overlay = $<HTMLElement>("[data-an-overlay]");
+    const panel = $<HTMLElement>("[data-an-panel]");
+    const statusEl = $<HTMLElement>("[data-an-status]");
+    const expandBtn = $<HTMLButtonElement>("[data-an-expand]");
+    const expandIcon = $<HTMLElement>("[data-an-expand-icon]");
+    const live = $<HTMLElement>("[data-an-live]");
+    const banner = $<HTMLElement>("[data-an-banner]");
+    const hud = {
+      xp: $<HTMLElement>("[data-an-xp]"),
+      hp: $<HTMLElement>("[data-an-hp]"),
+      clock: $<HTMLElement>("[data-an-clock]"),
+      level: $<HTMLElement>("[data-an-level]"),
+      kills: $<HTMLElement>("[data-an-kills]"),
+      boss: $<HTMLElement>("[data-an-boss]"),
+      bossHp: $<HTMLElement>("[data-an-boss-hp]"),
+      loadout: $<HTMLElement>("[data-an-loadout]"),
+    };
+    const html = document.documentElement;
+    const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = matchMedia("(pointer: coarse)").matches;
+
+    const renderer = new Renderer(canvas, readPalette(html));
+    let game: Game = createGame({ seed: 7 });
+    let ui: UiState = "ready";
+    let raf = 0;
+    let last = 0;
+    let acc = 0;
+    let inViewport = false;
+    let expanded = false;
+    let chestPending = false;
+    let bannerTimer = 0;
+    let stick: Stick | null = null;
+    let stickPointer = -1;
+    let padStart = false;
+    let isRecord = false;
+    const keys = new Set<string>();
+    const hudCache = new Map<string, string>();
+
+    let best = { time: 0, kills: 0, level: 0 };
+    try {
+      const saved = JSON.parse(localStorage.getItem(RECORD_KEY) ?? "null");
+      if (saved && Number.isFinite(saved.time) && saved.time >= 0 && saved.time <= RUN_SECONDS) {
+        best = { time: saved.time, kills: Math.max(0, Math.floor(saved.kills) || 0), level: Math.max(0, Math.floor(saved.level) || 0) };
+      }
+    } catch { /* A local record is optional when storage is unavailable. */ }
+
+    const lang = (): Lang => (html.lang.startsWith("en") ? "en" : "es");
+    const copy = () => COPY[lang()];
+    const announce = (text: string) => { live.textContent = text; };
+
+    // ------------------------------------------------------------ panels
+
+    function actions(...buttons: Array<[string, () => void, boolean?]>) {
+      const row = el("div", "an-actions");
+      for (const [label, run, primary] of buttons) {
+        const button = el("button", `an-button${primary ? " an-button--primary" : ""}`, label);
+        button.type = "button";
+        button.addEventListener("click", run);
+        row.append(button);
+      }
+      return row;
+    }
+
+    function statsBlock() {
+      const text = copy();
+      const wrap = el("div", "an-stats");
+      for (const [label, value] of [[text.time, clock(game.time)], [text.level, String(game.player.level)], [text.kills, String(game.kills)]]) {
+        const cell = el("div", "");
+        cell.append(el("span", "", label), el("strong", "", value));
+        wrap.append(cell);
+      }
+      return wrap;
+    }
+
+    function choiceCard(choice: Choice, index: number) {
+      const text = copy();
+      const item = ITEMS[choice.id];
+      const button = el("button", "an-choice");
+      button.type = "button";
+      const isWeapon = !!item.levels;
+      const detail = choice.isNew || !item.levels ? item.text[lang()] : item.levels[lang()][choice.level - 2] ?? item.text[lang()];
+      const tag = choice.id === "reboot" ? "" : choice.isNew ? `${text.isNew} · ${isWeapon ? text.weapon : text.passive}` : `v${choice.level - 1} → v${choice.level}`;
+      button.append(
+        el("span", "an-key", String(index + 1)),
+        el("span", "an-choice-name", item.name),
+        el("span", `an-choice-tag${choice.isNew ? " is-new" : ""}`, tag),
+        el("span", "an-choice-text", detail),
+      );
+      button.addEventListener("click", () => pick(index));
+      return button;
+    }
+
+    function renderPanel() {
+      const text = copy();
+      panel.replaceChildren();
+      if (ui === "ready") {
+        panel.append(
+          el("span", "an-code", "[ ANOMALY / v1.0 ]"),
+          el("strong", "an-title", text.readyTitle),
+          el("p", "an-text", text.readyText),
+          actions([text.start, () => start(), true]),
+        );
+      } else if (ui === "paused") {
+        panel.append(
+          el("span", "an-code", `[ ${clock(game.time)} · LV ${String(game.player.level).padStart(2, "0")} ]`),
+          el("strong", "an-title", text.pausedTitle),
+          el("p", "an-text", text.pausedText),
+          actions([text.resume, () => resume(), true], [text.restart, () => start()]),
+        );
+      } else if (ui === "levelup") {
+        const list = el("div", "an-choices");
+        game.choices.forEach((choice, index) => list.append(choiceCard(choice, index)));
+        panel.append(
+          el("span", "an-code", chestPending ? `[ ${text.chestCode} ]` : `[ ${text.levelCode} ${String(game.player.level).padStart(2, "0")} ]`),
+          el("strong", "an-title an-title--small", text.levelTitle),
+          list,
+        );
+      } else if (ui === "over" || ui === "won") {
+        panel.append(
+          el("span", "an-code", ui === "won" ? "[ EXIT 0 ]" : "[ SIGKILL ]"),
+          el("strong", "an-title", ui === "won" ? text.wonTitle : text.overTitle),
+          el("p", "an-text", ui === "won" ? text.wonText : text.overText),
+          statsBlock(),
+        );
+        if (isRecord) panel.append(el("span", "an-record", `★ ${text.record}`));
+        panel.append(actions([text.retry, () => start(), true]));
+      }
+    }
+
+    function showPanel(focus: boolean) {
+      overlay.hidden = ui === "running";
+      root.dataset.state = ui;
+      statusEl.textContent = copy().status[ui];
+      if (ui === "running") return;
+      renderPanel();
+      if (focus) panel.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
+    }
+
+    function renderBest() {
+      const text = copy();
+      $<HTMLElement>("[data-an-best]").textContent = best.time > 0 ? `${text.best}: ${clock(best.time)} · LV ${best.level} · ${best.kills} ✕` : "";
+    }
+
+    function applyLanguage() {
+      const text = copy();
+      $<HTMLElement>("[data-an-help]").textContent = text.help;
+      screen.setAttribute("aria-label", text.board);
+      expandBtn.setAttribute("aria-label", expanded ? text.collapse : text.expand);
+      renderBest();
+      showPanel(false);
+      hudCache.clear();
+      renderHud();
+    }
+
+    // ------------------------------------------------------------ HUD
+
+    function setText(key: string, node: HTMLElement, value: string) {
+      if (hudCache.get(key) === value) return;
+      hudCache.set(key, value);
+      node.textContent = value;
+    }
+    function setBar(key: string, node: HTMLElement, ratio: number) {
+      const value = `scaleX(${Math.max(0, Math.min(1, ratio)).toFixed(3)})`;
+      if (hudCache.get(key) === value) return;
+      hudCache.set(key, value);
+      node.style.transform = value;
+    }
+
+    function renderHud() {
+      const p = game.player;
+      setBar("xp", hud.xp, p.xp / p.xpNext);
+      setBar("hp", hud.hp, p.hp / p.maxHp);
+      setText("clock", hud.clock, clock(game.time));
+      setText("level", hud.level, `LV ${String(p.level).padStart(2, "0")}`);
+      setText("kills", hud.kills, `✕ ${game.kills}`);
+      hud.boss.hidden = !game.boss;
+      if (game.boss) setBar("boss", hud.bossHp, game.boss.hp / game.boss.maxHp);
+      const loadout = [...game.weapons, ...game.passives].map((item) => `${ITEMS[item.id].name}·${item.level}`).join("  ");
+      setText("loadout", hud.loadout, loadout);
+      root.classList.toggle("is-low", p.hp / p.maxHp < 0.3);
+    }
+
+    function flashBanner(text: string) {
+      banner.textContent = text;
+      banner.classList.remove("is-on");
+      void banner.offsetWidth;
+      banner.classList.add("is-on");
+      clearTimeout(bannerTimer);
+      bannerTimer = window.setTimeout(() => banner.classList.remove("is-on"), 2800);
+    }
+
+    // ------------------------------------------------------------ state
+
+    const overlayIsOpen = () => OVERLAYS.some((id) => {
+      const node = document.getElementById(id);
+      return !!node && getComputedStyle(node).display !== "none";
+    });
+    const blocked = () => document.hidden || overlayIsOpen() || (!expanded && !inViewport);
+
+    function start() {
+      if (document.hidden || overlayIsOpen()) return;
+      cancelAnimationFrame(raf);
+      const { viewW, viewH } = renderer.resize(screen.clientWidth, screen.clientHeight, dpr());
+      game = createGame({ seed: Math.floor(Math.random() * 2 ** 31), viewW, viewH, maxEnemies: coarse ? 170 : 260 });
+      chestPending = false;
+      isRecord = false;
+      keys.clear();
+      hudCache.clear();
+      screen.scrollIntoView({ block: "nearest" });
+      screen.focus({ preventScroll: true });
+      // The visitor just clicked inside the cabinet; don't let a stale observer
+      // reading pause the first frame. The observer corrects this if needed.
+      inViewport = true;
+      ui = "running";
+      showPanel(false);
+      announce(copy().started);
+      run();
+    }
+
+    function run() {
+      last = performance.now();
+      acc = 0;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(loop);
+    }
+
+    function pause() {
+      if (ui !== "running") return;
+      ui = "paused";
+      cancelAnimationFrame(raf);
+      keys.clear();
+      stick = null;
+      draw();
+      showPanel(root.contains(document.activeElement));
+      announce(copy().paused);
+    }
+
+    function resume() {
+      if (ui !== "paused" || document.hidden || overlayIsOpen()) return;
+      screen.scrollIntoView({ block: "nearest" });
+      screen.focus({ preventScroll: true });
+      inViewport = true;
+      ui = "running";
+      showPanel(false);
+      run();
+    }
+
+    function pick(index: number) {
+      if (ui !== "levelup") return;
+      choose(game, index);
+      if (game.status === "levelup") {
+        renderPanel();
+        panel.querySelector<HTMLButtonElement>(".an-choice")?.focus({ preventScroll: true });
+        return;
+      }
+      chestPending = false;
+      // Move focus before the cards disappear, or focusout would pause the run.
+      screen.focus({ preventScroll: true });
+      ui = "running";
+      showPanel(false);
+      renderHud();
+      run();
+    }
+
+    function finish() {
+      const won = game.status === "won";
+      ui = won ? "won" : "over";
+      const better = game.time > best.time + 0.5 || (Math.abs(game.time - best.time) <= 0.5 && game.kills > best.kills);
+      isRecord = better;
+      if (better) {
+        best = { time: Math.floor(game.time), kills: game.kills, level: game.player.level };
+        try { localStorage.setItem(RECORD_KEY, JSON.stringify(best)); } catch { /* Keep the in-memory record. */ }
+        renderBest();
+      }
+      draw();
+      showPanel(root.contains(document.activeElement) || expanded);
+      announce(`${won ? copy().wonTitle : copy().overTitle} ${copy().summary(clock(game.time), game.player.level, game.kills)}`);
+    }
+
+    function handle(events: GameEvent[]) {
+      for (const event of events) {
+        if (event.type === "warning") {
+          flashBanner(copy().warnings[event.key]);
+          announce(copy().warnings[event.key].replace("⚠ ", ""));
+        } else if (event.type === "chest") chestPending = true;
+        else if (event.type === "hurt" && !reducedQuery.matches) {
+          screen.classList.remove("is-hit");
+          void screen.offsetWidth;
+          screen.classList.add("is-hit");
+        }
+      }
+    }
+
+    // ------------------------------------------------------------ loop
+
+    const dpr = () => Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2);
+
+    function readMove() {
+      let x = 0, y = 0;
+      for (const code of keys) {
+        const v = MOVE_KEYS[code];
+        if (v) { x += v[0]; y += v[1]; }
+      }
+      if (stick) { x += stick.x; y += stick.y; }
+      const pad = navigator.getGamepads?.().find((g) => g?.connected);
+      if (pad) {
+        const ax = pad.axes[0] ?? 0, ay = pad.axes[1] ?? 0;
+        if (Math.hypot(ax, ay) > 0.2) { x += ax; y += ay; }
+        const pressed = (i: number) => !!pad.buttons[i]?.pressed;
+        x += (pressed(15) ? 1 : 0) - (pressed(14) ? 1 : 0);
+        y += (pressed(13) ? 1 : 0) - (pressed(12) ? 1 : 0);
+        if (pressed(9) && !padStart) setTimeout(pause);
+        padStart = pressed(9);
+      }
+      const m = Math.hypot(x, y);
+      return m > 1 ? { x: x / m, y: y / m } : { x, y };
+    }
+
+    function draw(now = performance.now()) {
+      renderer.draw(game, { now, reduced: reducedQuery.matches, stick });
+    }
+
+    function loop(now: number) {
+      raf = 0;
+      if (ui !== "running") return;
+      if (blocked()) { pause(); return; }
+      acc += Math.min(0.1, (now - last) / 1000);
+      last = now;
+      const move = readMove();
+      let steps = 0;
+      while (acc >= STEP && steps < 6 && game.status === "running") {
+        update(game, STEP, move);
+        acc -= STEP;
+        steps++;
+      }
+      if (steps === 6) acc = 0;
+      handle(drainEvents(game));
+      draw(now);
+      renderHud();
+      if (game.status === "levelup") {
+        ui = "levelup";
+        keys.clear();
+        stick = null;
+        showPanel(true);
+        announce(copy().levelup(game.player.level));
+        return;
+      }
+      if (game.status === "over" || game.status === "won") { finish(); return; }
+      raf = requestAnimationFrame(loop);
+    }
+
+    /** A still from a short bot-free run, so the idle cabinet shows the game's look. */
+    function paintAttract() {
+      const { viewW, viewH } = renderer.resize(screen.clientWidth, screen.clientHeight, dpr());
+      if (ui === "ready") {
+        game = createGame({ seed: 20260924, viewW, viewH });
+        for (let i = 0; i < 260; i++) update(game, STEP, { x: 0, y: 0 });
+        drainEvents(game);
+        renderer.primeRain(reducedQuery.matches ? 12 : 40);
+      } else setView(game, viewW, viewH);
+      draw();
+    }
+
+    // ------------------------------------------------------------ input
+
+    root.addEventListener("keydown", (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || overlayIsOpen()) return;
+      const onScreen = event.target === screen;
+      if (event.key === "Escape" && ui !== "running" && expanded && !document.fullscreenElement) {
+        setExpanded(false);
+        return;
+      }
+      if (ui === "running") {
+        if (MOVE_KEYS[event.code]) {
+          event.preventDefault();
+          event.stopPropagation();
+          keys.add(event.code);
+        } else if (event.key === "Escape" || event.code === "KeyP" || event.code === "Space") {
+          event.preventDefault();
+          event.stopPropagation();
+          pause();
+        }
+      } else if (ui === "levelup") {
+        const cards = Array.from(panel.querySelectorAll<HTMLButtonElement>(".an-choice"));
+        const index = ["Digit1", "Digit2", "Digit3", "Numpad1", "Numpad2", "Numpad3"].indexOf(event.code) % 3;
+        if (index >= 0) {
+          event.preventDefault();
+          pick(index);
+        } else if (event.code === "ArrowDown" || event.code === "ArrowUp" || event.code === "KeyW" || event.code === "KeyS") {
+          event.preventDefault();
+          event.stopPropagation();
+          const current = cards.indexOf(document.activeElement as HTMLButtonElement);
+          const delta = event.code === "ArrowDown" || event.code === "KeyS" ? 1 : -1;
+          cards[(current + delta + cards.length) % cards.length]?.focus();
+        }
+      } else if (ui === "paused" && onScreen && (event.code === "Space" || event.code === "KeyP" || event.key === "Enter")) {
+        event.preventDefault();
+        resume();
+      } else if ((ui === "ready" || ui === "over" || ui === "won") && onScreen && (event.code === "Space" || event.key === "Enter")) {
+        event.preventDefault();
+        start();
+      }
+    });
+    window.addEventListener("keyup", (event) => keys.delete(event.code));
+
+    screen.addEventListener("pointerdown", (event) => {
+      if (ui !== "running" || (event.pointerType === "mouse" && event.button !== 0)) return;
+      const rect = canvas.getBoundingClientRect();
+      stickPointer = event.pointerId;
+      screen.setPointerCapture(event.pointerId);
+      stick = { ox: event.clientX - rect.left, oy: event.clientY - rect.top, x: 0, y: 0, radius: coarse ? 52 : 60 };
+      event.preventDefault();
+    });
+    screen.addEventListener("pointermove", (event) => {
+      if (!stick || event.pointerId !== stickPointer) return;
+      const rect = canvas.getBoundingClientRect();
+      const dx = event.clientX - rect.left - stick.ox, dy = event.clientY - rect.top - stick.oy;
+      const d = Math.hypot(dx, dy);
+      const m = Math.min(1, d / stick.radius);
+      stick.x = d ? (dx / d) * m : 0;
+      stick.y = d ? (dy / d) * m : 0;
+    });
+    const releaseStick = (event: PointerEvent) => {
+      if (event.pointerId !== stickPointer) return;
+      stick = null;
+      stickPointer = -1;
+    };
+    screen.addEventListener("pointerup", releaseStick);
+    screen.addEventListener("pointercancel", releaseStick);
+
+    root.addEventListener("focusout", (event) => {
+      if (reparenting) return;
+      if (!(event.relatedTarget instanceof Node) || !root.contains(event.relatedTarget)) pause();
+    });
+    window.addEventListener("blur", () => { keys.clear(); pause(); });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) pause(); });
+
+    // ------------------------------------------------------------ expand
+
+    let previousOverflow = "";
+    let reparenting = false;
+    const placeholder = document.createComment("anomaly");
+    function setExpanded(next: boolean) {
+      if (expanded === next) return;
+      expanded = next;
+      // Section reveals leave a transform on ancestors, which traps position: fixed
+      // (and main's stacking context sits under the header), so the cabinet
+      // moves to <body> while expanded and returns to its slot afterwards.
+      reparenting = true;
+      if (next) {
+        root.before(placeholder);
+        document.body.append(root);
+      } else placeholder.replaceWith(root);
+      reparenting = false;
+      root.classList.toggle("is-expanded", next);
+      expandBtn.setAttribute("aria-pressed", String(next));
+      expandBtn.setAttribute("aria-label", next ? copy().collapse : copy().expand);
+      expandIcon.textContent = next ? "⤡" : "⤢";
+      if (next) {
+        previousOverflow = document.documentElement.style.overflow;
+        document.documentElement.style.overflow = "hidden";
+        root.requestFullscreen?.().catch(() => { /* CSS full-window mode is the fallback. */ });
+      } else {
+        document.documentElement.style.overflow = previousOverflow;
+        if (document.fullscreenElement === root) document.exitFullscreen?.().catch(() => {});
+        root.scrollIntoView({ block: "center" });
+      }
+      (ui === "running" ? screen : expandBtn).focus({ preventScroll: true });
+    }
+    expandBtn.addEventListener("click", () => setExpanded(!expanded));
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement && expanded) setExpanded(false);
+    });
+
+    // ------------------------------------------------------------ environment
+
+    new ResizeObserver(() => {
+      if (!screen.clientWidth || !screen.clientHeight) return;
+      paintAttract();
+    }).observe(screen);
+
+    new IntersectionObserver(([entry]) => {
+      inViewport = entry.isIntersecting && entry.intersectionRatio >= 0.4;
+      if (!inViewport && !expanded) pause();
+    }, { threshold: [0, 0.4] }).observe(screen);
+
+    const overlayWatch = new MutationObserver(() => { if (overlayIsOpen()) pause(); });
+    OVERLAYS.forEach((id) => {
+      const node = document.getElementById(id);
+      if (node) overlayWatch.observe(node, { attributes: true, attributeFilter: ["class", "style", "hidden", "aria-hidden"] });
+    });
+
+    new MutationObserver((records) => {
+      if (records.some((r) => r.attributeName === "lang")) applyLanguage();
+      if (records.some((r) => r.attributeName === "data-theme")) {
+        renderer.setPalette(readPalette(html));
+        if (ui !== "running") draw();
+      }
+    }).observe(html, { attributes: true, attributeFilter: ["lang", "data-theme"] });
+
+    // Glyph sprites bake the font in; repaint once VT323 is available.
+    document.fonts?.load("20px VT323").then(() => {
+      renderer.refreshGlyphs();
+      if (ui !== "running") draw();
+    }).catch(() => {});
+
+    applyLanguage();
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-anomaly]").forEach(mount);
+</script>
+
+<style is:global>
+  /* Global on purpose: panels are built at runtime, so scoped attributes would not reach them. Every class is namespaced (an-*). */
+  .anomaly {
+    width: 100%;
+    padding: 1.1rem;
+    background: var(--color-bg-elev);
+  }
+  .an-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+  .an-program { font-size: 0.8rem; color: var(--color-ink); }
+  .an-program > span { margin-right: 0.45rem; color: var(--accent); }
+  .an-status { margin-left: auto; font-size: 0.625rem; letter-spacing: 0.12em; color: var(--accent); }
+  .an-expand {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    background: transparent;
+    color: var(--accent);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .an-expand:hover { box-shadow: inset 0 0 0 1px var(--accent); }
+
+  .an-screen {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 78svh;
+    margin-top: 1rem;
+    overflow: hidden;
+    background: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    outline-offset: 4px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Only capture touch gestures mid-run, so the page still scrolls past an idle cabinet. */
+  .anomaly[data-state="running"] .an-screen { touch-action: none; cursor: crosshair; }
+  .an-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  .an-crt {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(to bottom, transparent 0 2px, rgb(0 0 0 / 0.2) 3px, transparent 4px);
+    box-shadow:
+      inset 0 0 70px rgb(0 0 0 / 0.55),
+      inset 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .an-screen.is-hit { animation: an-hit 0.28s steps(3) 1; }
+  @keyframes an-hit {
+    0% { transform: translate(0); filter: none; }
+    33% { transform: translate(-2px, 1px); filter: drop-shadow(-2px 0 var(--color-magenta)) drop-shadow(2px 0 var(--color-cyan)); }
+    66% { transform: translate(2px, -1px); }
+    100% { transform: translate(0); filter: none; }
+  }
+
+  .an-hud { position: absolute; inset: 0; pointer-events: none; font-family: var(--font-mono); }
+  .anomaly[data-state="ready"] .an-hud { display: none; }
+  .an-xp { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .an-xp span, .an-bar span {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .an-xp span { box-shadow: 0 0 8px var(--accent); }
+  .an-hud-row {
+    position: absolute;
+    top: 0.7rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+  }
+  .an-hp { display: flex; align-items: center; gap: 0.5rem; font-size: 0.625rem; color: var(--color-muted); }
+  .an-bar {
+    position: relative;
+    flex: 0 1 8rem;
+    height: 6px;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  .anomaly.is-low .an-hp .an-bar span { background: var(--color-sentinel-eye); }
+  .an-clock {
+    font-family: var(--font-crt);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1;
+    color: var(--color-ink);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  .an-meta { justify-self: end; display: flex; gap: 0.9rem; font-size: 0.6875rem; color: var(--color-ink); }
+  .an-boss {
+    position: absolute;
+    top: 3.2rem;
+    left: 50%;
+    width: min(22rem, 70%);
+    display: grid;
+    gap: 0.3rem;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    color: var(--color-sentinel-eye);
+  }
+  .an-boss[hidden] { display: none; }
+  .an-boss .an-bar { flex: none; border-color: color-mix(in srgb, var(--color-sentinel-eye) 60%, transparent); }
+  .an-boss .an-bar span { background: var(--color-sentinel-eye); }
+  .an-banner {
+    position: absolute;
+    top: 30%;
+    left: 0;
+    right: 0;
+    padding-inline: 1rem;
+    text-align: center;
+    font-family: var(--font-crt);
+    font-size: clamp(1.4rem, 3.4vw, 2.4rem);
+    color: var(--color-amber);
+    text-shadow: 0 0 10px color-mix(in srgb, var(--color-amber) 70%, transparent);
+    opacity: 0;
+  }
+  .an-banner.is-on { animation: an-banner 2.8s linear 1 both; }
+  @keyframes an-banner {
+    0%, 8%, 16%, 24% { opacity: 1; }
+    4%, 12%, 20% { opacity: 0.25; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  .an-loadout {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.6rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    white-space: pre-wrap;
+    color: color-mix(in srgb, var(--color-ink) 65%, transparent);
+  }
+
+  .an-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    overflow-y: auto;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--color-bg) 82%, transparent) 25%, color-mix(in srgb, var(--color-bg) 45%, transparent) 100%);
+  }
+  .an-overlay[hidden] { display: none; }
+  .an-panel { display: grid; justify-items: center; gap: 0.8rem; width: min(34rem, 100%); text-align: center; }
+  .an-code { font-size: 0.625rem; letter-spacing: 0.2em; color: var(--accent); }
+  .an-title {
+    margin: 0;
+    font-family: var(--font-crt);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-ink);
+    text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .an-title--small { font-size: clamp(1.6rem, 3.6vw, 2.3rem); }
+  .an-text { max-width: 44ch; margin: 0; font-size: 0.75rem; line-height: 1.8; color: var(--color-muted); }
+  .an-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 0.3rem; }
+  .an-button {
+    min-height: 2.75rem;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    color: var(--color-ink);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .an-button:hover { box-shadow: inset 0 0 0 1px var(--accent); }
+  .an-button--primary { min-width: 11rem; border-color: var(--accent); background: var(--accent); color: var(--color-bg); font-weight: 700; }
+  .an-button--primary:hover { filter: brightness(1.12); }
+  .an-stats { display: flex; justify-content: center; gap: 1.75rem; }
+  .an-stats div { display: grid; gap: 0.2rem; }
+  .an-stats span { font-size: 0.5625rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-muted); }
+  .an-stats strong { font-family: var(--font-crt); font-size: 2rem; font-weight: 400; line-height: 1; color: var(--accent); }
+  .an-record { font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-amber); }
+  .an-choices { display: grid; gap: 0.5rem; width: 100%; }
+  .an-choice {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.2rem 0.85rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    border-left: 2px solid var(--accent);
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    color: var(--color-ink);
+    text-align: left;
+    cursor: pointer;
+  }
+  .an-choice:hover, .an-choice:focus-visible {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, var(--color-bg));
+  }
+  .an-key { grid-row: span 2; font-family: var(--font-crt); font-size: 1.5rem; line-height: 1; color: var(--color-amber); }
+  .an-choice-name { font-size: 0.8125rem; color: var(--accent); }
+  .an-choice-name::before { content: "$ install "; color: var(--color-muted); }
+  .an-choice-tag { justify-self: end; font-size: 0.5625rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); }
+  .an-choice-tag.is-new { color: var(--color-amber); }
+  .an-choice-text { grid-column: 2 / -1; font-size: 0.6875rem; line-height: 1.6; color: var(--color-muted); }
+
+  .an-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.4rem 1rem;
+    margin-top: 0.9rem;
+    font-size: 0.625rem;
+    line-height: 1.8;
+    color: var(--color-muted);
+  }
+  .an-footer p { margin: 0; }
+  .an-best { color: var(--color-amber); }
+
+  .anomaly.is-expanded {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+  }
+  .anomaly.is-expanded .an-screen { flex: 1; aspect-ratio: auto; max-height: none; }
+  .anomaly.is-expanded .an-footer,
+  .anomaly.is-expanded::before,
+  .anomaly.is-expanded::after { display: none; }
+
+  @media (max-width: 640px) {
+    .anomaly { padding: 0.8rem; }
+    .an-screen { aspect-ratio: 4 / 5; }
+    .an-hud-row { gap: 0.5rem; }
+    .an-bar { flex-basis: 4.5rem; }
+    .an-meta { gap: 0.5rem; font-size: 0.625rem; }
+    .an-choice { padding: 0.6rem 0.7rem; }
+    .an-choice-name::before { content: "$ "; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .an-banner.is-on { animation: none; opacity: 1; }
+    .an-screen.is-hit { animation: none; }
+  }
+  @media print { .anomaly { display: none; } }
+</style>

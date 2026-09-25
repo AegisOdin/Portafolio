@@ -37,7 +37,7 @@
     </div>
     <ul id="cmd-list" role="listbox" aria-label="Comandos disponibles" class="max-h-[50dvh] overflow-y-auto py-2"></ul>
     <div
-      class="px-4 py-2 border-t border-[color-mix(in_srgb,var(--color-phosphor)_25%,transparent)] text-[11px] text-[var(--color-muted)] flex justify-between"
+      class="px-4 py-2 border-t border-[color-mix(in_srgb,var(--color-phosphor)_25%,transparent)] text-[0.6875rem] text-[var(--color-muted)] flex justify-between"
     >
       <span
         ><span class="sigil">↑↓</span> navegar · <span class="sigil">⏎</span> ejecutar
@@ -109,7 +109,7 @@
 
 <!-- Floating hint -->
 <div
-  class="hidden md:flex fixed bottom-4 right-4 z-[50] items-center gap-2 text-[11px] text-[var(--color-muted)] pointer-events-none"
+  class="hidden md:flex fixed bottom-4 right-4 z-[50] items-center gap-2 text-[0.6875rem] text-[var(--color-muted)] pointer-events-none"
 >
   pulsa <kbd class="pill !py-[1px]">/</kbd> para comandos
 </div>
@@ -134,7 +134,7 @@
     if (activeModal === panel) return;
     if (activeModal) closeModal(activeModal);
     previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    previousOverflow = document.body.style.overflow;
+    previousOverflow = document.documentElement.style.overflow;
     background = Array.from(document.body.children)
       .filter((element): element is HTMLElement => element instanceof HTMLElement && element !== panel && !element.contains(panel) && !["SCRIPT", "STYLE", "LINK"].includes(element.tagName))
       .map((element) => ({ element, inert: element.inert }));
@@ -142,7 +142,7 @@
     panel.classList.remove("hidden");
     panel.classList.add("flex");
     panel.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     activeModal = panel;
   }
 
@@ -151,7 +151,7 @@
     panel.classList.add("hidden");
     panel.classList.remove("flex");
     panel.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = previousOverflow;
+    document.documentElement.style.overflow = previousOverflow;
     background.forEach(({ element, inert }) => { element.inert = inert; });
     background = [];
     activeModal = null;
@@ -233,7 +233,7 @@
       run: () => scrollTo("skills"),
     },
     { name: "mail", desc: "→ contact", run: () => scrollTo("contact") },
-    { name: "arcade", desc: "→ jugar en la terminal", run: () => scrollTo("arcade") },
+    { name: "arcade", desc: "→ play ANOMALY", run: () => scrollTo("arcade") },
     {
       name: "open appbeperfect",
       desc: "→ live demo · Spa Be Perfect",
@@ -287,7 +287,7 @@
         (c, i) => `
       <li id="cmd-option-${i}" role="option" aria-selected="${i === 0}" data-i="${i}" class="px-4 py-3 flex justify-between gap-4 cursor-pointer text-sm ${i === 0 ? "bg-[color-mix(in_srgb,var(--color-phosphor)_12%,transparent)] text-[var(--color-phosphor)]" : "text-[var(--color-ink)]/85 hover:bg-[color-mix(in_srgb,var(--color-phosphor)_6%,transparent)]"}">
         <span><span class="sigil mr-2">▸</span>${c.name}</span>
-        <span class="text-[var(--color-muted)] text-[11px] hidden sm:inline">${c.desc}</span>
+        <span class="text-[var(--color-muted)] text-[0.6875rem] hidden sm:inline">${c.desc}</span>
       </li>
     `,
       )

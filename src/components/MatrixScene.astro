@@ -228,7 +228,7 @@ import redPill from "../assets/pill-red.png";
       isOpen = true;
       choosing = false;
       previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      previousOverflow = document.body.style.overflow;
+      previousOverflow = document.documentElement.style.overflow;
       background = Array.from(document.body.children)
         .filter((element): element is HTMLElement => element instanceof HTMLElement && element !== scene && !element.contains(scene) && !["SCRIPT", "STYLE", "LINK"].includes(element.tagName))
         .map((element) => ({ element, inert: element.inert }));
@@ -237,7 +237,7 @@ import redPill from "../assets/pill-red.png";
       if (choiceHint) choiceHint.textContent = copy("matrix.hint");
       scene!.classList.add("open");
       scene!.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
       startRain();
       scene!.scrollTop = 0;
       if (!motionPreference.matches) tickTime();
@@ -255,7 +255,7 @@ import redPill from "../assets/pill-red.png";
       flash!.style.background = "#fff";
       scene!.classList.remove("open");
       scene!.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = previousOverflow;
+      document.documentElement.style.overflow = previousOverflow;
       background.forEach(({ element, inert }) => { element.inert = inert; });
       background = [];
       stopRain();

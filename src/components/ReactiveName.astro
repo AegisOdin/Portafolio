@@ -8,8 +8,7 @@ const rows = [Array.from("NEFTALI"), Array.from("ODÍN")];
     <span class="name-line">
       {row.map((letter) => (
         <span class:list={["name-letter", { "name-letter-accent": letter === "Í" }]} aria-hidden="true">{letter}</span>
-      ))}
-      {index === 1 && <button type="button" id="wake-up" class="wake-trigger" aria-label="Explorar el otro lado de la terminal" title="." onclick="window.__matrix?.open()">.</button>}
+      ))}{index === 1 && <button type="button" id="wake-up" class="wake-trigger" aria-label="Explorar el otro lado de la terminal" title="." onclick="window.__matrix?.open()">.</button>}
     </span>
   ))}
 </h1>

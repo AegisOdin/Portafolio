@@ -200,7 +200,8 @@ html, body {
 }
 
 body {
-  overflow-x: hidden;
+  /* clip, not hidden: hidden turns body into a scroll container and breaks the sticky header. */
+  overflow-x: clip;
   background-image:
     radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.55) 100%),
     radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%);
@@ -329,43 +330,47 @@ section {
   transform: translateY(0);
 }
 
-/* ASCII frame card */
-.frame {
-  position: relative;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 4%, transparent), transparent);
-  box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(0,0,0,0.3),
-    0 0 22px -12px color-mix(in srgb, var(--accent) 18%, transparent);
-}
+/* ASCII frame card.
+   Component classes live in @layer components so Tailwind utilities on the same
+   element (fixed, bg-*, hidden…) win; unlayered rules would silently beat them. */
+@layer components {
+  .frame {
+    position: relative;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 4%, transparent), transparent);
+    box-shadow:
+      inset 0 0 0 1px rgba(0,0,0,0.4),
+      0 0 0 1px rgba(0,0,0,0.3),
+      0 0 22px -12px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
 
-.frame::before,
-.frame::after {
-  position: absolute;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: color-mix(in srgb, var(--accent) 70%, transparent);
-  letter-spacing: 0.04em;
-  pointer-events: none;
-}
+  .frame::before,
+  .frame::after {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: color-mix(in srgb, var(--accent) 70%, transparent);
+    letter-spacing: 0.04em;
+    pointer-events: none;
+  }
 
-.frame::before {
-  content: "● ● ●";
-  top: -0.7em;
-  left: 0.8em;
-  background: var(--color-bg);
-  padding: 0 0.4em;
-  color: var(--color-amber);
-  letter-spacing: 0.2em;
-}
+  .frame::before {
+    content: "● ● ●";
+    top: -0.7em;
+    left: 0.8em;
+    background: var(--color-bg);
+    padding: 0 0.4em;
+    color: var(--color-amber);
+    letter-spacing: 0.2em;
+  }
 
-.frame::after {
-  content: attr(data-label);
-  top: -0.7em;
-  right: 0.8em;
-  background: var(--color-bg);
-  padding: 0 0.4em;
+  .frame::after {
+    content: attr(data-label);
+    top: -0.7em;
+    right: 0.8em;
+    background: var(--color-bg);
+    padding: 0 0.4em;
+  }
 }
 
 /* Glitch hover for cards */
@@ -397,45 +402,52 @@ section {
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-/* Links */
-a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
-  text-underline-offset: 3px;
-  transition: text-shadow 0.2s, text-decoration-color 0.2s;
-}
-a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent); }
-
-/* Pill */
-.pill {
-  display: inline-block;
-  padding: 3px 9px;
-  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-ink) 90%, transparent);
-  background: color-mix(in srgb, var(--accent) 6%, transparent);
+/* Links — base layer, so no-underline / text-* utilities on anchors apply. */
+@layer base {
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    text-underline-offset: 3px;
+    transition: text-shadow 0.2s, text-decoration-color 0.2s;
+  }
+  a:hover { text-shadow: var(--accent-glow); text-decoration-color: var(--accent); }
 }
 
-/* Interactive pills (links/buttons containing a .pill) get a guaranteed tap target on touch devices. */
-a > .pill,
-button > .pill,
-.pill-tap {
-  min-height: 36px;
-  line-height: 1.25;
-  display: inline-flex;
-  align-items: center;
-}
-@media (pointer: coarse) {
+@layer components {
+  /* Pill */
+  .pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-ink) 90%, transparent);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+
+  /* Interactive pills (links/buttons containing a .pill) get a guaranteed tap target on touch devices. */
   a > .pill,
   button > .pill,
   .pill-tap {
-    min-height: 44px;
-    padding-inline: 14px;
-    font-size: 13px;
+    min-height: 36px;
+    line-height: 1.25;
+    display: inline-flex;
+    align-items: center;
   }
+  @media (pointer: coarse) {
+    a > .pill,
+    button > .pill,
+    .pill-tap {
+      min-height: 44px;
+      padding-inline: 14px;
+      font-size: 13px;
+    }
+  }
+
+  /* Header links stay quiet; hover utilities and the active-section rule below take over. */
+  .site-header nav a { color: var(--color-muted); }
 }
 
 /* Focus ring — high contrast on phosphor bg */
@@ -685,9 +697,10 @@ main > section:not(#hero) { padding-block: clamp(3.75rem, 7vw, 6.5rem); }
 :root[data-theme="realworld"] .project-card { background: var(--color-bg-elev); }
 :root[data-theme="realworld"] .skill-title { letter-spacing: 0; }
 .arcade-section { border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
-.arcade-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; align-items: center; }
-.arcade-copy { max-width: 42ch; color: var(--color-muted); font-size: 0.875rem; line-height: 1.9; }
-.arcade-lead { font-size: clamp(2.8rem, 5vw, 4rem); line-height: 1 !important; color: var(--color-amber); margin-bottom: 1.5rem; max-width: 14ch; }
+.arcade-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+.arcade-copy { display: grid; gap: 1.5rem; color: var(--color-muted); font-size: 0.875rem; line-height: 1.9; }
+.arcade-brief { max-width: 56ch; }
+.arcade-lead { font-size: clamp(2.8rem, 5vw, 4rem); line-height: 1 !important; color: var(--color-amber); max-width: 14ch; }
 .arcade-instructions { display: flex; gap: 0.875rem; margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); font-size: 0.75rem; }
 .arcade-contact { display: inline-block; margin-top: 1.5rem; padding-block: 0.5rem; }
 .contact-intro { max-width: 55ch; font-size: 1rem; line-height: 1.8; margin-top: -0.5rem; margin-bottom: 2.5rem; color: var(--color-muted); }
@@ -709,7 +722,7 @@ main > section:not(#hero) { padding-block: clamp(3.75rem, 7vw, 6.5rem); }
   .project-featured h3 { font-size: 4rem; }
   .project-system { margin-top: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
   .skills-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .arcade-layout { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); gap: 5rem; }
+  .arcade-copy { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); column-gap: 5rem; align-items: end; }
 }
 @media (max-width: 767px) {
   .hero-coordinates { display: none; }
